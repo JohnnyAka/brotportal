@@ -33,8 +33,9 @@ class db_connection{
 		INSERT INTO {$table_name} ({$strArgsNames})
 		VALUES ({$strArgs})
 EOT;
-		//execute query
 		$mysqli = $this->mysqli;
+		$sql = $mysqli->escape_string($sql);
+		//execute query
 		if ($mysqli->query($sql) === TRUE) {
 			return "New record created successfully";
 		} else {
@@ -64,8 +65,10 @@ EOT;
 		if (!is_null($where_condition)){
 			$sql .= " WHERE " . $where_condition;
 		}
+		$sql = $this->mysqli->escape_string($sql);
 		//execute query
-		return $this->mysqli->query($sql);
+		$result = mysqli_fetch_all($this->mysqli->query($sql), MYSQLI_ASSOC);
+		return $result;
 	}
 	
 				
@@ -83,6 +86,7 @@ EOT;
 		}
 		//put query
 		$sql = "UPDATE ".$table_name." SET ".$strArgs." WHERE ".$where_condition;
+		$sql = $this->mysqli->escape_string($sql);
 		//execute query
 		if ($this->mysqli->query($sql)=== TRUE) {
 			return "Record updated successfully";
@@ -94,6 +98,7 @@ EOT;
 	function deleteData($table_name, $where_condition){
 		//put query
 		$sql = "DELETE FROM ".$table_name." WHERE ".$where_condition;
+		$sql = $this->mysqli->escape_string($sql);
 		//execute query
 		if ($this->mysqli->query($sql)=== TRUE) {
 			return "Record deleted successfully";

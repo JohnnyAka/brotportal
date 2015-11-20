@@ -16,12 +16,14 @@
 
     <!-- Custom styles for this template -->
     <link href="navbar-fixed-top.css" rel="stylesheet">
+	<link href="css/products.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+	
   </head>
 
   <body>
@@ -59,35 +61,35 @@
     </nav>
 
     <div class="container">
-
-      <!-- Main component for a primary marketing message or call to action -->
-      <div class="jumbotron">
-        <h1>Navbar example</h1>
-        <p>This example is a quick exercise to illustrate how the default, static and fixed to top navbar work. It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
-        <p>To see the difference between static and fixed top navbars, just scroll.</p>
-		<?php
-			include('db_crud.php');
-			$db = new db_connection();
-			/* //createData Prüfung
-			echo "Here we go: " . $db->createData("products", array('productID','name','description'), array('90','Bombenstimmung','Schwabell Wabbel'));
-			*/
-			/*//getData Prüfung
-			foreach($db->getData("products",array("productID","name"), "name='Gaumenball'") as $value){
-				foreach($value as $subvalue){
-					echo "Get get get: " . $subvalue . '<br />';
+	  <div class="row mainrow">
+	    <div class="col-md-3">
+			<h3>Produkte</h3>
+			<ul class="productList">
+			  <?php
+			    include('db_crud.php');
+			    $db = new db_connection();
+				$productList = $db->getData("products",array("id","name"));
+				
+				
+			    foreach($productList as $item){
+				  echo "<li data-id=".$item['id'].">".$item['name']."</li>";
 				}	
-			}*/
-			/*//updateData Prüfung
-			echo $db->updateData("products", "productID", "345","id = 1");
-			*/
-			//deleteData Prüfung
-			//echo $db->deleteData("products", "id=1");
-		?>
-        <p>
-          <a class="btn btn-lg btn-primary" href="../../components/#navbar" role="button">View navbar docs &raquo;</a>
-        </p>
-      </div>
-
+				
+			  ?>
+			</ul>
+	    </div>
+	    <div class="col-md-9">
+		<h1>Ausgew&auml;hlter Artikel</h1>
+		  <p>
+			Artikel Nr.: <a class="displayProductID"></a><br />
+		    Name: <a class="displayName"></a><br />
+			Beschreibung: <a class="displayDescription"></a><br /><br />
+		  </p>
+			<p>
+			  <a class="btn btn-lg btn-primary" href="../../components/#navbar" role="button">View navbar docs &raquo;</a>
+			</p>
+		</div>
+	  </div>
     </div> <!-- /container -->
 
 
@@ -98,5 +100,27 @@
     <script src="../../bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="../../bootstrap-3.3.5-dist/assets/js/ie10-viewport-bug-workaround.js"></script>
+	<!-- Own js files-->
+	<script src="js/products.js"></script>
   </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

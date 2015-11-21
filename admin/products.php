@@ -78,16 +78,24 @@
 			  ?>
 			</ul>
 	    </div>
-	    <div class="col-md-9">
+	    <div class="col-md-9 main-content">
+		<div id="messages"></div>
+		<div class="button_group handleData">
+		  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createProduct">
+			Artikel anlegen
+		  </button>
+		  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateProduct">
+			Artikel &auml;ndern
+		  </button>
+		  <a class="btn btn-primary deleteProduct" role="button">Artikel l&ouml;schen</a>
+		</div> 
 		<h1>Ausgew&auml;hlter Artikel</h1>
 		  <p>
-			Artikel Nr.: <a class="displayProductID"></a><br />
-		    Name: <a class="displayName"></a><br />
-			Beschreibung: <a class="displayDescription"></a><br /><br />
+			Artikel Nr.: <span class="displayProductID"></span><br />
+		    Name: <span class="displayName"></span><br />
+			Beschreibung: <span class="displayDescription"></span><br /><br />
 		  </p>
-			<p>
-			  <a class="btn btn-lg btn-primary" href="../../components/#navbar" role="button">View navbar docs &raquo;</a>
-			</p>
+		  
 		</div>
 	  </div>
     </div> <!-- /container -->
@@ -101,8 +109,62 @@
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="../../bootstrap-3.3.5-dist/assets/js/ie10-viewport-bug-workaround.js"></script>
 	<!-- Own js files-->
+	<script src="js/brotportal.js"></script>
 	<script src="js/products.js"></script>
   </body>
+  
+  <!-- Modals for create and update product -->
+	<div class="modal" id="createProduct" tabindex="-1" role="dialog" aria-labelledby="createProductLabel">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="createProductLabel">Artikel anlegen</h4>
+		  </div>
+		  <div class="modal-body">
+			<form id="createProductForm" method="post" action="ajax/products_create.php">
+				<div class="field">
+					<label for="productid">Artikel Nr.:</label>
+					<input type="text" id="productid" name="productid" required>
+				</div>
+
+				<div class="field">
+					<label for="name">Name:</label>
+					<input type="text" id="name" name="name" required>
+				</div>
+
+				<div class="field">
+					<label for="description">Beschreibung:</label>
+					<textarea id="description" name="description" required></textarea>
+				</div>
+			</form>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
+			<button type="submit" form="createProductForm" class="btn btn-primary createProduct">Artikel speichern</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	
+  <!-- Modal -->
+	<div class="modal" id="updateProduct" tabindex="-1" role="dialog" aria-labelledby="updateProductLabel">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="updateProductLabel">Artikel &auml;ndern</h4>
+		  </div>
+		  <div class="modal-body">
+			...
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
+			<button type="button" class="btn btn-primary updateProduct">&Auml;nderungen speichern</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
 </html>
 
 

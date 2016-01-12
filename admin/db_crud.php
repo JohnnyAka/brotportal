@@ -73,17 +73,19 @@ EOT;
 	function updateData($table_name, $args_names, $args_values, $where_condition){
 		//prepare name-value pairs for query
 		if (is_array($args_names)){
+			$strArgs = "";
+			
 			for($x=0; $x < count($args_names); $x++){
-				$strArgs = $args_names[$x]." = '".$args_values[$x]."', ";
+				$strArgs .= $args_names[$x]." = '".$args_values[$x]."', ";
 			}
-			chop($strArgs, ", ");
+			$strArgs = chop($strArgs, ", ");
 		}
 		else
 		{
 			$strArgs = $args_names." = '".$args_values."'";
 		}
 		//put query
-		$sql = "UPDATE ".$table_name." SET ".$strArgs." WHERE ".$where_condition;
+		$sql = "UPDATE ".$table_name." SET ".$strArgs." WHERE ".$where_condition.";";
 		//execute query
 		if ($this->mysqli->query($sql)=== TRUE) {
 			return "Record updated successfully";

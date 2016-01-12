@@ -15,13 +15,14 @@
     <link href="../../bootstrap-3.3.5-dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="navbar-fixed-top.css" rel="stylesheet">
+	<link href="css/admin.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+	
   </head>
 
   <body>
@@ -42,7 +43,7 @@
           <ul class="nav navbar-nav">
             <li><a href="products.php">Produkte</a></li>
             <li class="active"><a href="users.php">Benutzer</a></li>
-            <li><a href="#orders">Bestellungen</a></li>
+            <li><a href="orders.php">Bestellungen</a></li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Kategorien <span class="caret"></span></a>
               <ul class="dropdown-menu">
@@ -59,26 +60,224 @@
     </nav>
 
     <div class="container">
-
-      <!-- Main component for a primary marketing message or call to action -->
-      <div class="jumbotron">
-        <h1>Navbar example</h1>
-        <p>This example is a quick exercise to illustrate how the default, static and fixed to top navbar work. It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
-        <p>To see the difference between static and fixed top navbars, just scroll.</p>
-        <p>
-          <a class="btn btn-lg btn-primary" href="../../components/#navbar" role="button">View navbar docs &raquo;</a>
-        </p>
-      </div>
-
+	  <div class="row mainrow">
+	    <div class="col-md-3">
+			<h3>Benutzer</h3>
+			<ul class="sidebarList">
+			  <?php
+			    include('db_crud.php');
+			    $db = new db_connection();
+				$sidebarList = $db->getData("users",array("id","name"));
+				
+				
+			    foreach($sidebarList as $item){
+				  echo "<li class='sidelist' data-id=".$item['id'].">".$item['name']."</li>";
+				}	
+				
+			  ?>
+			</ul>
+	    </div>
+	    <div class="col-md-9 main-content">
+		<div id="messages"></div>
+		<div class="button_group handleData">
+		  <button type="button" class="btn btn-primary createUserButton">
+			Benutzer anlegen
+		  </button>
+		  <button type="button" class="btn btn-primary updateUserButton" >
+			Benutzer &auml;ndern
+		  </button>
+		  <button type="button" class="btn btn-primary deleteUserButton" >
+			Benutzer l&ouml;schen
+		  </button>
+		</div> 
+		<h1>Ausgew&auml;hlter Benutzer</h1>
+		  <p>
+			Kunden Nr.: <span class="customerIDDisp"></span><br />
+		    Name: <span class="nameDisp"></span><br />
+			Passwort: <span class="passwordDisp"></span><br />
+			Kategorie: <span class="customerCategoryDisp"></span><br />
+			E-Mail Anschrift: <span class="mailAdressToDisp"></span><br />
+			E-Mail-Verteiler: <span class="mailAdressReceiveDisp"></span><br />
+			Telefon Laden: <span class="telephone1Disp"></span><br />
+			Telefon Ansprechpartner: <span class="telephone2Disp"></span><br />
+			Fax: <span class="faxDisp"></span><br />
+			Lieferadresse: <span class="storeAdressDisp"></span><br />
+			Lieferdetails: <span class="whereToPutOrderDisp"></span><br />
+		  </p>
+		</div>
+	  </div>
     </div> <!-- /container -->
 
 
-    <!-- Bootstrap core JavaScript
+  </body>
+  
+  <!-- Modals for create and update user -->
+	<div class="modal" id="createUser" tabindex="-1" role="dialog" aria-labelledby="createUserLabel">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="createUserLabel">Benutzer anlegen</h4>
+		  </div>
+		  <div class="modal-body">
+			<form id="createUserForm" method="post" action="ajax/users_create.php">
+				<div class="field">
+					<label for="customerid">Kunden Nr.:</label>
+					<input type="text" id="customerid" name="customerid" required>
+				</div>
+				<div class="field">
+					<label for="name">Name:</label>
+					<input type="text" id="name" name="name" required>
+				</div>
+				<div class="field">
+					<label for="password">Passwort:</label>
+					<input type="password" id="password" name="password">
+				</div>
+				<div class="field">
+					<label for="customerCategory">Kunden-Kategorie:</label>
+					<select id="customerCategory" name="customerCategory">
+						<option value="Langbrot">Baustelle: Hier Kategorie einfügen</option>
+						<option value="Kurzbrot">Auch update nicht vergessen</option>
+						<option value="Breitbrot">Breitbrot</option>
+						<option value="Bastardbrot">Bastardbrot</option>
+					</select>
+				</div>
+				<div class="field">
+					<label for="mailAdressTo">E-Mail Adresse:</label>
+					<input type="email" id="mailAdressTo" name="mailAdressTo">
+				</div>
+				<div class="field">
+					<label for="mailAdressReceive">E-Mail Adresse (Verteiler):</label>
+					<input type="email" id="mailAdressReceive" name="mailAdressReceive">
+				</div>
+				<div class="field">
+					<label for="telephone1">Telefon (Laden):</label>
+					<input type="tel" id="telephone1" name="telephone1">
+				</div>
+				<div class="field">
+					<label for="telephone2">Telefon (Zuständiger):</label>
+					<input type="tel" id="telephone2" name="telephone2">
+				</div>
+				<div class="field">
+					<label for="fax">Fax:</label>
+					<input type="tel" id="fax" name="fax">
+				</div>
+				<div class="field">
+					<label for="storeAdress">Lieferadresse:</label>
+					<textarea type="text" id="storeAdress" name="storeAdress"></textarea>
+				</div>
+				<div class="field">
+					<label for="whereToPutOrder">Lieferdetails:</label>
+					<textarea id="whereToPutOrder" name="whereToPutOrder"></textarea>
+				</div>
+			</form>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
+			<button type="submit" form="createUserForm" class="btn btn-primary createUser">Benutzer speichern</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	
+  <!-- Modal -->
+	<div class="modal" id="updateUser" tabindex="-1" role="dialog" aria-labelledby="updateUserLabel">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="updateUserLabel">Benutzer &auml;ndern</h4>
+		  </div>
+		  <div class="modal-body">
+			<form id="updateUserForm" method="post" action="ajax/users_update.php">
+				<div class="field">
+					<label for="customeridUp">Kunden Nr.:</label>
+					<input type="text" id="customeridUp" name="customerid" required>
+				</div>
+				<div class="field">
+					<input type="hidden" id="idUp" name="id">
+				</div>
+				<div class="field">
+					<label for="nameUp">Name:</label>
+					<input type="text" id="nameUp" name="name">
+				</div>
+				<div class="field">
+					<label for="passwordUp">Passwort:</label>
+					<input type="password" id="passwordUp" name="password">
+				</div>
+				<div class="field">
+					<label for="customerCategoryUp">Kunden-Kategorie:</label>
+					<select id="customerCategoryUp" name="customerCategory">
+						<option value="Langbrot">Baustelle: Hier Kategorie einfügen</option>
+						<option value="Kurzbrot">Auch update nicht vergessen</option>
+						<option value="Breitbrot">Breitbrot</option>
+						<option value="Bastardbrot">Bastardbrot</option>
+					</select>
+				</div>
+				<div class="field">
+					<label for="mailAdressToUp">E-Mail Adresse:</label>
+					<input type="email" id="mailAdressToUp" name="mailAdressTo">
+				</div>
+				<div class="field">
+					<label for="mailAdressReceiveUp">E-Mail Adresse (Verteiler):</label>
+					<input type="email" id="mailAdressReceiveUp" name="mailAdressReceive">
+				</div>
+				<div class="field">
+					<label for="telephone1Up">Telefon (Laden):</label>
+					<input type="tel" id="telephone1Up" name="telephone1">
+				</div>
+				<div class="field">
+					<label for="telephone2Up">Telefon (Zuständiger):</label>
+					<input type="tel" id="telephone2Up" name="telephone2">
+				</div>
+				<div class="field">
+					<label for="faxUp">Fax:</label>
+					<input type="tel" id="faxUp" name="fax">
+				</div>
+				<div class="field">
+					<label for="storeAdressUp">Lieferadresse:</label>
+					<textarea id="storeAdressUp" name="storeAdress"></textarea>
+				</div>
+				<div class="field">
+					<label for="whereToPutOrderUp">Lieferdetails:</label>
+					<textarea id="whereToPutOrderUp" name="whereToPutOrder"></textarea>
+				</div>
+			</form>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
+			<button type="submit" form="updateUserForm" class="btn btn-primary updateUser">&Auml;nderungen speichern</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	
+	<!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="../../bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../../bootstrap-3.3.5-dist/assets/js/ie10-viewport-bug-workaround.js"></script>
-  </body>
+	<!-- Own js files-->
+	<script src="js/brotportal.js"></script>
+	<script src="js/users.js"></script>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

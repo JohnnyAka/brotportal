@@ -1,0 +1,17 @@
+
+.mainrow{
+	padding-top: 60px;
+}
+
+.sidebarList{
+	list-style-type: none;
+}
+
+li.active{
+	background-color: #e7e7e7;
+}
+
+#messages{
+float: right;
+
+}

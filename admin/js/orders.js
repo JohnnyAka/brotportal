@@ -1,9 +1,37 @@
 /*This file contains event handlers for click events and form-submit events*/
 
-//create product form submit
+//create product list(dictionary) for name and backcontrol id retrieval
+$(function() {
+	// Get the messages div.
+	var messages = $('#messages');
+
+	// Submit the form using AJAX.
+	$.ajax({
+		type: 'POST',
+		url: 'ajax/orders_read_products.php'
+	}).done(function(response) {
+		productsData = JSON.parse(response);
+			//set Item List
+			productsIdDict = new Object();
+			productsNameDict = new Object();
+			for(var x=0; x < productsData.length; x++){
+				productsIdDict[productsData[x].id] = productsData[x].productID;
+				productsNameDict[productsData[x].id] = productsData[x].name;
+			}
+	}).fail(function(data) {
+		// Set the message text.
+		if (data.responseText !== '') {
+			$(messages).text(data.responseText);
+		} else {
+			$(messages).text('Fehler, Artikelnamensliste konnte nicht erstellt werden.');
+		}
+	});
+});
+
+//create order form submit
 $(function() {
     // Get the form.
-    var form = $('#createProductForm');
+    var form = $('#createOrderForm');
 
     // Get the messages div.
     var messages = $('#messages');
@@ -26,30 +54,27 @@ $(function() {
 			// Set the message text.
 			$(messages).text(response);
 
-			// Clear the form.
-			$('#productid').val('');
-			$('#name').val('');
-			$('#productCategory').val('');
-			$('#visibleForUser').val('');
-			$('#description').val('');
-			$('#imagePath').val('');
-			$('#ingredients').val('');
-			$('#allergens').val('');
-			$('#weight').val('');
-			$('#preBakeExp').val('');
-			$('#featureExp').val('');
-			
 			//close modal
-			$("#createProduct").modal("hide");
+			$("#createOrder").modal("hide");
 			//reload page to show new article
-			location.reload(); 
+			//location.reload(); 
 		}).fail(function(data) {
+			$('#idProduct').empty();
 			// Set the message text.
 			if (data.responseText !== '') {
 				$(messages).text(data.responseText);
 			} else {
 				$(messages).text('Fehler, Artikel konnte nicht erstellt werden.');
 			}
+		}).always(function(data){
+			// Clear the form.
+			$('#idProduct').empty();
+			$('#number').val('');
+			$('#hook').val('');
+			$('#noteDelivery').val('');
+			$('#noteBaking').val('');
+			$('#idCustomer').val('');
+			$('#orderDate').val('');
 		});
 	});
 });
@@ -95,8 +120,9 @@ $(function() {
 			
 			//close modal
 			$("#updateProduct").modal("hide");
-			//reload page to show new article
-			location.reload(); 
+			
+			//reload datepicker
+			$('#datepicker').onClose();
 		}).fail(function(data) {
 
 			// Set the message text.
@@ -109,42 +135,99 @@ $(function() {
 	});
 });
 
+//datepicker setup including onclose ajax orderlist load function
+$(function() {
+	$( "#datepicker" ).datepicker($.datepicker.regional[ "de" ]);
+	$( "#datepicker" ).datepicker( "option", "dateFormat", "dd.mm.yy" );
+	$( "#datepicker" ).datepicker( "setDate", "+1" );
+	$( "#datepicker" ).datepicker( "option", "minDate", "-1" );
+	$( "#datepicker" ).datepicker( "option", "onClose", function(selectedDate, picker){
+		//reset list
+		$('ul.orderList').empty();
+		//check dateinput and send ajax request
+		var regExp = /\d\d.\d\d.\d\d\d\d/;
+		if(regExp.test(selectedDate)){
+			var customer = $("li.active.sidelist");
+			var customerID = customer.data('id');
+			if(customerID == null){
+				alert("Es ist kein Kunde ausgewählt.");
+				return;
+			}
+			$.ajax({
+				type: 'POST',
+				url: 'ajax/orders_read.php',
+				data: {
+					id:customerID,
+					date:selectedDate
+				}
+			}).done(function(response){
+				var ordersData = JSON.parse(response);
+				//set Item List
+				for(var x=0; x < ordersData.length; x++){
+					$('ul.orderList').append("<li class='orderListItem'>Artikelnummer: "+productsIdDict[ordersData[x].idProduct]+" | Name: "+productsNameDict[ordersData[x].idProduct]+" | Anzahl: "+ordersData[x].number+"</li>");
+				}
+			}).fail(function(data){
+				// Set the message text.
+				if (data.responseText !== '') {
+					$(messages).text(data.responseText);
+				} else {
+					$(messages).text('Fehler, Bestellung konnte nicht geladen werden.');
+				}
+			});
+		}
+		else{
+			alert("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
+		}
+	});
+});
+//baustelle!!!!
+function populateOrders
 			
 //main function for click event handlers
 var main = function(){
 
+	
 	// click-event to retrieve data-id and alert
 	$('ul.sidebarList li').click(function() {
 		$('ul.sidebarList li').removeClass("active");
 		$(this).addClass("active");
+	});
+	
+	
+	
+	$('.createOrderButton').click(function(){
+	//get customerID
+		var customer = $("li.active.sidelist");
+		var customerID = customer.data('id');
+		if(customerID == null){
+			alert("Es ist kein Kunde ausgewählt.");
+			return;
+		}
+		//set hidden formfields
+		$('#idCustomer').val(customerID);
+		var dateSelected = $("#datepicker").datepicker("getDate");
+		$('#orderDate').val(dateSelected.getFullYear()+"-"+(dateSelected.getMonth()+1)+"-"+dateSelected.getDate());
 		
-		//ajax call for product data
-		$.post("ajax/products_read.php", {id:$(this).data('id')}, function(response, status){
-			var productData = JSON.parse(response);
-			
-			$(".displayProductID").text(productData[0]["productID"]);
-			$(".displayName").text(productData[0]["name"]);
-			$(".displayDescription").text(productData[0]["description"]);
-			$(".displayVisibleForUser").text(productData[0]["visibleForUser"]);
-			$(".displayProductCategory").text(productData[0]["productCategory"]);
-			$(".displayImagePath").text(productData[0]["imagePath"]);
-			$(".displayIngredients").text(productData[0]["ingredients"]);
-			$(".displayAllergens").text(productData[0]["allergens"]);
-			$(".displayWeight").text(productData[0]["weight"]);
-			$(".displayPreBakeExp").text(productData[0]["preBakeExp"]);
-			$(".displayFeatureExp").text(productData[0]["featureExp"]);
-		});
-
+		//set product options of select
+		var idProductSelect = $('#idProduct');
+		
+		
+		
+		for (var key in productsNameDict) {
+				if (key === 'length' || !productsIdDict.hasOwnProperty(key)){ 
+					continue;
+				}
+				$('#idProduct').append($('<option>', {
+					value: key,
+					text: productsNameDict[key]
+				}));
+				
+		}
+		
+		$("#createOrder").modal("show");
 	});
 	
-	
-	
-	$('.createProductButton').click(function(){
-		//$.post('server.php', $('#theForm').serialize());
-		$("#createProduct").modal("show");
-	});
-	
-	$('.updateProductButton').click(function(){
+	$('.updateOrderButton').click(function(){
 		var item = $("li.active.sidelist");
 		if (item.length){
 			// Get the messages div.

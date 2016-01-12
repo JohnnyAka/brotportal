@@ -35,6 +35,17 @@ $(function() {
 
     // Get the messages div.
     var messages = $('#messages');
+		
+	//clear formfields after modal close (event)
+	$('#createOrder').on('hidden.bs.modal', function () {
+		$('#idProduct').empty();
+		$('#number').val('');
+		$('#hook').val('');
+		$('#noteDelivery').val('');
+		$('#noteBaking').val('');
+		$('#idCustomer').val('');
+		$('#orderDate').val('');
+	})
 
 	// Set up an event listener for the createProduct form.
 	$(form).submit(function(event) {
@@ -66,26 +77,22 @@ $(function() {
 			} else {
 				$(messages).text('Fehler, Artikel konnte nicht erstellt werden.');
 			}
-		}).always(function(data){
-			// Clear the form.
-			$('#idProduct').empty();
-			$('#number').val('');
-			$('#hook').val('');
-			$('#noteDelivery').val('');
-			$('#noteBaking').val('');
-			$('#idCustomer').val('');
-			$('#orderDate').val('');
 		});
 	});
 });
 
-//update product form submit
+//update order form submit
 $(function() {
-    // Get the form.
-    var form = $('#updateProductForm');
+	// Get the form.
+	var form = $('#updateOrderForm');
 
-    // Get the messages div.
-    var messages = $('#messages');
+	// Get the messages div.
+	var messages = $('#messages');
+	
+	//clear formfields after modal close (event)
+	$('#updateOrder').on('hidden.bs.modal', function () {
+		$('#idProductUp').empty();
+	})
 
 	// Set up an event listener for the updateProduct form.
 	$(form).submit(function(event) {
@@ -104,25 +111,12 @@ $(function() {
 
 			// Set the message text.
 			$(messages).text(response);
-
-			// Clear the form.
-			$('#productidUp').val('');
-			$('#nameUp').val('');
-			$('#productCategoryUp').val('');
-			$('#visibleForUserUp').val('');
-			$('#descriptionUp').val('');
-			$('#imagePathUp').val('');
-			$('#ingredientsUp').val('');
-			$('#allergensUp').val('');
-			$('#weightUp').val('');
-			$('#preBakeExpUp').val('');
-			$('#featureExpUp').val('');
 			
 			//close modal
-			$("#updateProduct").modal("hide");
+			$("#updateOrder").modal("hide");
 			
 			//reload datepicker
-			$('#datepicker').onClose();
+			//$('#datepicker').onClose();
 		}).fail(function(data) {
 
 			// Set the message text.
@@ -218,8 +212,6 @@ var main = function(){
 		$('#orderDate').val(dateSelected.getFullYear()+"-"+(dateSelected.getMonth()+1)+"-"+dateSelected.getDate());
 		
 		//set product options of select
-		var idProductSelect = $('#idProduct');
-		
 		for (var key in productsNameDict) {
 				if (key === 'length' || !productsIdDict.hasOwnProperty(key)){ 
 					continue;
@@ -235,64 +227,74 @@ var main = function(){
 	
 	$('.updateOrderButton').click(function(){
 		var item = $("li.activeOrder");
-		//item.idproduct item.orderhook
 		if (item.length){
 			// Get the messages div.
 			var messages = $('#messages');
 			
 			//get values of item from db
-			
-			var itemID = item.data('productid');
+			var productID = item.data('idproduct');
 			var itemHook = item.data('orderhook');
 			var selectedCustomer = $('li.active.sidelist').data('id');
 			var selectedDate = $( "#datepicker" ).datepicker().val();
-	//check dateinput and send ajax request
-	var regExp = /\d\d.\d\d.\d\d\d\d/;
-	if(regExp.test(selectedDate)){
-		$.ajax({
-				type: 'POST',
-				url: 'ajax/orders_single_read.php',
-				data: {
-					itemId:itemID,
-					orderHook:itemHook,
-					customer:selectedCustomer,
-					date:selectedDate
-				}
-			}).done(function(response){
-				var productData = JSON.parse(response);
-				//set values of form
-				$('#productidUp').val(productData[0]["productID"]);
-				$('#nameUp').val(productData[0]["name"]);
-				$('#descriptionUp').val(productData[0]["description"]);
-				$('#idUp').val(productData[0]["id"]);
-				//Boolean() doesnt seem to work
-				var visForU = productData[0]["visibleForUser"];
-				if (visForU != 0){visForU = true}
-				else{visForU = false}
-				$('#visibleForUserUp').prop('checked', visForU);
-				$('#productCategoryUp').val(productData[0]["productCategory"]);
-				$('#imagePathUp').val(productData[0]["imagePath"]);
-				$('#ingredientsUp').val(productData[0]["ingredients"]);
-				$('#allergensUp').val(productData[0]["allergens"]);
-				$('#weightUp').val(productData[0]["weight"]);
-				$('#preBakeExpUp').val(productData[0]["preBakeExp"]);
-				$('#featureExpUp').val(productData[0]["featureExp"]);
+			//check dateinput and send ajax request
+			var regExp = /\d\d.\d\d.\d\d\d\d/;
+			if(regExp.test(selectedDate)){
+				$.ajax({
+					type: 'POST',
+					url: 'ajax/orders_single_read.php',
+					data: {
+						productId:productID,
+						orderHook:itemHook,
+						customer:selectedCustomer,
+						date:selectedDate
+					}
+				}).done(function(response){
+					var productData = JSON.parse(response);
+					//set values of form
+					$('#numberUp').val(productData[0]["number"]);
+					$('#hookUp').val(productData[0]["hook"]);
+					//Boolean() doesnt seem to work
+					var important = productData[0]["important"];
+					if (important != 0){important = true}
+					else{important = false}
+					$('#importantUp').prop('checked', important);
+					$('#noteDeliveryUp').val(productData[0]["noteDelivery"]);
+					$('#noteBakingUp').val(productData[0]["noteBaking"]);
+					
+					//set hidden formfields
+					$('#idCustomerUp').val(selectedCustomer);
+					var dateSelected = $("#datepicker").datepicker("getDate");
+					$('#orderDateUp').val(dateSelected.getFullYear()+"-"+(dateSelected.getMonth()+1)+"-"+dateSelected.getDate());
+					
+					//set product options of select
+					for (var key in productsNameDict) {
+						if (key === 'length' || !productsIdDict.hasOwnProperty(key)){ 
+							continue;
+						}
+						$('#idProductUp').append($('<option>', {
+							value: key,
+							text: productsNameDict[key]
+						}));
+						if(productID==key){
+							$('#idProductUp option:last').attr('selected', 'selected');
+						}
+					}
 				
-				//show modal
-				$("#updateProduct").modal("show");
-			}).fail(function(data){
-				// Set the message text.
-				if (data.responseText !== '') {
-					$(messages).text(data.responseText);
-				} else {
-					$(messages).text('Fehler, Artikel konnte nicht geändert werden.');
-				}
-			});
-	}
-	else{
-		alert("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
-	}
-			
+					//show modal
+					$("#updateOrder").modal("show");
+				}).fail(function(data){
+					// Set the message text.
+					if (data.responseText !== '') {
+						$(messages).text(data.responseText);
+					} else {
+						$(messages).text('Fehler, Bestellung konnte nicht geändert werden.');
+					}
+				});
+			}
+			else{
+				alert("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
+			}
+				
 		}
 		else{
 			alert("Keine Bestellung ausgewählt");

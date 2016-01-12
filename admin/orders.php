@@ -181,6 +181,7 @@
 		  <div class="modal-body">
 			<form id="updateOrderForm" method="post" action="ajax/orders_update.php">
 				<div class="field">
+					<label for="idProductUp">Artikel:</label>
 					<select id="idProductUp" name="idProduct" required>
 					</select>
 				</div>
@@ -191,7 +192,7 @@
 				<div class="field">
 					<label for="hook">Haken:</label>
 					<select id="hookUp" name="hook" required>
-						<option value="1" >Lieferung 1</option>
+						<option value="1">Lieferung 1</option>
 						<option value="2">Lieferung 2</option>
 						<option value="3">Lieferung 3</option>
 						<option value="4">Extra</option>

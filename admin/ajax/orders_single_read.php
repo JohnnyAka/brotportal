@@ -8,7 +8,7 @@ $year = strtok(".");
 $orderDate = $year."-".$month."-".$day;
 
 $db = new db_connection();
-$data = $db->getData("orders", array('idProduct','idCustomer','orderDate','number','hook','important','noteBaking','noteDelivery'), "idProduct=".$_POST["itemId"]." AND hook=".$_POST["orderHook"]." AND idCustomer=".$_POST["customer"]." AND orderDate='".$orderDate."'");
+$data = $db->getData("orders", array('idProduct','idCustomer','orderDate','number','hook','important','noteBaking','noteDelivery'), "idProduct=".$_POST["productId"]." AND hook=".$_POST["orderHook"]." AND idCustomer=".$_POST["customer"]." AND orderDate='".$orderDate."'");
 
 $jsonData = json_encode($data);
 echo $jsonData;

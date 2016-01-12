@@ -86,6 +86,7 @@ EOT;
 		}
 		//put query
 		$sql = "UPDATE ".$table_name." SET ".$strArgs." WHERE ".$where_condition.";";
+		
 		//execute query
 		if ($this->mysqli->query($sql)=== TRUE) {
 			return "Record updated successfully";

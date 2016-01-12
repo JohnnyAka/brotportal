@@ -1,0 +1,11 @@
+.orderList{
+	list-style-type: none;
+}
+
+li.activeOrder{
+	background-color: #e7e7e7;
+}
+
+.orderListItem{
+	cursor: pointer;
+}

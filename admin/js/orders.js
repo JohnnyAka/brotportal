@@ -56,8 +56,8 @@ $(function() {
 
 			//close modal
 			$("#createOrder").modal("hide");
-			//reload page to show new article
-			//location.reload(); 
+			//show changes
+			showOrders();
 		}).fail(function(data) {
 			$('#idProduct').empty();
 			// Set the message text.
@@ -142,63 +142,72 @@ $(function() {
 	$( "#datepicker" ).datepicker( "setDate", "+1" );
 	$( "#datepicker" ).datepicker( "option", "minDate", "-1" );
 	$( "#datepicker" ).datepicker( "option", "onClose", function(selectedDate, picker){
-		//reset list
-		$('ul.orderList').empty();
-		//check dateinput and send ajax request
-		var regExp = /\d\d.\d\d.\d\d\d\d/;
-		if(regExp.test(selectedDate)){
-			var customer = $("li.active.sidelist");
-			var customerID = customer.data('id');
-			if(customerID == null){
-				alert("Es ist kein Kunde ausgewählt.");
-				return;
-			}
-			$.ajax({
-				type: 'POST',
-				url: 'ajax/orders_read.php',
-				data: {
-					id:customerID,
-					date:selectedDate
-				}
-			}).done(function(response){
-				var ordersData = JSON.parse(response);
-				//set Item List
-				for(var x=0; x < ordersData.length; x++){
-					$('ul.orderList').append("<li class='orderListItem'>Artikelnummer: "+productsIdDict[ordersData[x].idProduct]+" | Name: "+productsNameDict[ordersData[x].idProduct]+" | Anzahl: "+ordersData[x].number+"</li>");
-				}
-			}).fail(function(data){
-				// Set the message text.
-				if (data.responseText !== '') {
-					$(messages).text(data.responseText);
-				} else {
-					$(messages).text('Fehler, Bestellung konnte nicht geladen werden.');
-				}
-			});
-		}
-		else{
-			alert("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
-		}
+		showOrders();
 	});
 });
-//baustelle!!!!
-function populateOrders
+
+//displays orders of selected date and customer
+var showOrders = function populateOrders(){
+	var selectedDate = $( "#datepicker" ).datepicker().val();
+	//reset list
+	$('ul.orderList').empty();
+	//check dateinput and send ajax request
+	var regExp = /\d\d.\d\d.\d\d\d\d/;
+	if(regExp.test(selectedDate)){
+		var customer = $("li.active.sidelist");
+		var customerID = customer.data('id');
+		if(customerID == null){
+			alert("Es ist kein Kunde ausgewählt.");
+			return;
+		}
+		$.ajax({
+			type: 'POST',
+			url: 'ajax/orders_read.php',
+			data: {
+				id:customerID,
+				date:selectedDate
+			}
+		}).done(function(response){
+			var ordersData = JSON.parse(response);
+			//set Item List
+			for(var x=0; x < ordersData.length; x++){
+				$('ul.orderList').append("<li class='orderListItem' data-idproduct='"+ordersData[x].idProduct+"' data-orderhook='"+ordersData[x].hook+"'>Artikelnummer: "+productsIdDict[ordersData[x].idProduct]+" | Name: "+productsNameDict[ordersData[x].idProduct]+" | Anzahl: "+ordersData[x].number+" | Lieferung: "+ordersData[x].hook+"</li>");
+			}
+		}).fail(function(data){
+			// Set the message text.
+			if (data.responseText !== '') {
+				$(messages).text(data.responseText);
+			} else {
+				$(messages).text('Fehler, Bestellung konnte nicht geladen werden.');
+			}
+		});
+	}
+	else{
+		alert("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
+	}
+};
 			
 //main function for click event handlers
 var main = function(){
 
 	
-	// click-event to retrieve data-id and alert
+	// click-event to retrieve data-id
 	$('ul.sidebarList li').click(function() {
 		$('ul.sidebarList li').removeClass("active");
 		$(this).addClass("active");
+		
+		showOrders();
 	});
-	
-	
+
+	// click-event to pick order row
+	$('ul.orderList').on('click', 'li.orderListItem', function() {
+		$('.orderListItem').removeClass("activeOrder");
+		$(this).addClass("activeOrder");
+	});
 	
 	$('.createOrderButton').click(function(){
 	//get customerID
-		var customer = $("li.active.sidelist");
-		var customerID = customer.data('id');
+		var customerID = $("li.active.sidelist").data('id');
 		if(customerID == null){
 			alert("Es ist kein Kunde ausgewählt.");
 			return;
@@ -211,8 +220,6 @@ var main = function(){
 		//set product options of select
 		var idProductSelect = $('#idProduct');
 		
-		
-		
 		for (var key in productsNameDict) {
 				if (key === 'length' || !productsIdDict.hasOwnProperty(key)){ 
 					continue;
@@ -221,25 +228,35 @@ var main = function(){
 					value: key,
 					text: productsNameDict[key]
 				}));
-				
 		}
 		
 		$("#createOrder").modal("show");
 	});
 	
 	$('.updateOrderButton').click(function(){
-		var item = $("li.active.sidelist");
+		var item = $("li.activeOrder");
+		//item.idproduct item.orderhook
 		if (item.length){
 			// Get the messages div.
 			var messages = $('#messages');
 			
 			//get values of item from db
-			var itemID = item.data('id');
-			$.ajax({
+			
+			var itemID = item.data('productid');
+			var itemHook = item.data('orderhook');
+			var selectedCustomer = $('li.active.sidelist').data('id');
+			var selectedDate = $( "#datepicker" ).datepicker().val();
+	//check dateinput and send ajax request
+	var regExp = /\d\d.\d\d.\d\d\d\d/;
+	if(regExp.test(selectedDate)){
+		$.ajax({
 				type: 'POST',
-				url: 'ajax/products_read.php',
+				url: 'ajax/orders_single_read.php',
 				data: {
-					id:itemID
+					itemId:itemID,
+					orderHook:itemHook,
+					customer:selectedCustomer,
+					date:selectedDate
 				}
 			}).done(function(response){
 				var productData = JSON.parse(response);
@@ -271,9 +288,14 @@ var main = function(){
 					$(messages).text('Fehler, Artikel konnte nicht geändert werden.');
 				}
 			});
+	}
+	else{
+		alert("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
+	}
+			
 		}
 		else{
-			alert("Kein Artikel ausgewählt");
+			alert("Keine Bestellung ausgewählt");
 		}
 	});
 	

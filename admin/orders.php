@@ -81,12 +81,9 @@
 							include('db_crud.php');
 							$db = new db_connection();
 						$sidebarList = $db->getData("users",array("id","name"));
-						
-						
 							foreach($sidebarList as $item){
 							echo "<li class='sidelist' data-id=".$item['id'].">".$item['name']."</li>";
 						}	
-						
 						?>
 					</ul>
 				</div>
@@ -184,59 +181,42 @@
 		  <div class="modal-body">
 			<form id="updateOrderForm" method="post" action="ajax/orders_update.php">
 				<div class="field">
-					<label for="productidUp">Artikel Nr.:</label>
-					<input type="text" id="productidUp" name="productid" required>
-				</div>
-				<div class="field">
-					<label for="nameUp">Name:</label>
-					<input type="text" id="nameUp" name="name" required>
-				</div>
-				<div class="field">
-					<input type="hidden" name="visibleForUser" value="0">
-				</div>
-				<div class="field">
-					<label for="visibleForUserUp">Für Kunden sichtbar:</label>
-					<input type="checkbox" id="visibleForUserUp" name="visibleForUser" value="1">
-				</div>
-				<div class="field">
-					<label for="productCategoryUp">Produkt-Kategorie:</label>
-					<select id="productCategoryUp" name="productCategory" required>
-						<option value="Langbrot">Baustelle: Hier Kategorie einfügen</option>
-						<option value="Kurzbrot">Auch create nicht vergessen</option>
-						<option value="Breitbrot">Breitbrot</option>
-						<option value="Bastardbrot">Bastardbrot</option>
+					<select id="idProductUp" name="idProduct" required>
 					</select>
 				</div>
 				<div class="field">
-					<label for="descriptionUp">Beschreibung:</label>
-					<textarea id="descriptionUp" name="description"></textarea>
+					<label for="number">Anzahl:</label>
+					<input type="number" id="numberUp" name="number">
 				</div>
 				<div class="field">
-					<input type="hidden" id="idUp" name="id">
+					<label for="hook">Haken:</label>
+					<select id="hookUp" name="hook" required>
+						<option value="1" >Lieferung 1</option>
+						<option value="2">Lieferung 2</option>
+						<option value="3">Lieferung 3</option>
+						<option value="4">Extra</option>
+					</select>
 				</div>
 				<div class="field">
-					<label for="imagePathUp">Bild-Pfad:</label>
-					<input type="text" id="imagePathUp" name="imagePath">
+					<input type="hidden" name="important" value="0">
 				</div>
 				<div class="field">
-					<label for="ingredientsUp">Inhaltsstoffe:</label>
-					<textarea id="ingredientsUp" name="ingredients"></textarea>
+					<label for="important">Wichtig:</label>
+					<input type="checkbox" id="importantUp" name="important" value="1">
 				</div>
 				<div class="field">
-					<label for="allergensUp">Allergene:</label>
-					<textarea id="allergensUp" name="allergens"></textarea>
+					<label for="noteDelivery">Notiz (Lieferschein):</label>
+					<textarea id="noteDeliveryUp" name="noteDelivery"></textarea>
 				</div>
 				<div class="field">
-					<label for="weightUp">Gewicht:</label>
-					<input type="text" id="weightUp" name="weight">
+					<label for="noteBaking">Notiz (Backzettel):</label>
+					<textarea id="noteBakingUp" name="noteBaking"></textarea>
 				</div>
 				<div class="field">
-					<label for="preBakeExpUp">Tage vorher Backen:</label>
-					<input type="number" id="preBakeExpUp" name="preBakeExp">
+					<input type="hidden" id="idCustomerUp" name="idCustomer">
 				</div>
 				<div class="field">
-					<label for="featureExpUp">Besonderheiten (Pre-Notifikation):</label>
-					<textarea id="featureExpUp" name="featureExp"></textarea>
+					<input type="hidden" id="orderDateUp" name="orderDate">
 				</div>
 			</form>
 		  </div>

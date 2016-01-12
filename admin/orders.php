@@ -131,7 +131,7 @@
 					<input type="number" id="number" name="number">
 				</div>
 				<div class="field">
-					<label for="hook">Haken:</label>
+					<label for="hook">Lieferung:</label>
 					<select id="hook" name="hook" required>
 						<option value="1" >Lieferung 1</option>
 						<option value="2">Lieferung 2</option>
@@ -182,21 +182,15 @@
 			<form id="updateOrderForm" method="post" action="ajax/orders_update.php">
 				<div class="field">
 					<label for="idProductUp">Artikel:</label>
-					<select id="idProductUp" name="idProduct" required>
-					</select>
+					<input id="idProductUp" name="idProduct" disabled="disabled">
 				</div>
 				<div class="field">
 					<label for="number">Anzahl:</label>
 					<input type="number" id="numberUp" name="number">
 				</div>
 				<div class="field">
-					<label for="hook">Haken:</label>
-					<select id="hookUp" name="hook" required>
-						<option value="1">Lieferung 1</option>
-						<option value="2">Lieferung 2</option>
-						<option value="3">Lieferung 3</option>
-						<option value="4">Extra</option>
-					</select>
+					<label for="hook">Lieferung:</label>
+					<input id="hookUp" name="hook" disabled="disabled">
 				</div>
 				<div class="field">
 					<input type="hidden" name="important" value="0">

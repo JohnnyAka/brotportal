@@ -251,6 +251,7 @@ var main = function(){
 				}).done(function(response){
 					var productData = JSON.parse(response);
 					//set values of form
+					$('#idProductUp').val(productsNameDict[productID]);
 					$('#numberUp').val(productData[0]["number"]);
 					$('#hookUp').val(productData[0]["hook"]);
 					//Boolean() doesnt seem to work
@@ -266,19 +267,7 @@ var main = function(){
 					var dateSelected = $("#datepicker").datepicker("getDate");
 					$('#orderDateUp').val(dateSelected.getFullYear()+"-"+(dateSelected.getMonth()+1)+"-"+dateSelected.getDate());
 					
-					//set product options of select
-					for (var key in productsNameDict) {
-						if (key === 'length' || !productsIdDict.hasOwnProperty(key)){ 
-							continue;
-						}
-						$('#idProductUp').append($('<option>', {
-							value: key,
-							text: productsNameDict[key]
-						}));
-						if(productID==key){
-							$('#idProductUp option:last').attr('selected', 'selected');
-						}
-					}
+					
 				
 					//show modal
 					$("#updateOrder").modal("show");

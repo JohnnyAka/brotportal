@@ -8,10 +8,8 @@ $year = strtok(".");
 $orderDate = $year."-".$month."-".$day;
 
 $db = new db_connection();
-$data = $db->getData("orders", array('idProduct','idCustomer','orderDate','number','hook','important','noteBaking','noteDelivery'), 
+$result = $db->deleteData("orders", 
 "idProduct=".$_POST["productId"]." AND hook=".$_POST["orderHook"]." AND idCustomer=".$_POST["customer"]." AND orderDate='".$orderDate."'");
 
-$jsonData = json_encode($data);
-echo $jsonData;
+echo $result;
 ?>
-

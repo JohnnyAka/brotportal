@@ -96,7 +96,7 @@
 		    Name: <span class="nameDisp"></span><br />
 			Passwort: <span class="passwordDisp"></span><br />
 			Kategorie: <span class="customerCategoryDisp"></span><br />
-			E-Mail Anschrift: <span class="mailAdressToDisp"></span><br />
+			E-Mail: <span class="mailAdressToDisp"></span><br />
 			E-Mail-Verteiler: <span class="mailAdressReceiveDisp"></span><br />
 			Telefon Laden: <span class="telephone1Disp"></span><br />
 			Telefon Ansprechpartner: <span class="telephone2Disp"></span><br />

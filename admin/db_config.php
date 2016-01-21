@@ -32,6 +32,12 @@ $sql = "DROP TABLE users;";
 $conn->query($sql);
 $sql = "DROP TABLE orders;";
 $conn->query($sql);
+$sql = "DROP TABLE productCategories;";
+$conn->query($sql);
+$sql = "DROP TABLE userCategories;";
+$conn->query($sql);
+$sql = "DROP TABLE categoryRelations;";
+$conn->query($sql);
 
 
 $sql = "CREATE TABLE products (
@@ -89,6 +95,36 @@ PRIMARY KEY(idProduct, idCustomer, orderDate, hook)
 
 if ($conn->query($sql) === TRUE) {
     echo "Table orders created successfully<br>";
+} else {
+    echo "Error creating database: " . $conn->error."<br>";
+}
+
+$sql = "CREATE TABLE productCategories(
+id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR (60)
+)";
+if ($conn->query($sql) === TRUE) {
+    echo "Table productCategories created successfully<br>";
+} else {
+    echo "Error creating database: " . $conn->error."<br>";
+}
+
+$sql = "CREATE TABLE userCategories(
+id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR (60)
+)";
+if ($conn->query($sql) === TRUE) {
+    echo "Table userCategories created successfully<br>";
+} else {
+    echo "Error creating database: " . $conn->error."<br>";
+}
+
+$sql = "CREATE TABLE categoryRelations(
+idUserCat INT(6) UNSIGNED,
+idProductCat INT(6) UNSIGNED
+)";
+if ($conn->query($sql) === TRUE) {
+    echo "Table categoryRelations created successfully<br>";
 } else {
     echo "Error creating database: " . $conn->error."<br>";
 }

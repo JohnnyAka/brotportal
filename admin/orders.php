@@ -54,19 +54,12 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Kategorien <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="#">Kunden</a></li>
-                <li><a href="#">Produkte</a></li>
-				<!--<li role="separator" class="divider"></li>
-                <li><a href="#">Kunden - Produkte</a></li>-->
+                <li><a href="categories_products.php">Produkte</a></li>
+								<li role="separator" class="divider"></li>
+                <li><a href="#">Kunden - Produkte</a></li>
               </ul>
             </li>
-			<li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Sichtbarkeiten <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="#">Kategorien</a></li>
-                <li><a href="#">Einzelzuordnung</a></li>
-              </ul>
-            </li>
-			<li><a href="#account">Konto</a></li>
+						<li><a href="#account">Konto</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -181,16 +174,16 @@
 		  <div class="modal-body">
 			<form id="updateOrderForm" method="post" action="ajax/orders_update.php">
 				<div class="field">
-					<label for="idProductUp">Artikel:</label>
-					<input id="idProductUp" name="idProduct" disabled="disabled">
+					<label for="nameProductUp">Artikel:</label>
+					<input id="nameProductUp" name="nameProduct" disabled="disabled">
+				</div>
+				<div class="field">
+					<label for="delivery">Lieferung:</label>
+					<input id="deliveryUp" name="delivery" disabled="disabled">
 				</div>
 				<div class="field">
 					<label for="number">Anzahl:</label>
 					<input type="number" id="numberUp" name="number">
-				</div>
-				<div class="field">
-					<label for="hook">Lieferung:</label>
-					<input id="hookUp" name="hook" disabled="disabled">
 				</div>
 				<div class="field">
 					<input type="hidden" name="important" value="0">
@@ -208,7 +201,13 @@
 					<textarea id="noteBakingUp" name="noteBaking"></textarea>
 				</div>
 				<div class="field">
+					<input type="hidden" id="idProductUp" name="idProduct" >
+				</div>
+				<div class="field">
 					<input type="hidden" id="idCustomerUp" name="idCustomer">
+				</div>
+				<div class="field">
+					<input id="hookUp" name="hook">
 				</div>
 				<div class="field">
 					<input type="hidden" id="orderDateUp" name="orderDate">

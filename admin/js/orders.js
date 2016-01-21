@@ -114,7 +114,8 @@ $(function() {
 			
 			//close modal
 			$("#updateOrder").modal("hide");
-			
+			//display changes
+			showOrders();
 			//reload datepicker
 			//$('#datepicker').onClose();
 		}).fail(function(data) {
@@ -251,9 +252,9 @@ var main = function(){
 				}).done(function(response){
 					var productData = JSON.parse(response);
 					//set values of form
-					$('#idProductUp').val(productsNameDict[productID]);
+					$('#nameProductUp').val(productsNameDict[productID]);
 					$('#numberUp').val(productData[0]["number"]);
-					$('#hookUp').val(productData[0]["hook"]);
+					$('#deliveryUp').val(productData[0]["hook"]);
 					//Boolean() doesnt seem to work
 					var important = productData[0]["important"];
 					if (important != 0){important = true}
@@ -261,6 +262,8 @@ var main = function(){
 					$('#importantUp').prop('checked', important);
 					$('#noteDeliveryUp').val(productData[0]["noteDelivery"]);
 					$('#noteBakingUp').val(productData[0]["noteBaking"]);
+					$('#idProductUp').val(productID);
+					$('#hookUp').val(productData[0]["hook"]);
 					
 					//set hidden formfields
 					$('#idCustomerUp').val(selectedCustomer);
@@ -290,33 +293,47 @@ var main = function(){
 		}
 	});
 	
-	$('.deleteProductButton').click(function(){
-		var messages = $('#messages');
-		
-		var item = $("li.active.sidelist");
-		var itemID = item.data('id');
+	$('.deleteOrderButton').click(function(){
+		var item = $("li.activeOrder");
 		if (item.length){
-			$.ajax({
-				type: 'POST',
-				url: 'ajax/products_delete.php',
-				data: {
-					id:itemID
-				}
-			}).done(function(response){
-				$(".messages").text("Artikel erfolgreich gel&ouml;scht!");
-				//reload page to show new article
-				location.reload(); 
-			}).fail(function(data){
-				// Set the message text.
-				if (data.responseText !== '') {
-					$(messages).text(data.responseText);
-				} else {
-					$(messages).text('Fehler, Artikel konnte nicht gel&ouml;scht werden.');
-				}
-			});
+			// Get the messages div.
+			var messages = $('#messages');
+			
+			//get values of item from db
+			var productID = item.data('idproduct');
+			var itemHook = item.data('orderhook');
+			var selectedCustomer = $('li.active.sidelist').data('id');
+			var selectedDate = $( "#datepicker" ).datepicker().val();
+			//check dateinput and send ajax request
+			var regExp = /\d\d.\d\d.\d\d\d\d/;
+			if(regExp.test(selectedDate)){
+				$.ajax({
+					type: 'POST',
+					url: 'ajax/orders_delete.php',
+					data: {
+						productId:productID,
+						orderHook:itemHook,
+						customer:selectedCustomer,
+						date:selectedDate
+					}
+				}).done(function(response){
+					$(".messages").text("Bestellung erfolgreich gel&ouml;scht!");
+					showOrders();
+				}).fail(function(data){
+					// Set the message text.
+					if (data.responseText !== '') {
+						$(messages).text(data.responseText);
+					} else {
+						$(messages).text('Fehler, Bestellung konnte nicht geändert werden.');
+					}
+				});
+			}
+			else{
+				alert("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
+			}
 		}
 		else{
-			alert("Kein Artikel ausgewählt");
+			alert("Keine Bestellung ausgewählt");
 		}
 	});
 	

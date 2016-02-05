@@ -3,18 +3,18 @@
 //create category form submit
 $(function() {
     // Get the form.
-    var form = $('#createProductCatForm');
+    var form = $('#createUserCatForm');
 
     // Get the messages div.
     var messages = $('#messages');
 		
 	//clear formfields after modal close (event)
-	$('#createProductCat').on('hidden.bs.modal', function () {
-		$('#productCatName').val('');
+	$('#createUserCat').on('hidden.bs.modal', function () {
+		$('#userCatName').val('');
 		$('#catId').val('');
 	})
 
-	// Set up an event listener for the createProduct form.
+	// Set up an event listener for the createUser form.
 	$(form).submit(function(event) {
 		// Stop the browser from submitting the form.
 		event.preventDefault();
@@ -33,7 +33,7 @@ $(function() {
 			$(messages).text(response);
 
 			//close modal
-			$("#createProductCat").modal("hide");
+			$("#createUserCat").modal("hide");
 			//show changes
 			displayCategories();
 		}).fail(function(data) {
@@ -47,20 +47,20 @@ $(function() {
 	});
 });
 
-//update productcat form submit
+//update usercat form submit
 $(function() {
 	// Get the form.
-	var form = $('#updateProductCatForm');
+	var form = $('#updateUserCatForm');
 
 	// Get the messages div.
 	var messages = $('#messages');
 	
 	//clear formfields after modal close (event)
-	$('#updateProductCat').on('hidden.bs.modal', function () {
-		$('#productCatNameUp').val('');
+	$('#updateUserCat').on('hidden.bs.modal', function () {
+		$('#userCatNameUp').val('');
 	})
 
-	// Set up an event listener for the updateProduct form.
+	// Set up an event listener for the updateUser form.
 	$(form).submit(function(event) {
 		// Stop the browser from submitting the form.
 		event.preventDefault();
@@ -77,7 +77,7 @@ $(function() {
 			// Set the message text.
 			$(messages).text(response);
 			//close modal
-			$("#updateProductCat").modal("hide");
+			$("#updateUserCat").modal("hide");
 			//display changes
 			displayCategories();
 		}).fail(function(data) {
@@ -96,7 +96,7 @@ var displayCategories = function(){
 	$('ul.sidebarList').empty();
 	$.ajax({
 		type: 'POST',
-		url: 'ajax/categories_product_read.php'
+		url: 'ajax/categories_user_read.php'
 	}).done(function(response){
 		var categoryData = JSON.parse(response);
 		//set Item List
@@ -107,7 +107,7 @@ var displayCategories = function(){
 		$('ul.sidebarList li').click(function() {
 			$('ul.sidebarList li').removeClass("active");
 			$(this).addClass("active");
-			displayProducts($(this));
+			displayUsers($(this));
 		});
 	}).fail(function(data){
 		// Set the message text.
@@ -119,22 +119,22 @@ var displayCategories = function(){
 	});
 };
 
-//displays products belonging to active category
-var displayProducts = function(category){
+//displays users belonging to active category
+var displayUsers = function(category){
 	//reset list
-	$('ul.productList').empty();
+	$('ul.userList').empty();
 	var categoryID = category.data('idcategory');
 	$.ajax({
 		type: 'POST',
-		url: 'ajax/categories_product_products_read.php',
+		url: 'ajax/categories_user_users_read.php',
 		data: {
 			id:categoryID
 		}
 	}).done(function(response){
-		var productData = JSON.parse(response);
+		var userData = JSON.parse(response);
 		//set Item List
-		for(var x=0; x < productData.length; x++){
-			$('ul.productList').append("<li>"+productData[x].name+"</li>");
+		for(var x=0; x < userData.length; x++){
+			$('ul.userList').append("<li>"+userData[x].name+"</li>");
 		}
 	}).fail(function(data){
 		// Set the message text.
@@ -151,11 +151,11 @@ var main = function(){
 	
 	displayCategories();
 	
-	$('.createProductCatButton').click(function(){
-		$("#createProductCat").modal("show");
+	$('.createUserCatButton').click(function(){
+		$("#createUserCat").modal("show");
 	});
 	
-	$('.updateProductCatButton').click(function(){
+	$('.updateUserCatButton').click(function(){
 		var item = $(".categoryListItem.active");
 		if (item.length){
 			// Get the messages div.
@@ -165,20 +165,20 @@ var main = function(){
 			var selectedCategory = item.data('idcategory');
 			$.ajax({
 				type: 'POST',
-				url: 'ajax/categories_product_single_read.php',
+				url: 'ajax/categories_user_single_read.php',
 				data: {
 					catId:selectedCategory
 				}
 			}).done(function(response){
-				var productData = JSON.parse(response);
+				var userData = JSON.parse(response);
 				//set values of form
-				$('#productCatNameUp').val(productData[0]['name']);
+				$('#userCatNameUp').val(userData[0]['name']);
 				
 				//set hidden formfields
 				$('#catIdUp').val(selectedCategory);
 				
 				//show modal
-				$("#updateProductCat").modal("show");
+				$("#updateUserCat").modal("show");
 			}).fail(function(data){
 				// Set the message text.
 				if (data.responseText !== '') {
@@ -194,7 +194,7 @@ var main = function(){
 		}
 	});
 	
-	$('.deleteProductCatButton').click(function(){
+	$('.deleteUserCatButton').click(function(){
 		var item = $(".categoryListItem.active");
 		if (item.length){
 			// Get the messages div.
@@ -204,7 +204,7 @@ var main = function(){
 			var categoryID = item.data('idcategory');
 			$.ajax({
 				type: 'POST',
-				url: 'ajax/categories_product_delete.php',
+				url: 'ajax/categories_user_delete.php',
 				data: {
 					catId:categoryID
 				}

@@ -53,7 +53,7 @@
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Kategorien <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a href="#">Kunden</a></li>
+                <li><a href="categories_users.php">Kunden</a></li>
                 <li><a href="categories_products.php">Produkte</a></li>
 								<li role="separator" class="divider"></li>
                 <li><a href="#">Kunden - Produkte</a></li>

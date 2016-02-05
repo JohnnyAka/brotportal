@@ -214,7 +214,7 @@ var main = function(){
 		
 		//set product options of select
 		for (var key in productsNameDict) {
-				if (key === 'length' || !productsIdDict.hasOwnProperty(key)){ 
+				if (key === 'length' || !productsNameDict.hasOwnProperty(key)){ 
 					continue;
 				}
 				$('#idProduct').append($('<option>', {

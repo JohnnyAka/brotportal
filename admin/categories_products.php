@@ -69,7 +69,8 @@
 			<div class="row mainrow">
 				<div class="col-md-3">
 					<h3>Produktkategorien</h3>
-					<ul class="sidebarList"></ul>
+					<ul class="sidebarList">
+					</ul>
 				</div>
 				<div class="col-md-9 main-content">
 					<div id="messages"></div>
@@ -84,9 +85,9 @@
 						Produktkategorie l&ouml;schen
 						</button>
 					</div> 
-					<h1>Produktkategorien</h1>
+					<h1>Produkte dieser Kategorie:</h1>
 					<hr>
-					<ul class="categoryList"></ul>
+					<ul class="productList"></ul>
 				</div>
 			</div>
     </div> <!-- /container -->

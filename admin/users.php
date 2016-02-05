@@ -136,10 +136,6 @@
 				<div class="field">
 					<label for="customerCategory">Kunden-Kategorie:</label>
 					<select id="customerCategory" name="customerCategory">
-						<option value="Langbrot">Baustelle: Hier Kategorie einfügen</option>
-						<option value="Kurzbrot">Auch update nicht vergessen</option>
-						<option value="Breitbrot">Breitbrot</option>
-						<option value="Bastardbrot">Bastardbrot</option>
 					</select>
 				</div>
 				<div class="field">
@@ -208,10 +204,6 @@
 				<div class="field">
 					<label for="customerCategoryUp">Kunden-Kategorie:</label>
 					<select id="customerCategoryUp" name="customerCategory">
-						<option value="Langbrot">Baustelle: Hier Kategorie einfügen</option>
-						<option value="Kurzbrot">Auch update nicht vergessen</option>
-						<option value="Breitbrot">Breitbrot</option>
-						<option value="Bastardbrot">Bastardbrot</option>
 					</select>
 				</div>
 				<div class="field">

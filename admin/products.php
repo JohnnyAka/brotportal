@@ -94,7 +94,7 @@
 		<h1>Ausgew&auml;hlter Artikel</h1>
 		  <p>
 			Artikel Nr.: <span class="displayProductID"></span><br />
-		    Name: <span class="displayName"></span><br />
+		  Name: <span class="displayName"></span><br />
 			Veröffentlicht: <span class="displayVisibleForUser"></span><br />
 			Kategorie: <span class="displayProductCategory"></span><br />
 			Beschreibung: <span class="displayDescription"></span><br />
@@ -144,10 +144,6 @@
 				<div class="field">
 					<label for="productCategory">Produkt-Kategorie:</label>
 					<select id="productCategory" name="productCategory" required>
-						<option value="Langbrot">Baustelle: Hier Kategorie einfügen</option>
-						<option value="Kurzbrot">Auch update nicht vergessen</option>
-						<option value="Breitbrot">Breitbrot</option>
-						<option value="Bastardbrot">Bastardbrot</option>
 					</select>
 				</div>
 				<div class="field">
@@ -212,10 +208,6 @@
 				<div class="field">
 					<label for="productCategoryUp">Produkt-Kategorie:</label>
 					<select id="productCategoryUp" name="productCategory" required>
-						<option value="Langbrot">Baustelle: Hier Kategorie einfügen</option>
-						<option value="Kurzbrot">Auch create nicht vergessen</option>
-						<option value="Breitbrot">Breitbrot</option>
-						<option value="Bastardbrot">Bastardbrot</option>
 					</select>
 				</div>
 				<div class="field">

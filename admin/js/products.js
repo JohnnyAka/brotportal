@@ -1,5 +1,28 @@
 /*This file contains event handlers for click events and form-submit events*/
 
+//create category dictionary (id to name)
+$(function(){
+		$.ajax({
+			type: 'POST',
+			url: 'ajax/categories_product_read.php'
+		}).done(function(response){
+			categoriesNameDict = new Object();
+			var categoriesData = JSON.parse(response);
+			//set product options of select
+			for (var x=0;x<categoriesData.length;x++) {
+				categoriesNameDict[categoriesData[x].id] = categoriesData[x].name;
+			}
+		}).fail(function(data){
+			// Set the message text.
+			if (data.responseText !== '') {
+				$(messages).text(data.responseText);
+			} else {
+				$(messages).text('Fehler, Kategorien konnten nicht aus Datenbank gelesen werden.');
+				return;
+			}
+		});
+});
+		
 //create product form submit
 $(function() {
     // Get the form.
@@ -7,6 +30,21 @@ $(function() {
 
     // Get the messages div.
     var messages = $('#messages');
+		
+		//clear formfields after modal close (event)
+		$('#createProduct').on('hidden.bs.modal', function () {
+			$('#productid').val('');
+			$('#name').val('');
+			$('#productCategory').empty();
+			$('#visibleForUser').val('');
+			$('#description').val('');
+			$('#imagePath').val('');
+			$('#ingredients').val('');
+			$('#allergens').val('');
+			$('#weight').val('');
+			$('#preBakeExp').val('');
+			$('#featureExp').val('');
+		})
 
 	// Set up an event listener for the createProduct form.
 	$(form).submit(function(event) {
@@ -25,19 +63,6 @@ $(function() {
 
 			// Set the message text.
 			$(messages).text(response);
-
-			// Clear the form.
-			$('#productid').val('');
-			$('#name').val('');
-			$('#productCategory').val('');
-			$('#visibleForUser').val('');
-			$('#description').val('');
-			$('#imagePath').val('');
-			$('#ingredients').val('');
-			$('#allergens').val('');
-			$('#weight').val('');
-			$('#preBakeExp').val('');
-			$('#featureExp').val('');
 			
 			//close modal
 			$("#createProduct").modal("hide");
@@ -61,6 +86,21 @@ $(function() {
 
     // Get the messages div.
     var messages = $('#messages');
+		
+			//clear formfields after modal close (event)
+		$('#updateProduct').on('hidden.bs.modal', function () {
+			$('#productidUp').val('');
+			$('#nameUp').val('');
+			$('#productCategoryUp').empty();
+			$('#visibleForUserUp').val('');
+			$('#descriptionUp').val('');
+			$('#imagePathUp').val('');
+			$('#ingredientsUp').val('');
+			$('#allergensUp').val('');
+			$('#weightUp').val('');
+			$('#preBakeExpUp').val('');
+			$('#featureExpUp').val('');
+		})
 
 	// Set up an event listener for the updateProduct form.
 	$(form).submit(function(event) {
@@ -79,19 +119,6 @@ $(function() {
 
 			// Set the message text.
 			$(messages).text(response);
-
-			// Clear the form.
-			$('#productidUp').val('');
-			$('#nameUp').val('');
-			$('#productCategoryUp').val('');
-			$('#visibleForUserUp').val('');
-			$('#descriptionUp').val('');
-			$('#imagePathUp').val('');
-			$('#ingredientsUp').val('');
-			$('#allergensUp').val('');
-			$('#weightUp').val('');
-			$('#preBakeExpUp').val('');
-			$('#featureExpUp').val('');
 			
 			//close modal
 			$("#updateProduct").modal("hide");
@@ -125,8 +152,10 @@ var main = function(){
 			$(".displayProductID").text(productData[0]["productID"]);
 			$(".displayName").text(productData[0]["name"]);
 			$(".displayDescription").text(productData[0]["description"]);
-			$(".displayVisibleForUser").text(productData[0]["visibleForUser"]);
-			$(".displayProductCategory").text(productData[0]["productCategory"]);
+			var visableFUText = "Nein";
+			if(productData[0]["visibleForUser"]!=0) visableFUText = "Ja";
+			$(".displayVisibleForUser").text(visableFUText);
+			$(".displayProductCategory").text(categoriesNameDict[productData[0]["productCategory"]]);
 			$(".displayImagePath").text(productData[0]["imagePath"]);
 			$(".displayIngredients").text(productData[0]["ingredients"]);
 			$(".displayAllergens").text(productData[0]["allergens"]);
@@ -134,13 +163,23 @@ var main = function(){
 			$(".displayPreBakeExp").text(productData[0]["preBakeExp"]);
 			$(".displayFeatureExp").text(productData[0]["featureExp"]);
 		});
-
 	});
 	
 	
 	
 	$('.createProductButton').click(function(){
-		//$.post('server.php', $('#theForm').serialize());
+		
+		//set product options of select
+		for (var key in categoriesNameDict) {
+				if (key === 'length' || !categoriesNameDict.hasOwnProperty(key)){ 
+					continue;
+				}
+				$('#productCategory').append($('<option>', {
+					value: key,
+					text: categoriesNameDict[key]
+				}));
+		}
+		
 		$("#createProduct").modal("show");
 	});
 	
@@ -160,6 +199,18 @@ var main = function(){
 				}
 			}).done(function(response){
 				var productData = JSON.parse(response);
+				
+				//set productCategory options of select
+				for (var key in categoriesNameDict) {
+					if (key === 'length' || !categoriesNameDict.hasOwnProperty(key)){ 
+						continue;
+					}
+					$('#productCategoryUp').append($('<option>', {
+						value: key,
+						text: categoriesNameDict[key]
+					}));
+				}
+				
 				//set values of form
 				$('#productidUp').val(productData[0]["productID"]);
 				$('#nameUp').val(productData[0]["name"]);
@@ -177,6 +228,8 @@ var main = function(){
 				$('#weightUp').val(productData[0]["weight"]);
 				$('#preBakeExpUp').val(productData[0]["preBakeExp"]);
 				$('#featureExpUp').val(productData[0]["featureExp"]);
+				
+				
 				
 				//show modal
 				$("#updateProduct").modal("show");

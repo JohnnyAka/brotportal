@@ -22,7 +22,7 @@
 
     <!-- Custom styles for this template -->
 	<link href="css/admin.css" rel="stylesheet">
-	<link href="css/categories_products.css" rel="stylesheet">
+	<link href="css/categories_relations.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -53,10 +53,10 @@
             <li class="dropdown active">
               <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Kategorien <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a href="categories_customers.php">Kundenkategorien</a></li>
+                <li><a href="categories_users.php">Kundenkategorien</a></li>
                 <li><a href="categories_products.php">Produktkategorien</a></li>
 								<li role="separator" class="divider"></li>
-                <li><a href="customers-products.php">Kunden - Produkte</a></li>
+                <li><a href="categories_relations.php">Kunden - Produkte</a></li>
               </ul>
             </li>
 						<li><a href="#account">Konto</a></li>
@@ -68,25 +68,28 @@
     <div class="container">
 			<div class="row mainrow">
 				<div class="col-md-3">
-					<h3>Benutzer</h3>
-					<ul class="sidebarList"></ul>
+					<h3>Kundenkategorien</h3>
+					<ul class="sidebarList">
+					</ul>
 				</div>
-				<div class="col-md-9 main-content">
+				<div class="col-md-6 main-content">
 					<div id="messages"></div>
 					<div class="button_group handleData">
-						<button type="button" class="btn btn-primary createProductCatButton">
-						Zeile anlegen
+						<button type="button" class="btn btn-primary addProductCatButton">
+						Produktkategorie hinzufügen
 						</button>
-						<button type="button" class="btn btn-primary updateProductCatButton" >
-						Zeile &auml;ndern
-						</button>
-						<button type="button" class="btn btn-primary deleteProductCatButton" >
-						Zeile l&ouml;schen
+						<button type="button" class="btn btn-primary removeProductCatButton" >
+						Produktkategorie entfernen
 						</button>
 					</div> 
-					<h1>Produktkategorien</h1>
+					<h1>Sichtbare Produkt-Kategorien:</h1>
 					<hr>
-					<ul class="categoryList"></ul>
+					<ul class="visibleProductCatList"></ul>
+				</div>
+				<div class="col-md-3">
+					<h3>Produktkategorien</h3>
+					<ul class="rightSidebarList">
+					</ul>
 				</div>
 			</div>
     </div> <!-- /container -->
@@ -94,53 +97,6 @@
 
   </body>
   
-  <!-- Modals for create and update row -->
-	<div class="modal" id="createOrder" tabindex="-1" role="dialog" aria-labelledby="createProductCatLabel">
-	  <div class="modal-dialog" role="document">
-		<div class="modal-content">
-		  <div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h4 class="modal-title" id="createProductCatLabel">Bestellzeile hinzufügen</h4>
-		  </div>
-		  <div class="modal-body">
-			<form id="createProductCatForm" method="post" action="ajax/categories_product_create.php">
-				<div class="field">
-					<label for="nameProduct">Artikel:</label>
-					<input id="nameProduct" name="nameProduct" disabled="disabled">
-				</div>
-				<div class="field">
-					<input type="hidden" id="orderDate" name="orderDate">
-				</div>
-			</form>
-		  </div>
-		  <div class="modal-footer">
-			<button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
-			<button type="submit" form="createProductCatForm" class="btn btn-primary createProductCat">Bestellzeile speichern</button>
-		  </div>
-		</div>
-	  </div>
-	</div>
-	
-  <!-- Modal -->
-	<div class="modal" id="updateProductCat" tabindex="-1" role="dialog" aria-labelledby="updateProductCatLabel">
-	  <div class="modal-dialog" role="document">
-		<div class="modal-content">
-		  <div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h4 class="modal-title" id="updateProductCatLabel">Artikel &auml;ndern</h4>
-		  </div>
-		  <div class="modal-body">
-			<form id="updateProductCatForm" method="post" action="ajax/categories_product_update.php">
-			
-			</form>
-		  </div>
-		  <div class="modal-footer">
-			<button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
-			<button type="submit" form="updateProductCatForm" class="btn btn-primary updateProductCat">&Auml;nderungen speichern</button>
-		  </div>
-		</div>
-	  </div>
-	</div>
 	
 	<!-- Bootstrap core JavaScript
     ================================================== -->
@@ -149,7 +105,7 @@
 		
 	<!-- Own js files-->
 	<script src="js/brotportal.js"></script>
-	<script src="js/categories_product.js"></script>
+	<script src="js/categories_relations.js"></script>
 </html>
 
 

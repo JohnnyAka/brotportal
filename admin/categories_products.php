@@ -56,7 +56,7 @@
                 <li><a href="categories_users.php">Kundenkategorien</a></li>
                 <li><a href="categories_products.php">Produktkategorien</a></li>
 								<li role="separator" class="divider"></li>
-                <li><a href="customers-products.php">Kunden - Produkte</a></li>
+                <li><a href="categories_relations.php">Kunden - Produkte</a></li>
               </ul>
             </li>
 						<li><a href="#account">Konto</a></li>

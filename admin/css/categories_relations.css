@@ -1,0 +1,11 @@
+.userList{
+	list-style-type: none;
+}
+
+.visibleProductCatList{
+	list-style-type: none;
+}
+
+.visibleProductCatList li{
+	cursor: pointer;
+}

@@ -121,7 +121,8 @@ if ($conn->query($sql) === TRUE) {
 
 $sql = "CREATE TABLE categoryRelations(
 idUserCat INT(6) UNSIGNED,
-idProductCat INT(6) UNSIGNED
+idProductCat INT(6) UNSIGNED,
+primary key (idUserCat, idProductCat)
 )";
 if ($conn->query($sql) === TRUE) {
     echo "Table categoryRelations created successfully<br>";

@@ -27,7 +27,6 @@
   </head>
 
   <body>
-
     <!-- Fixed navbar -->
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
@@ -246,6 +245,25 @@
 		  <div class="modal-footer">
 			<button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
 			<button type="submit" form="updateProductForm" class="btn btn-primary updateProduct">&Auml;nderungen speichern</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	
+  <!-- Modal for choice of deleting product with active orders-->
+	<div class="modal" id="deleteProductChoice" tabindex="-1" role="dialog" aria-labelledby="deleteProductChoiceLabel">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="deleteProductChoiceLabel">Artikel l&ouml;schen</h4>
+		  </div>
+		  <div class="modal-body">
+				<p>Der Artikel ist noch bestellt. Soll der Artikel mitsamt den betreffenden Bestellungen gelöscht werden?</p>
+			</div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Nein</button>
+			<button type="button" class="btn btn-primary deleteProductAndOrdersButton">Ja</button>
 		  </div>
 		</div>
 	  </div>

@@ -136,6 +136,46 @@ $(function() {
 	});
 });
 
+//deletes a product and orders if parameter is true
+var deleteProductAndOrders = function(itemID, deleteOrders = false){
+	$.ajax({
+		type: 'POST',
+		url: 'ajax/products_delete.php',
+		data: {
+			id:itemID
+		}
+		}).done(function(response){
+		$(".messages").text("Artikel erfolgreich gel&ouml;scht!");
+		//reload page to show new article
+		location.reload(); 
+		}).fail(function(data){
+		// Set the message text.
+		if (data.responseText !== '') {
+			$(messages).text(data.responseText);
+		} else {
+			$(messages).text('Fehler, Artikel konnte nicht gel&ouml;scht werden.');
+		}
+	});
+	if(deleteOrders){
+		$.ajax({
+			type: 'POST',
+			url: 'ajax/products_orders_delete.php',
+			data: {
+				id:itemID
+			}
+		}).done(function(response){
+			$(".messages").text("Bestellungen erfolgreich gel&ouml;scht!");
+		}).fail(function(data){
+			// Set the message text.
+			if (data.responseText !== '') {
+				$(messages).text(data.responseText);
+			} else {
+				$(messages).text('Fehler, Bestellungen konnten nicht gel&ouml;scht werden.');
+			}
+		});
+	}
+	$('#deleteProductChoice').modal("hide");
+}
 			
 //main function for click event handlers
 var main = function(){
@@ -246,29 +286,34 @@ var main = function(){
 			alert("Kein Artikel ausgewählt");
 		}
 	});
-	
 	$('.deleteProductButton').click(function(){
 		var messages = $('#messages');
 		
 		var item = $("li.active.sidelist");
 		var itemID = item.data('id');
 		if (item.length){
+			//delete only if not present in any order
 			$.ajax({
 				type: 'POST',
-				url: 'ajax/products_delete.php',
+				url: 'ajax/products_orders_read.php',
 				data: {
 					id:itemID
 				}
 			}).done(function(response){
-				$(".messages").text("Artikel erfolgreich gel&ouml;scht!");
-				//reload page to show new article
-				location.reload(); 
+				productOrders = JSON.parse(response);
+				if(productOrders !== 'undefined' && productOrders.length > 0){
+					$('#deleteProductChoice').modal("show");
+				}
+				else{
+					deleteProductAndOrders(itemID);
+				}
+				
 			}).fail(function(data){
 				// Set the message text.
 				if (data.responseText !== '') {
 					$(messages).text(data.responseText);
 				} else {
-					$(messages).text('Fehler, Artikel konnte nicht gel&ouml;scht werden.');
+					$(messages).text('Fehler, Artikel konnte nicht gelesen werden.');
 				}
 			});
 		}
@@ -277,9 +322,10 @@ var main = function(){
 		}
 	});
 	
-	
-
-
+	$('.deleteProductAndOrdersButton').click(function(){
+		var itemID = $("li.active.sidelist").data('id');
+		deleteProductAndOrders(itemID, true);
+	});
 }
 
 $(document).ready(main);

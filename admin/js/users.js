@@ -144,7 +144,7 @@ var main = function(){
 		$('ul.sidebarList li').removeClass("active");
 		$(this).addClass("active");
 		
-		//ajax call for product data
+		//ajax call for user data
 		$.post("ajax/users_read.php", {id:$(this).data('id')}, function(response, status){
 			var userData = JSON.parse(response);
 			$(".customerIDDisp").text(userData[0]["customerID"]);
@@ -244,20 +244,43 @@ var main = function(){
 		if (item.length){
 			$.ajax({
 				type: 'POST',
-				url: 'ajax/users_delete.php',
+				url: 'ajax/users_orders_read.php',
 				data: {
 					id:itemID
 				}
 			}).done(function(response){
-				$(".messages").text("Benutzer erfolgreich gel&ouml;scht!");
-				//reload page to show new article
-				location.reload(); 
+				customerOrders = JSON.parse(response);
+				
+				if(customerOrders !== 'undefined' && customerOrders.length > 0){
+					alert("Kunde hat noch eingetragene Bestellungen");
+				}
+				else{
+					$.ajax({
+						type: 'POST',
+						url: 'ajax/users_delete.php',
+						data: {
+							id:itemID
+						}
+					}).done(function(response){
+						$(".messages").text("Benutzer erfolgreich gel&ouml;scht!");
+						//reload page to show new article
+						location.reload(); 
+					}).fail(function(data){
+						// Set the message text.
+						if (data.responseText !== '') {
+							$(messages).text(data.responseText);
+						} else {
+							$(messages).text('Fehler, Benutzer konnte nicht gel&ouml;scht werden.');
+						}
+					});
+				}
+				
 			}).fail(function(data){
 				// Set the message text.
 				if (data.responseText !== '') {
 					$(messages).text(data.responseText);
 				} else {
-					$(messages).text('Fehler, Benutzer konnte nicht gel&ouml;scht werden.');
+					$(messages).text('Fehler, Benutzer konnte nicht gelesen werden.');
 				}
 			});
 		}
@@ -266,9 +289,6 @@ var main = function(){
 		}
 	});
 	
-	
-
-
 }
 
 $(document).ready(main);

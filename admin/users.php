@@ -244,6 +244,25 @@
 	  </div>
 	</div>
 	
+	 <!-- Modal for choice of deleting user with active orders-->
+	<div class="modal" id="deleteUserChoice" tabindex="-1" role="dialog" aria-labelledby="deleteUserChoiceLabel">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="deleteUserChoiceLabel">Benutzer l&ouml;schen</h4>
+		  </div>
+		  <div class="modal-body">
+				<p>Der Benutzer hat noch Bestellungen offen. Soll der Benutzer mitsamt den betreffenden Bestellungen gelöscht werden?</p>
+			</div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Nein</button>
+			<button type="button" class="btn btn-primary deleteUserAndOrdersButton">Ja</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	
 	<!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->

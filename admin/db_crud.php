@@ -20,7 +20,9 @@ class db_connection{
 		//prepare arguments and names of arguments
 		$strArgsNames="";
 		$strArgs="";
+		$mysqli = $this->mysqli;
 		foreach ($array_args_names as $value){
+			//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!$value = mysqli_real_escape_string($mysqli, $value );
 			$strArgsNames .= $value . ", ";
 		}
 		$strArgsNames = chop($strArgsNames, ", ");
@@ -33,7 +35,7 @@ class db_connection{
 		INSERT INTO {$table_name} ({$strArgsNames})
 		VALUES ({$strArgs})
 EOT;
-		$mysqli = $this->mysqli;
+		
 		//execute query
 		if ($mysqli->query($sql) === TRUE) {
 			return "New record created successfully";

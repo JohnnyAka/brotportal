@@ -46,7 +46,7 @@ $(function() {
 			$('#whereToPutOrder').val('');
 		})
 
-	// Set up an event listener for the createProduct form.
+	// Set up an event listener for the createUser form.
 	$(form).submit(function(event) {
 		// Stop the browser from submitting the form.
 		event.preventDefault();
@@ -78,7 +78,7 @@ $(function() {
 	});
 });
 
-//update product form submit
+//update user form submit
 $(function() {
     // Get the form.
     var form = $('#updateUserForm');
@@ -134,6 +134,47 @@ $(function() {
 		});
 	});
 });
+
+//deletes a user and orders if parameter is true
+var deleteUserAndOrders = function(userID, deleteOrders = false){
+	$.ajax({
+		type: 'POST',
+		url: 'ajax/users_delete.php',
+		data: {
+			id:userID
+		}
+		}).done(function(response){
+		$(".messages").text("Benutzer erfolgreich gel&ouml;scht!");
+		//reload page to show new article
+		location.reload(); 
+		}).fail(function(data){
+		// Set the message text.
+		if (data.responseText !== '') {
+			$(messages).text(data.responseText);
+		} else {
+			$(messages).text('Fehler, Benutzer konnte nicht gel&ouml;scht werden.');
+		}
+	});
+	if(deleteOrders){
+		$.ajax({
+			type: 'POST',
+			url: 'ajax/users_orders_delete.php',
+			data: {
+				id:userID
+			}
+		}).done(function(response){
+			$(".messages").text("Bestellungen erfolgreich gel&ouml;scht!");
+		}).fail(function(data){
+			// Set the message text.
+			if (data.responseText !== '') {
+				$(messages).text(data.responseText);
+			} else {
+				$(messages).text('Fehler, Bestellungen konnten nicht gel&ouml;scht werden.');
+			}
+		});
+	}
+	$('#deleteProductChoice').modal("hide");
+}
 
 			
 //main function for click event handlers
@@ -252,27 +293,10 @@ var main = function(){
 				customerOrders = JSON.parse(response);
 				
 				if(customerOrders !== 'undefined' && customerOrders.length > 0){
-					alert("Kunde hat noch eingetragene Bestellungen");
+					$('#deleteUserChoice').modal("show");
 				}
 				else{
-					$.ajax({
-						type: 'POST',
-						url: 'ajax/users_delete.php',
-						data: {
-							id:itemID
-						}
-					}).done(function(response){
-						$(".messages").text("Benutzer erfolgreich gel&ouml;scht!");
-						//reload page to show new article
-						location.reload(); 
-					}).fail(function(data){
-						// Set the message text.
-						if (data.responseText !== '') {
-							$(messages).text(data.responseText);
-						} else {
-							$(messages).text('Fehler, Benutzer konnte nicht gel&ouml;scht werden.');
-						}
-					});
+					deleteUserAndOrders(itemID);
 				}
 				
 			}).fail(function(data){
@@ -287,6 +311,11 @@ var main = function(){
 		else{
 			alert("Kein Benutzer ausgewählt");
 		}
+	});
+	
+	$('.deleteUserAndOrdersButton').click(function(){
+		var userID = $("li.active.sidelist").data('id');
+		deleteUserAndOrders(userID, true);
 	});
 	
 }

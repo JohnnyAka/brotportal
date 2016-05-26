@@ -185,7 +185,7 @@ var main = function(){
 			});
 		}
 		else{
-			alert("Bitte eine Kundenkategorie und eine darin sichtbare Produktkategorie ausgewählen");
+			alert("Bitte eine Kundenkategorie und eine darin sichtbare Produktkategorie auswählen");
 		}
 	});
 	

@@ -1,3 +1,9 @@
+<?php
+session_start();
+if(!isset($_SESSION['trustedUser'])) {
+   die("Bitte erst einloggen");  
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -13,6 +19,10 @@
 
     <!-- Bootstrap core CSS -->
     <link href="../../bootstrap-3.3.5-dist/css/bootstrap.min.css" rel="stylesheet">
+				<!--jquery files -->
+		<link href="../../jquery-ui-1.11.4.custom/jquery-ui.css" rel="stylesheet">
+		<script src="../../jquery-ui-1.11.4.custom/external/jquery/jquery.js"></script>
+		<script src="../../jquery-ui-1.11.4.custom/jquery-ui.js"></script>
 
     <!-- Custom styles for this template -->
 	<link href="css/admin.css" rel="stylesheet">
@@ -53,7 +63,8 @@
                 <li><a href="categories_relations.php">Kunden - Produkte</a></li>
               </ul>
             </li>
-			<li><a href="#account">Konto</a></li>
+						<li><a href="settings.php">Einstellungen</a></li>
+						<li><a href="logout.php">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>

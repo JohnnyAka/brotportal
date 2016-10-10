@@ -56,7 +56,7 @@ if(!isset($_SESSION['trustedUser'])) {
             <li><a href="products.php">Produkte</a></li>
             <li><a href="users.php">Benutzer</a></li>
             <li ><a href="orders.php">Bestellungen</a></li>
-            <li class="dropdown active">
+            <li class="dropdown">
               <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Kategorien <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="categories_users.php">Kundenkategorien</a></li>
@@ -65,7 +65,7 @@ if(!isset($_SESSION['trustedUser'])) {
                 <li><a href="categories_relations.php">Kunden - Produkte</a></li>
               </ul>
             </li>
-						<li><a href="settings.php">Einstellungen</a></li>
+						<li class="active"><a href="settings.php">Einstellungen</a></li>
 						<li><a href="logout.php">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -75,83 +75,53 @@ if(!isset($_SESSION['trustedUser'])) {
     <div class="container">
 			<div class="row mainrow">
 				<div class="col-md-3">
-					<h3>Kundenkategorien</h3>
-					<ul class="sidebarList">
-					</ul>
 				</div>
 				<div class="col-md-9 main-content">
 					<div id="messages"></div>
+					
+						<form id="updateSettingsForm" method="post" action="ajax/settings_update.php">
+							<div class="field">
+								<label for="adminName">Administrator Name:</label>
+								<input id="adminName" name="adminName">
+							</div>
+							<div class="field">
+								<label for="adminPassword">Administrator Passwort:</label>
+								<input id="adminPassword" name="adminPassword">
+							</div>
+							<div class="field">
+								<label for="deleteOrdersInDays">Speicherdauer der Bestellungen in Tagen:</label>
+								<input id="deleteOrdersInDays" name="deleteOrdersInDays">
+							</div>
+							<div class="field">
+								<label for="imagesPath">Bilderpfad:</label>
+								<input id="imagesPath" name="imagesPath">
+							</div>
+							<div class="field">
+								<label for="autoExportOrdersTime">Automatischer Export der Bestellungen (in hh:mm:ss):</label>
+								<input id="autoExportOrdersTime" name="autoExportOrdersTime">
+							</div>
+							<div class="field">
+								<label for="exportOrdersTo">Exportadresse:</label>
+								<input id="exportOrdersTo" name="exportOrdersTo">
+							</div>
+							<div class="field">
+								<label for="saveDatabaseTo">Datensicherungspfad:</label>
+								<input id="saveDatabaseTo" name="saveDatabaseTo">
+							</div>
+						</form>
 					<div class="button_group handleData">
-						<button type="button" class="btn btn-primary createUserCatButton">
-						Kundenkategorie anlegen
-						</button>
-						<button type="button" class="btn btn-primary updateUserCatButton" >
-						Kundenkategorie &auml;ndern
-						</button>
-						<button type="button" class="btn btn-primary deleteUserCatButton" >
-						Kundenkategorie l&ouml;schen
+						<button type="submit" form="updateSettingsForm" class="btn btn-primary updateSettingsButton">
+							&Auml;nderungen speichern
 						</button>
 					</div> 
-					<h1>Kunden dieser Kategorie:</h1>
-					<hr>
-					<ul class="userList"></ul>
 				</div>
 			</div>
     </div> <!-- /container -->
 
 
   </body>
-  
-  <!-- Modals for create and update row -->
-	<div class="modal" id="createUserCat" tabindex="-1" role="dialog" aria-labelledby="createUserCatLabel">
-	  <div class="modal-dialog" role="document">
-		<div class="modal-content">
-		  <div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h4 class="modal-title" id="createUserCatLabel">Kundenkategorie hinzufügen</h4>
-		  </div>
-		  <div class="modal-body">
-			<form id="createUserCatForm" method="post" action="ajax/categories_user_create.php">
-				<div class="field">
-					<label for="userCatName">Kundenkategorie:</label>
-					<input id="userCatName" name="userCatName">
-				</div>
-			</form>
-		  </div>
-		  <div class="modal-footer">
-			<button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
-			<button type="submit" form="createUserCatForm" class="btn btn-primary createUserCat">Kundenkategorie speichern</button>
-		  </div>
-		</div>
-	  </div>
-	</div>
+ 
 	
-  <!-- Modal -->
-	<div class="modal" id="updateUserCat" tabindex="-1" role="dialog" aria-labelledby="updateUserCatLabel">
-	  <div class="modal-dialog" role="document">
-		<div class="modal-content">
-		  <div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h4 class="modal-title" id="updateUserCatLabel">Kundenkategorie &auml;ndern</h4>
-		  </div>
-		  <div class="modal-body">
-			<form id="updateUserCatForm" method="post" action="ajax/categories_user_update.php">
-				<div class="field">
-					<label for="userCatNameUp">Kundenkategorie:</label>
-					<input id="userCatNameUp" name="userCatName">
-				</div>
-				<div class="field">
-					<input type="hidden" id="catIdUp" name="catId">
-				</div>
-			</form>
-		  </div>
-		  <div class="modal-footer">
-			<button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
-			<button type="submit" form="updateUserCatForm" class="btn btn-primary updateUserCat">&Auml;nderungen speichern</button>
-		  </div>
-		</div>
-	  </div>
-	</div>
 	
 	<!-- Bootstrap core JavaScript
     ================================================== -->
@@ -160,7 +130,7 @@ if(!isset($_SESSION['trustedUser'])) {
 		
 	<!-- Own js files-->
 	<script src="js/brotportal.js"></script>
-	<script src="js/categories_users.js"></script>
+	<script src="js/settings.js"></script>
 </html>
 
 

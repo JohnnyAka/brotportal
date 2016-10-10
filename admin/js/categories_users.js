@@ -202,21 +202,44 @@ var main = function(){
 			
 			//get values of item from db
 			var categoryID = item.data('idcategory');
+			//check for dependent customers
 			$.ajax({
 				type: 'POST',
-				url: 'ajax/categories_user_delete.php',
+				url: 'ajax/categories_user_users_read.php',
 				data: {
-					catId:categoryID
+					id:categoryID
 				}
 			}).done(function(response){
-				$(".messages").text("Kategorie erfolgreich gel&ouml;scht!");
-				displayCategories();
+				users = JSON.parse(response);
+				if(users !== 'undefined' && users.length > 0){
+					alert("Es gibt noch Kunden dieser Kategorie. Bevor die Kategorie gelöscht werden kann, bitte die Kunden löschen oder die Kategorie dieser Kunden ändern.");
+				}
+				else{
+					//delete user
+					$.ajax({
+						type: 'POST',
+						url: 'ajax/categories_user_delete.php',
+						data: {
+							catId:categoryID
+						}
+					}).done(function(response){
+						$(".messages").text("Kategorie erfolgreich gel&ouml;scht!");
+						displayCategories();
+					}).fail(function(data){
+						// Set the message text.
+						if (data.responseText !== '') {
+							$(messages).text(data.responseText);
+						} else {
+							$(messages).text('Fehler, Kategorie konnte nicht gelöscht werden.');
+						}
+					});
+				}
 			}).fail(function(data){
 				// Set the message text.
 				if (data.responseText !== '') {
 					$(messages).text(data.responseText);
 				} else {
-					$(messages).text('Fehler, Kategorie konnte nicht gelöscht werden.');
+					$(messages).text('Fehler, Kunden konnten nicht gelesen werden.');
 				}
 			});
 		}

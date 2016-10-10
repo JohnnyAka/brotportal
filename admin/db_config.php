@@ -1,4 +1,6 @@
 <?php
+include('db_crud.php');
+
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -37,6 +39,8 @@ $conn->query($sql);
 $sql = "DROP TABLE userCategories;";
 $conn->query($sql);
 $sql = "DROP TABLE categoryRelations;";
+$conn->query($sql);
+$sql = "DROP TABLE settings;";
 $conn->query($sql);
 
 
@@ -92,7 +96,6 @@ noteBaking VARCHAR(200),
 noteDelivery VARCHAR(200),
 PRIMARY KEY(idProduct, idCustomer, orderDate, hook)
 )";
-
 if ($conn->query($sql) === TRUE) {
     echo "Table orders created successfully<br>";
 } else {
@@ -126,6 +129,24 @@ primary key (idUserCat, idProductCat)
 )";
 if ($conn->query($sql) === TRUE) {
     echo "Table categoryRelations created successfully<br>";
+} else {
+    echo "Error creating database: " . $conn->error."<br>";
+}
+
+$sql = "CREATE TABLE settings (
+adminName VARCHAR(40),
+adminPassword VARCHAR(40),
+deleteOrdersInDays INT(6),
+imagesPath VARCHAR(400),
+autoExportOrdersTime TIME,
+exportOrdersTo VARCHAR(400),
+saveDatabaseTo VARCHAR(400)
+)";
+if ($conn->query($sql) === TRUE) {
+    echo "Table settings created successfully<br>";
+		$db = new db_connection();
+		$result = $db->createData("settings",array('adminName','adminPassword','deleteOrdersInDays','imagesPath','exportOrdersTo','saveDatabaseTo'), array('admin','password','30','/','/','/'));
+		echo 'Settings: '.$result;
 } else {
     echo "Error creating database: " . $conn->error."<br>";
 }

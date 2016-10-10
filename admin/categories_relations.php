@@ -1,3 +1,9 @@
+<?php
+session_start();
+if(!isset($_SESSION['trustedUser'])) {
+   die("Bitte erst einloggen");  
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -59,7 +65,8 @@
                 <li><a href="categories_relations.php">Kunden - Produkte</a></li>
               </ul>
             </li>
-						<li><a href="#account">Konto</a></li>
+						<li><a href="settings.php">Einstellungen</a></li>
+						<li><a href="logout.php">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>

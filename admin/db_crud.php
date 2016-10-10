@@ -1,4 +1,5 @@
 <?php
+
 class db_connection{
 	public $db_username = 'root';
 	public $db_password = '';
@@ -16,13 +17,13 @@ class db_connection{
 	}
 
 	function createData($table_name, $array_args_names, $array_args){
-
+		
 		//prepare arguments and names of arguments
 		$strArgsNames="";
 		$strArgs="";
 		$mysqli = $this->mysqli;
 		foreach ($array_args_names as $value){
-			//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!$value = mysqli_real_escape_string($mysqli, $value );
+			$value = $mysqli->real_escape_string($value);
 			$strArgsNames .= $value . ", ";
 		}
 		$strArgsNames = chop($strArgsNames, ", ");
@@ -46,11 +47,13 @@ EOT;
 
 	//returns array of items (array of array)
 	function getData($table_name, $args_names, $where_condition = NULL){
-
+		$mysqli = $this->mysqli;
+		
 		//prepare names of arguments
 		if(is_array($args_names)){
 			$strArgsNames="";
 			foreach ($args_names as $value){
+				$value = $mysqli->real_escape_string($value);
 				$strArgsNames .= $value . ", ";
 			}
 			$strArgsNames = chop($strArgsNames, ", ");
@@ -67,27 +70,41 @@ EOT;
 			$sql .= " WHERE " . $where_condition;
 		}
 		//execute query
-		$result = mysqli_fetch_all($this->mysqli->query($sql), MYSQLI_ASSOC);
-		return $result;
+		$result = $this->mysqli->query($sql);
+		if($result){
+			return mysqli_fetch_all($result, MYSQLI_ASSOC);
+		}
+		else{
+			return $result;
+		}
 	}
 	
 				
-	function updateData($table_name, $args_names, $args_values, $where_condition){
+	function updateData($table_name, $args_names, $args_values, $where_condition = NULL){
+		$mysqli = $this->mysqli;
 		//prepare name-value pairs for query
 		if (is_array($args_names)){
 			$strArgs = "";
 			
 			for($x=0; $x < count($args_names); $x++){
+				$args_names[$x] = $mysqli->real_escape_string($args_names[$x]);
+				$args_values[$x] = $mysqli->real_escape_string($args_values[$x]);
 				$strArgs .= $args_names[$x]." = '".$args_values[$x]."', ";
 			}
 			$strArgs = chop($strArgs, ", ");
 		}
 		else
 		{
+			$args_names = $mysqli->real_escape_string($args_names);
+			$args_values = $mysqli->real_escape_string($args_values);
 			$strArgs = $args_names." = '".$args_values."'";
 		}
 		//put query
-		$sql = "UPDATE ".$table_name." SET ".$strArgs." WHERE ".$where_condition.";";
+		$sql = "UPDATE ".$table_name." SET ".$strArgs;
+		//put where condition if given
+		if (!is_null($where_condition)){
+			$sql .= " WHERE " . $where_condition.";";
+		}
 		
 		//execute query
 		if ($this->mysqli->query($sql)=== TRUE) {

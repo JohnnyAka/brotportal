@@ -202,21 +202,43 @@ var main = function(){
 			
 			//get values of item from db
 			var categoryID = item.data('idcategory');
+			//check for dependent customers
 			$.ajax({
 				type: 'POST',
-				url: 'ajax/categories_product_delete.php',
+				url: 'ajax/categories_product_products_read.php',
 				data: {
-					catId:categoryID
+					id:categoryID
 				}
 			}).done(function(response){
-				$(".messages").text("Kategorie erfolgreich gel&ouml;scht!");
-				displayCategories();
+				products = JSON.parse(response);
+				if(products !== 'undefined' && products.length > 0){
+					alert("Es gibt noch Artikel dieser Kategorie. Bevor die Kategorie gelöscht werden kann, bitte die Artikel löschen oder die Kategorie dieser Artikel ändern.");
+				}
+				else{
+					$.ajax({
+						type: 'POST',
+						url: 'ajax/categories_product_delete.php',
+						data: {
+							catId:categoryID
+						}
+					}).done(function(response){
+						$(".messages").text("Kategorie erfolgreich gel&ouml;scht!");
+						displayCategories();
+					}).fail(function(data){
+						// Set the message text.
+						if (data.responseText !== '') {
+							$(messages).text(data.responseText);
+						} else {
+							$(messages).text('Fehler, Kategorie konnte nicht gelöscht werden.');
+						}
+					});
+				}
 			}).fail(function(data){
 				// Set the message text.
 				if (data.responseText !== '') {
 					$(messages).text(data.responseText);
 				} else {
-					$(messages).text('Fehler, Kategorie konnte nicht gelöscht werden.');
+					$(messages).text('Fehler, Artikel konnten nicht gelesen werden.');
 				}
 			});
 		}

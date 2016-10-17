@@ -1,4 +1,6 @@
-
+<?php
+	session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -22,36 +24,20 @@
 		<script src="../jquery-ui-1.11.4.custom/datepicker-de.js"></script>
 
     <!-- Custom styles for this template -->
-	<link href="css/admin.css" rel="stylesheet">
-	<link href="css/login.css" rel="stylesheet">
+	<link href="css/brotportal.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-  </head>
+  </head>,
 	
 	<body>
-	
-	
-	<div id="messages"></div>
-	<h1>Login</h1>
-	<form id="loginForm" method="post" action="ajax/login.php">
-		<div class="field">
-			<label for="name">Name:</label>
-			<input id="name" name="name">
-		</div>
-		<div class="field">
-			<label for="password">Passwort:</label>
-			<input type="password" id="password" name="password">
-		</div>
-	</form>
-	<div class="button_group handleData">
-		<button type="submit" form="loginForm" class="btn btn-primary loginButton">
-			Login
-		</button>
-	</div> 
+	<?php
+		session_destroy();
+	?>
+	<h3 style="text-align:center">Erfolgreich ausgeloggt.</h3>
 					
 	</body>
 	
@@ -63,5 +49,4 @@
 		
 	<!-- Own js files-->
 	<script src="js/brotportal.js"></script>
-	<script src="js/login.js"></script>
 </html>

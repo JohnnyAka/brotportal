@@ -78,7 +78,7 @@ if(!isset($_SESSION['trustedUser'])) {
 			  <?php
 			    include('db_crud.php');
 			    $db = new db_connection();
-				$sidebarList = $db->getData("products",array("id","name"));
+					$sidebarList = $db->getData("products",array("id","name"));
 				
 				
 			    foreach($sidebarList as $item){

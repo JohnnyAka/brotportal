@@ -1,0 +1,29 @@
+
+.mainrow{
+	padding-top: 60px;
+}
+
+.sidebarList{
+	list-style-type: none;
+}
+
+.sidebarList li{
+cursor: pointer;
+}
+
+.rightSidebarList{
+	list-style-type: none;
+}
+
+.rightSidebarList li{
+cursor: pointer;
+}
+
+li.active{
+	background-color: #e7e7e7;
+}
+
+#messages{
+float: right;
+
+}

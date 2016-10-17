@@ -1,0 +1,11 @@
+.userList{
+	list-style-type: none;
+}
+
+.productsList{
+	list-style-type: none;
+}
+
+.productsList li{
+	cursor: pointer;
+}

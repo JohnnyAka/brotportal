@@ -26,6 +26,9 @@ if(!isset($_SESSION['userid'])) {
 		<!--datepicker language-->
 		<script src="../jquery-ui-1.11.4.custom/datepicker-de.js"></script>
 
+		<?php
+			require 'orders_functions.php';
+		?>
     <!-- Custom styles for this template -->
 	<link href="css/brotportal.css" rel="stylesheet">
 	<link href="css/orders.css" rel="stylesheet">
@@ -68,15 +71,35 @@ if(!isset($_SESSION['userid'])) {
 						<?php
 							include('queries/db_queries.php');
 							$db = new db_connection();
-							//get customercat
-							$customer = $db->getData("users",array("id","name"), "id==".$_SESSION['userid']);
+							//get customerdata
+							$customer = $db->getData("users",array("id","customerID","name","customerCategory"), "id=".$_SESSION['userid'])[0];
+							//echo '<script>console.log('. json_encode(      ).')</script>';
 							//get visible cats
-							//get products
-							$sidebarList = $db->getData("products",array("id","name"));
-						
-							foreach($sidebarList as $item){
-							echo "<li class='sidelist' data-id=".$item['id'].">".$item['name']."</li>";
-						}?>
+							$visibleCats = $db->getData("categoryRelations",array("idProductCat"), "idUserCat=".$customer['customerCategory']);
+							//get products and make products dictionary and category dictionary
+							//produces a an associative array with key = product ID and objects with keys: "id","productID","name","productCategory","visibleForUser"
+							//for category dict: associative array with key = category ID and value = name
+							//example: $productDict['8']['name'] ; $categoryDict['5']
+							$productDict = array(); $categoryDict = array();
+							foreach($visibleCats as $category){
+								$queryResult = $db->getData("products",array("id","productID","name","productCategory","visibleForUser"), "productCategory=".$category['idProductCat']);
+								$arrayLength = count($queryResult);
+								for($x=0; $x < $arrayLength; $x++){
+									$productDict[$queryResult[$x]['id']] = $queryResult[$x];
+								}
+								$categoryDict[$category['idProductCat']] = $db->getData("productCategories",array("id","name"), "id=".$category['idProductCat'])[0]['name'];
+							}
+							foreach($categoryDict as $catId => $catName){
+								echo "<li class='sidelist' data-id=".$catId.">".$catName."</li>";
+								echo '<ul class="subSidebarList">';
+								$productsOfCategory = search($productDict, 'productCategory', $catId);
+								foreach($productsOfCategory as $product){
+									echo "<li class='sidelist' data-id=".$product['id'].">".$product['name']."</li>";
+								}
+								echo '</ul>';
+							}
+							
+						?>
 					</ul>
 				</div>
 				<div class="col-md-6 main-content">

@@ -9,3 +9,7 @@
 .productsList li{
 	cursor: pointer;
 }
+
+.subSidebarList{
+	list-style-type: none;
+}

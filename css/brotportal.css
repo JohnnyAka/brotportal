@@ -6,9 +6,12 @@
 .sidebarList{
 	list-style-type: none;
 }
-
 .sidebarList li{
 cursor: pointer;
+}
+
+.subSidebarList{
+	list-style-type: none;
 }
 
 .rightSidebarList{

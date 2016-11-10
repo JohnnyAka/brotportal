@@ -90,11 +90,11 @@ if(!isset($_SESSION['userid'])) {
 								$categoryDict[$category['idProductCat']] = $db->getData("productCategories",array("id","name"), "id=".$category['idProductCat'])[0]['name'];
 							}
 							foreach($categoryDict as $catId => $catName){
-								echo "<li class='sidelist' data-id=".$catId.">".$catName."</li>";
+								echo "<li class='sidebarElement showMultipleArticles' data-id=".$catId.">".$catName."</li>";
 								echo '<ul class="subSidebarList">';
 								$productsOfCategory = search($productDict, 'productCategory', $catId);
 								foreach($productsOfCategory as $product){
-									echo "<li class='sidelist' data-id=".$product['id'].">".$product['name']."</li>";
+									echo "<li class='subSidebarElement showSingleArticle' data-id=".$product['id'].">".$product['name']."</li>";
 								}
 								echo '</ul>';
 							}
@@ -119,56 +119,6 @@ if(!isset($_SESSION['userid'])) {
 
   </body>
   
-  <!-- Modals for create and update row -->
-	<div class="modal" id="createProductCat" tabindex="-1" role="dialog" aria-labelledby="createProductCatLabel">
-	  <div class="modal-dialog" role="document">
-		<div class="modal-content">
-		  <div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h4 class="modal-title" id="createProductCatLabel">Produktkategorie hinzufügen</h4>
-		  </div>
-		  <div class="modal-body">
-			<form id="createProductCatForm" method="post" action="ajax/categories_product_create.php">
-				<div class="field">
-					<label for="productCatName">Produktkategorie:</label>
-					<input id="productCatName" name="productCatName">
-				</div>
-			</form>
-		  </div>
-		  <div class="modal-footer">
-			<button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
-			<button type="submit" form="createProductCatForm" class="btn btn-primary createProductCat">Produktkategorie speichern</button>
-		  </div>
-		</div>
-	  </div>
-	</div>
-	
-  <!-- Modal -->
-	<div class="modal" id="updateProductCat" tabindex="-1" role="dialog" aria-labelledby="updateProductCatLabel">
-	  <div class="modal-dialog" role="document">
-		<div class="modal-content">
-		  <div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h4 class="modal-title" id="updateProductCatLabel">Produktkategorie &auml;ndern</h4>
-		  </div>
-		  <div class="modal-body">
-			<form id="updateProductCatForm" method="post" action="ajax/categories_product_update.php">
-				<div class="field">
-					<label for="productCatNameUp">Produktkategorie:</label>
-					<input id="productCatNameUp" name="productCatName">
-				</div>
-				<div class="field">
-					<input type="hidden" id="catIdUp" name="catId">
-				</div>
-			</form>
-		  </div>
-		  <div class="modal-footer">
-			<button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
-			<button type="submit" form="updateProductCatForm" class="btn btn-primary updateProductCat">&Auml;nderungen speichern</button>
-		  </div>
-		</div>
-	  </div>
-	</div>
 	
 	<!-- Bootstrap core JavaScript
     ================================================== -->

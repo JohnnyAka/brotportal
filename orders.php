@@ -104,9 +104,8 @@ if(!isset($_SESSION['userid'])) {
 				</div>
 				<div class="col-md-6 main-content">
 					<div id="messages"></div>
-					<h1>Produkte</h1>
+					<div class="productContent"></div>
 					<hr>
-					<ul class="productsList"></ul>
 				</div>
 				<div class="col-md-3">
 					<h3>Bestellte Produkte</h3>

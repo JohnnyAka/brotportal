@@ -92,10 +92,11 @@ if(!isset($_SESSION['trustedUser'])) {
 								<label for="deleteOrdersInDays">Speicherdauer der Bestellungen in Tagen:</label>
 								<input id="deleteOrdersInDays" name="deleteOrdersInDays">
 							</div>
+							<!-- doesnt work, but is unnecessery
 							<div class="field">
 								<label for="imagesPath">Bilderpfad:</label>
 								<input id="imagesPath" name="imagesPath">
-							</div>
+							</div>-->
 							<div class="field">
 								<label for="autoExportOrdersTime">Automatischer Export der Bestellungen (in hh:mm:ss):</label>
 								<input id="autoExportOrdersTime" name="autoExportOrdersTime">

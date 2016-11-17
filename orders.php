@@ -107,10 +107,20 @@ if(!isset($_SESSION['userid'])) {
 					<div class="productContent"></div>
 					<hr>
 				</div>
-				<div class="col-md-3">
-					<h3>Bestellte Produkte</h3>
-					<ul class="rightSidebarList">
-					</ul>
+				<div class="col-md-3"
+					<!-- share the session variables with orders.js -->
+					<?php
+					echo '<input type="hidden" id="userID" data-value="'.$_SESSION["userid"].'">'
+					?>
+					<input type="text" id="ordersDatepicker">
+					<button type="button" class="btn btn-primary sendOrderButton">
+						abschicken
+					</button>
+					<form id="sendOrderForm" method="post" action="ajax/orders_sendOrder.php">
+					<!--<input type="hidden" id="idUp" name="id">
+					<input type="number" id="preBakeExpUp" name="preBakeExp">-->
+					
+					</form>
 				</div>
 			</div>
     </div> <!-- /container -->

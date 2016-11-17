@@ -3,3 +3,8 @@
 	height:auto;
 	float: right;
 }
+
+input[type="number"] {
+   width:45px;
+	 text-align: right;
+}

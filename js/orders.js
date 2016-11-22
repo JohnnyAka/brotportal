@@ -71,10 +71,8 @@ $(function() {
 });
 
 //displays orders of selected date and customer
-var showOrders = function populateOrderlist(){
+var showOrders = function(){
 	var selectedDate = $( "#ordersDatepicker" ).datepicker().val();
-	//reset list
-	$('#sendOrderForm').empty();
 	//check dateinput and send ajax request
 	var regExp = /\d\d.\d\d.\d\d\d\d/;
 	if(regExp.test(selectedDate)){
@@ -87,6 +85,8 @@ var showOrders = function populateOrderlist(){
 				date:selectedDate
 			}
 		}).done(function(response){
+			//reset list
+			$('#sendOrderForm').empty();
 			var ordersData = JSON.parse(response);
 			//set Item List/Form
 			for(var x=0; x < ordersData.length; x++){
@@ -119,7 +119,7 @@ var main = function(){
 			
 		//});
 	});
-	
+	//show single article in product content on click on left sidebar
 	$('.showSingleArticle').click(function() {
 		$('ul.sidebarList').find('*').removeClass("active");
 		$(this).addClass("active");
@@ -150,6 +150,21 @@ var main = function(){
 			console.log(productData["id"]);
 		});
 	});
+	//show and hide addProduct button
+	$(".subSidebarElement").mouseenter(function() { 
+		$(this).find(".buttonAddProduct").css('visibility','visible'); 
+	}).mouseleave(function() {
+    $(this).find(".buttonAddProduct").css('visibility','hidden'); 
+  });
+	
+	$('.buttonAddProduct').click(function(event) {
+		event.stopPropagation();
+		var idProduct = $(this).parent().data('id');
+		if( $('#sendOrderForm').find('#'+idProduct).length < 1){
+			$('#sendOrderForm').append('<div class="field"><label for='+idProduct+'>'+productsNameDict[idProduct]+'&nbsp;</label><input type="number" id="'+idProduct+'" value="'+1+'" min="0" name="'+idProduct+'"></div>');
+		}
+		$('input#'+idProduct).focus().select();
+	});
 	
 	$('.sendOrderButton').click(function() {
 		//check dateinput and send ajax request
@@ -160,12 +175,13 @@ var main = function(){
 			$('#sendOrderForm').append('<input type="hidden" value="'+selectedDate+'" name="orderDate">');
 			$('#sendOrderForm').append('<input type="hidden" value="'+customerID+'" name="userID">');
 			$('#sendOrderForm').submit();
+			setTimeout(function(){showOrders(); }, 50);
 		}
 		else{
 			alert("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
 		}
 	});
 }
-
+$(document).ready(function(){showOrders()});
 $(document).ready(main);
 

@@ -1,10 +1,25 @@
+
+/*product content*/
 #productImgSingle{
 	width:60%;
 	height:auto;
 	float: right;
 }
-
+/*right productlist*/
 input[type="number"] {
    width:45px;
 	 text-align: right;
+}
+#sendOrderForm input{
+	float:right;
+}
+
+/*left productlist*/
+.buttonAddProduct{
+	margin-top:2px;
+	visibility:hidden;
+	float: right;
+}
+.iconAddProduct{
+	float: right;
 }

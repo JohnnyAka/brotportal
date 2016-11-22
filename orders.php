@@ -94,7 +94,7 @@ if(!isset($_SESSION['userid'])) {
 								echo '<ul class="subSidebarList">';
 								$productsOfCategory = search($productDict, 'productCategory', $catId);
 								foreach($productsOfCategory as $product){
-									echo "<li class='subSidebarElement showSingleArticle' data-id=".$product['id'].">".$product['name']."</li>";
+									echo "<li class='subSidebarElement showSingleArticle' data-id=".$product['id'].">".$product['name']."<button class='btn btn-default btn-xs buttonAddProduct' type='button'><span class='glyphicon glyphicon-triangle-right iconAddProduct' aria-hidden='true'></span></button></li>";
 								}
 								echo '</ul>';
 							}
@@ -116,10 +116,7 @@ if(!isset($_SESSION['userid'])) {
 					<button type="button" class="btn btn-primary sendOrderButton">
 						abschicken
 					</button>
-					<form id="sendOrderForm" method="post" action="ajax/orders_sendOrder.php">
-					<!--<input type="hidden" id="idUp" name="id">
-					<input type="number" id="preBakeExpUp" name="preBakeExp">-->
-					
+					<form id="sendOrderForm" method="post" action="ajax/orders_sendOrder.php">					
 					</form>
 				</div>
 			</div>

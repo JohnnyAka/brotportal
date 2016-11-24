@@ -6,12 +6,24 @@
 	float: right;
 }
 /*right productlist*/
+.productActions{
+	/*position:fixed;
+	background-color: #333;
+	margin:0px,0px,0px,0px;
+	padding:20px, 20px, 20px, 20px;*/
+}
+.productActionsWrapper{
+	min-height:50px;
+}
+
 input[type="number"] {
    width:45px;
 	 text-align: right;
 }
 #sendOrderForm input{
 	float:right;
+}
+#sendOrderForm{
 }
 
 /*left productlist*/
@@ -22,4 +34,16 @@ input[type="number"] {
 }
 .iconAddProduct{
 	float: right;
+}
+
+@media (min-width: 768px) {
+    .affix {
+        position: fixed;
+    }
+}
+
+@media (max-width: 767px) {
+    .affix {
+        position: static;
+    }
 }

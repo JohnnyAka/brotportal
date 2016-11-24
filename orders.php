@@ -65,7 +65,7 @@ if(!isset($_SESSION['userid'])) {
 
     <div class="container">
 			<div class="row mainrow">
-				<div class="col-md-3">
+				<div class="col-md-3 col-sm-6">
 					<h3>Produktliste</h3>
 					<ul class="sidebarList">
 						<?php
@@ -102,22 +102,26 @@ if(!isset($_SESSION['userid'])) {
 						?>
 					</ul>
 				</div>
-				<div class="col-md-6 main-content">
+				<div class="col-md-3 col-sm-6 col-md-push-6">
+					<div class="productActionsWrapper">
+						<div class="productActions" data-spy="affix" data-offset-top="0">
+							<!-- share the session variables with orders.js -->
+							<?php
+							echo '<input type="hidden" id="userID" data-value="'.$_SESSION["userid"].'">'
+							?>
+							<input type="text" id="ordersDatepicker">
+							<button type="button" class="btn btn-primary sendOrderButton">
+								abschicken
+							</button>
+						</div>
+					</div>
+					<form id="sendOrderForm" method="post" action="ajax/orders_sendOrder.php">					
+					</form>
+				</div>
+				<div class="col-md-6 col-sm-12 col-md-pull-3 main-content">
 					<div id="messages"></div>
 					<div class="productContent"></div>
 					<hr>
-				</div>
-				<div class="col-md-3"
-					<!-- share the session variables with orders.js -->
-					<?php
-					echo '<input type="hidden" id="userID" data-value="'.$_SESSION["userid"].'">'
-					?>
-					<input type="text" id="ordersDatepicker">
-					<button type="button" class="btn btn-primary sendOrderButton">
-						abschicken
-					</button>
-					<form id="sendOrderForm" method="post" action="ajax/orders_sendOrder.php">					
-					</form>
 				</div>
 			</div>
     </div> <!-- /container -->

@@ -11,13 +11,14 @@ $(function() {
 		url: 'ajax/orders_read_products.php'
 	}).done(function(response) {
 		productsData = JSON.parse(response);
-			//set Item List
-			//productsIdDict = new Object();
-			productsNameDict = new Object();
-			for(var x=0; x < productsData.length; x++){
-				//productsIdDict[productsData[x].id] = productsData[x].productID;
-				productsNameDict[productsData[x].id] = productsData[x].name;
-			}
+		//set Item List
+		//productsIdDict = new Object();
+		productsNameDict = new Object();
+		for(var x=0; x < productsData.length; x++){
+			//productsIdDict[productsData[x].id] = productsData[x].productID;
+			productsNameDict[productsData[x].id] = productsData[x].name;
+		}
+		showOrders();
 	}).fail(function(data) {
 		// Set the message text.
 		if (data.responseText !== '') {
@@ -106,6 +107,7 @@ var showOrders = function(){
 	}
 };
 
+
 //main function for click event handlers
 var main = function(){
 
@@ -150,6 +152,7 @@ var main = function(){
 			console.log(productData["id"]);
 		});
 	});
+	
 	//show and hide addProduct button
 	$(".subSidebarElement").mouseenter(function() { 
 		$(this).find(".buttonAddProduct").css('visibility','visible'); 
@@ -182,6 +185,5 @@ var main = function(){
 		}
 	});
 }
-$(document).ready(function(){showOrders()});
 $(document).ready(main);
 

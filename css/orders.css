@@ -16,14 +16,25 @@
 	min-height:50px;
 }
 
+#sendOrderForm{
+	overflow:auto;
+	height: 600px;
+}
+
 input[type="number"] {
    width:45px;
 	 text-align: right;
 }
 #sendOrderForm input{
 	float:right;
+	
 }
-#sendOrderForm{
+.orderNameSize{
+	font-size:xx-small;
+}
+
+.clearfix{
+	overflow: auto; 
 }
 
 /*left productlist*/
@@ -36,14 +47,48 @@ input[type="number"] {
 	float: right;
 }
 
-@media (min-width: 768px) {
-    .affix {
-        position: fixed;
-    }
-}
 
-@media (max-width: 767px) {
-    .affix {
-        position: static;
-    }
-}
+	/* Custom, iPhone Retina */
+	@media only screen and (min-width : 0px){
+		#sendOrderForm{
+			height: 300px;
+		}
+	}
+	
+	@media only screen and (min-width : 320px){
+		#sendOrderForm{
+			height: 300px;
+		}
+	}
+
+	/* Extra Small Devices, Phones */
+	@media only screen and (min-width : 480px){
+		#sendOrderForm{
+			height: 300px;
+		}
+	}
+
+	/* Small Devices, Tablets */
+	@media only screen and (min-width : 768px){
+		#sendOrderForm{
+			height: 400px;
+		}
+	}
+
+	/* Medium Devices, Desktops */
+	@media only screen and (min-width : 992px){
+		#sendOrderForm{
+			height: 500px;
+		}
+	}
+
+	/* Large Devices, Wide Screens */
+	@media only screen and (min-width : 1200px){
+		#sendOrderForm{
+			height: 600px;
+		}
+	}
+
+
+
+

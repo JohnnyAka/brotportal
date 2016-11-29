@@ -104,7 +104,7 @@ if(!isset($_SESSION['userid'])) {
 				</div>
 				<div class="col-md-3 col-sm-6 col-md-push-6">
 					<div class="productActionsWrapper">
-						<div class="productActions" data-spy="affix" data-offset-top="0">
+						<div class="productActions">
 							<!-- share the session variables with orders.js -->
 							<?php
 							echo '<input type="hidden" id="userID" data-value="'.$_SESSION["userid"].'">'

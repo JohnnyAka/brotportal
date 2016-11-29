@@ -1,6 +1,8 @@
 /*This file contains event handlers for click events and form-submit events*/
 
-//create product list(dictionary) for name and backcontrol id retrieval
+//create product list(dictionary) for name retrieval via id, product-category list for category retrieval via id
+//and category list for category name retrieval via id --- then show orders
+//productsNameDict, productsCategoryDict, categoriesNameDict
 $(function() {
 	// Get the messages div.
 	var messages = $('#messages');
@@ -12,12 +14,31 @@ $(function() {
 	}).done(function(response) {
 		productsData = JSON.parse(response);
 		//set Item List
-		//productsIdDict = new Object();
 		productsNameDict = new Object();
+		productsCategoryDict = new Object();
 		for(var x=0; x < productsData.length; x++){
-			//productsIdDict[productsData[x].id] = productsData[x].productID;
+			productsCategoryDict[productsData[x].id] = productsData[x].productCategory;
 			productsNameDict[productsData[x].id] = productsData[x].name;
 		}
+		//create product category list(dictionary) for name retrieval
+		$.ajax({
+			type: 'POST',
+			url: 'ajax/orders_read_productCategories.php'
+		}).done(function(response) {
+			categoriesData = JSON.parse(response);
+			//set Item List
+			categoriesNameDict = new Object();
+			for(var x=0; x < categoriesData.length; x++){
+				categoriesNameDict[categoriesData[x].id] = categoriesData.name;
+			}
+		}).fail(function(data) {
+			// Set the message text.
+			if (data.responseText !== '') {
+				$(messages).text(data.responseText);
+			} else {
+				$(messages).text('Fehler, Kategorienamensliste konnte nicht erstellt werden.');
+			}
+		});
 		showOrders();
 	}).fail(function(data) {
 		// Set the message text.
@@ -28,6 +49,7 @@ $(function() {
 		}
 	});
 });
+
 
 $(function() {
 	var form = $('#sendOrderForm');
@@ -91,7 +113,7 @@ var showOrders = function(){
 			var ordersData = JSON.parse(response);
 			//set Item List/Form
 			for(var x=0; x < ordersData.length; x++){
-				$('#sendOrderForm').append('<div class="field"><label for='+ordersData[x].idProduct+'>'+productsNameDict[ordersData[x].idProduct]+'&nbsp;</label><input type="number" id="'+ordersData[x].idProduct+'" value="'+ordersData[x].number+'" min="0" name="'+ordersData[x].idProduct+'"></div>');
+				appendToProductList($('#sendOrderForm'), ordersData[x].idProduct, ordersData[x].number);
 			}
 		}).fail(function(data){
 			// Set the message text.
@@ -106,6 +128,21 @@ var showOrders = function(){
 		alert("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
 	}
 };
+
+var appendToProductList = function(formObj,idProduct, number){
+	var productName = productsNameDict[idProduct];
+	var orderLabel, maxSize = 30;
+	//add class to make textsize smaller if name longer than maxSize
+	if(productName.length > maxSize){
+		orderLabel = " class='orderNameSize' ";
+	}
+	else{
+		orderLabel = " ";
+	} 
+	formObj.append('<div class="field clearfix"><label'+orderLabel+'for='+idProduct+'>'+productName+'&nbsp;</label><input type="number" id="'+idProduct+'" value="'+number+'" min="0" name="'+idProduct+'"></div>');
+}
+
+
 
 
 //main function for click event handlers
@@ -164,7 +201,7 @@ var main = function(){
 		event.stopPropagation();
 		var idProduct = $(this).parent().data('id');
 		if( $('#sendOrderForm').find('#'+idProduct).length < 1){
-			$('#sendOrderForm').append('<div class="field"><label for='+idProduct+'>'+productsNameDict[idProduct]+'&nbsp;</label><input type="number" id="'+idProduct+'" value="'+1+'" min="0" name="'+idProduct+'"></div>');
+			appendToProductList($('#sendOrderForm'),idProduct, 1);
 		}
 		$('input#'+idProduct).focus().select();
 	});

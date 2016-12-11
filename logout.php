@@ -38,7 +38,9 @@
 		session_destroy();
 	?>
 	<h3 style="text-align:center">Erfolgreich ausgeloggt.</h3>
-					
+					<script>
+						window.location.href = 'index.php';
+					</script>
 	</body>
 	
 	

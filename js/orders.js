@@ -66,7 +66,11 @@ $(function() {
 			url: $(form).attr('action'),
 			data: formData
 		}).done(function(response) {
-
+			//update orderSentSign
+			var orderSent = $('#orderSentSign');
+			orderSent.removeClass('glyphicon-share');
+			orderSent.addClass('glyphicon-check');
+			
 			// Set the message text.
 			$(messages).text(response);
 			
@@ -113,7 +117,7 @@ var showOrders = function(){
 			var ordersData = JSON.parse(response);
 			//set Item List/Form
 			for(var x=0; x < ordersData.length; x++){
-				appendToProductList($('#sendOrderForm'), ordersData[x].idProduct, ordersData[x].number);
+				appendToProductList($('#sendOrderForm'), ordersData[x].idProduct, ordersData[x].number, true);
 			}
 		}).fail(function(data){
 			// Set the message text.
@@ -128,8 +132,7 @@ var showOrders = function(){
 		alert("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
 	}
 };
-
-var appendToProductList = function(formObj,idProduct, number){
+var appendToProductList = function(formObj,idProduct, number, init){
 	var productName = productsNameDict[idProduct];
 	var orderLabel, maxSize = 30;
 	//add class to make textsize smaller if name longer than maxSize
@@ -140,8 +143,16 @@ var appendToProductList = function(formObj,idProduct, number){
 		orderLabel = " ";
 	} 
 	formObj.append('<div class="field clearfix"><label'+orderLabel+'for='+idProduct+'>'+productName+'&nbsp;</label><input type="number" id="'+idProduct+'" value="'+number+'" min="0" name="'+idProduct+'"></div>');
+	if(!init){
+		updateOrderSentIcon();
+	}
+	document.getElementById(idProduct).addEventListener("input", updateOrderSentIcon, false);
 }
-
+var updateOrderSentIcon = function(){
+	var orderSent = $('#orderSentSign');
+	orderSent.removeClass('glyphicon-check');
+	orderSent.addClass('glyphicon-share');
+}
 
 
 
@@ -201,7 +212,7 @@ var main = function(){
 		event.stopPropagation();
 		var idProduct = $(this).parent().data('id');
 		if( $('#sendOrderForm').find('#'+idProduct).length < 1){
-			appendToProductList($('#sendOrderForm'),idProduct, 1);
+			appendToProductList($('#sendOrderForm'),idProduct, 1, false);
 		}
 		$('input#'+idProduct).focus().select();
 	});

@@ -2,6 +2,7 @@
 session_start();
 if(!isset($_SESSION['userid'])) {
    die("Bitte erst einloggen");  
+	 echo "<script>window.location.href = 'index.php';</script>";
 }
 ?>
 <!DOCTYPE html>
@@ -113,6 +114,10 @@ if(!isset($_SESSION['userid'])) {
 							<button type="button" class="btn btn-primary sendOrderButton">
 								abschicken
 							</button>
+							<span id="orderSentSign" class="glyphicon glyphicon-check" aria-hidden="true"></span>
+							<!--glyphicon glyphicon-share
+							glyphicon glyphicon-check
+							-->
 						</div>
 					</div>
 					<form id="sendOrderForm" method="post" action="ajax/orders_sendOrder.php">					

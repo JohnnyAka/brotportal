@@ -37,6 +37,10 @@ input[type="number"] {
 	overflow: auto; 
 }
 
+#orderSentSign{
+	font-size: 2em;
+}
+
 /*left productlist*/
 .buttonAddProduct{
 	margin-top:2px;

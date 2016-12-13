@@ -24,12 +24,11 @@ $(function() {
 			url: $(form).attr('action'),
 			data: formData
 		}).done(function(response) {
-
-			if(response != false){
-				window.location.href = 'orders.php';
+			if(response == false){
+				alert("Der Benutzername und das Passwort stimmen nicht überein.");
 			}
 			else{
-				alert("Der Benutzername und das Passwort stimmen nicht überein.");
+				window.location.href = 'orders.php';
 			}
 		}).fail(function(data) {
 			// Set the message text.

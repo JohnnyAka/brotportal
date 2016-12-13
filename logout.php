@@ -39,7 +39,7 @@
 	?>
 	<h3 style="text-align:center">Erfolgreich ausgeloggt.</h3>
 					<script>
-						window.location.href = 'index.php';
+						setTimeout(function(){window.location.href = 'index.php';}, 750);
 					</script>
 	</body>
 	

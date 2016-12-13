@@ -67,9 +67,7 @@ $(function() {
 			data: formData
 		}).done(function(response) {
 			//update orderSentSign
-			var orderSent = $('#orderSentSign');
-			orderSent.removeClass('glyphicon-share');
-			orderSent.addClass('glyphicon-check');
+			showOrderSentIcon();
 			
 			// Set the message text.
 			$(messages).text(response);
@@ -114,6 +112,7 @@ var showOrders = function(){
 		}).done(function(response){
 			//reset list
 			$('#sendOrderForm').empty();
+			showOrderSentIcon();
 			var ordersData = JSON.parse(response);
 			//set Item List/Form
 			for(var x=0; x < ordersData.length; x++){
@@ -144,16 +143,20 @@ var appendToProductList = function(formObj,idProduct, number, init){
 	} 
 	formObj.append('<div class="field clearfix"><label'+orderLabel+'for='+idProduct+'>'+productName+'&nbsp;</label><input type="number" id="'+idProduct+'" value="'+number+'" min="0" name="'+idProduct+'"></div>');
 	if(!init){
-		updateOrderSentIcon();
+		showOrderNotYetSentIcon();
 	}
-	document.getElementById(idProduct).addEventListener("input", updateOrderSentIcon, false);
+	document.getElementById(idProduct).addEventListener("input", showOrderNotYetSentIcon, false);
 }
-var updateOrderSentIcon = function(){
+var showOrderNotYetSentIcon = function(){
 	var orderSent = $('#orderSentSign');
 	orderSent.removeClass('glyphicon-check');
 	orderSent.addClass('glyphicon-share');
 }
-
+var showOrderSentIcon = function(){
+	var orderSent = $('#orderSentSign');
+	orderSent.removeClass('glyphicon-share');
+	orderSent.addClass('glyphicon-check');
+}
 
 
 //main function for click event handlers

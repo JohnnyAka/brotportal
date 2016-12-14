@@ -18,6 +18,7 @@ if(!isset($_SESSION['userid'])) {
 
     <title>Joldelunder Brotportal</title>
 
+		
     <!-- Bootstrap core CSS -->
     <link href="../bootstrap-3.3.5-dist/css/bootstrap.min.css" rel="stylesheet">
 		<!--jquery files -->

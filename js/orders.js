@@ -29,7 +29,7 @@ $(function() {
 			//set Item List
 			categoriesNameDict = new Object();
 			for(var x=0; x < categoriesData.length; x++){
-				categoriesNameDict[categoriesData[x].id] = categoriesData.name;
+				categoriesNameDict[categoriesData[x].id] = categoriesData[x].name;
 			}
 		}).fail(function(data) {
 			// Set the message text.
@@ -115,9 +115,37 @@ var showOrders = function(){
 			showOrderSentIcon();
 			var ordersData = JSON.parse(response);
 			//set Item List/Form
+			var productList = Object();
 			for(var x=0; x < ordersData.length; x++){
-				appendToProductList($('#sendOrderForm'), ordersData[x].idProduct, ordersData[x].number, true);
+				//create ordered Product-List with category headings
+				singleOrder = ordersData[x];
+				productCategory = productsCategoryDict[singleOrder.idProduct];
+				
+				if(!productList.hasOwnProperty(productCategory)){
+					productList[productCategory] = [];
+				}
+				productList[productCategory].push([singleOrder.idProduct, singleOrder.number]);
+				//appendToProductList($('#sendOrderForm'), ordersData[x].idProduct, ordersData[x].number, true);
 			}
+			//sort products and build form
+			for (var category in productList) {
+				if (productList.hasOwnProperty(category)) {
+					var currentList = productList[category];
+					currentList.sort(function(a,b){
+						var one = productsNameDict[a[0].toUpperCase()]; 
+						var two = productsNameDict[b[0].toUpperCase()];
+						if(one < two) return -1;
+						if(one > two) return 1;
+						return 0;
+					});
+					$('#sendOrderForm').append('<p>'+categoriesNameDict[category]+'</p>');
+					for(var x = 0; x < currentList.length; x++){
+						appendToProductList($('#sendOrderForm'), currentList[x][0], currentList[x][1], true);
+					}
+					$('#sendOrderForm').append('<hr>');
+				}
+			}
+			
 		}).fail(function(data){
 			// Set the message text.
 			if (data.responseText !== '') {

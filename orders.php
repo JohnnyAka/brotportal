@@ -18,7 +18,6 @@ if(!isset($_SESSION['userid'])) {
 
     <title>Joldelunder Brotportal</title>
 
-		
     <!-- Bootstrap core CSS -->
     <link href="../bootstrap-3.3.5-dist/css/bootstrap.min.css" rel="stylesheet">
 		<!--jquery files -->
@@ -91,10 +90,16 @@ if(!isset($_SESSION['userid'])) {
 								}
 								$categoryDict[$category['idProductCat']] = $db->getData("productCategories",array("id","name"), "id=".$category['idProductCat'])[0]['name'];
 							}
+							uasort($categoryDict, function($a, $b){
+								return strcasecmp($a,$b);
+							});
 							foreach($categoryDict as $catId => $catName){
 								echo "<li class='sidebarElement showMultipleArticles' data-id=".$catId.">".$catName."</li>";
 								echo '<ul class="subSidebarList">';
 								$productsOfCategory = search($productDict, 'productCategory', $catId);
+								usort($productsOfCategory, function($a, $b) {
+									return strcasecmp($a['name'], $b['name']);
+								});
 								foreach($productsOfCategory as $product){
 									echo "<li class='subSidebarElement showSingleArticle' data-id=".$product['id'].">".$product['name']."<button class='btn btn-default btn-xs buttonAddProduct' type='button'><span class='glyphicon glyphicon-triangle-right iconAddProduct' aria-hidden='true'></span></button></li>";
 								}

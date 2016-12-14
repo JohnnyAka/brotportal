@@ -31,6 +31,7 @@ $(function() {
 			for(var x=0; x < categoriesData.length; x++){
 				categoriesNameDict[categoriesData[x].id] = categoriesData[x].name;
 			}
+			showOrders();
 		}).fail(function(data) {
 			// Set the message text.
 			if (data.responseText !== '') {
@@ -39,7 +40,6 @@ $(function() {
 				$(messages).text('Fehler, Kategorienamensliste konnte nicht erstellt werden.');
 			}
 		});
-		showOrders();
 	}).fail(function(data) {
 		// Set the message text.
 		if (data.responseText !== '') {
@@ -125,10 +125,23 @@ var showOrders = function(){
 					productList[productCategory] = [];
 				}
 				productList[productCategory].push([singleOrder.idProduct, singleOrder.number]);
-				//appendToProductList($('#sendOrderForm'), ordersData[x].idProduct, ordersData[x].number, true);
 			}
+			//sort categories
+			var keys = [];
+			for(k in productList){
+				if(productList.hasOwnProperty(k)){
+					keys.push(k);
+				}
+			}
+			keys.sort(function(a,b){
+				return categoriesNameDict[a].localeCompare(categoriesNameDict[b]);
+			});
+			console.log(productList);
+			console.log(keys);
 			//sort products and build form
-			for (var category in productList) {
+			for (var y=0; y < keys.length; y++){
+				var category = keys[y];
+				console.log(category);
 				if (productList.hasOwnProperty(category)) {
 					var currentList = productList[category];
 					currentList.sort(function(a,b){

@@ -136,12 +136,9 @@ var showOrders = function(){
 			keys.sort(function(a,b){
 				return categoriesNameDict[a].localeCompare(categoriesNameDict[b]);
 			});
-			console.log(productList);
-			console.log(keys);
 			//sort products and build form
 			for (var y=0; y < keys.length; y++){
 				var category = keys[y];
-				console.log(category);
 				if (productList.hasOwnProperty(category)) {
 					var currentList = productList[category];
 					currentList.sort(function(a,b){
@@ -240,8 +237,6 @@ var main = function(){
 			$('.productContent').append('<p>Zutaten <br />'+productData["ingredients"]+'</p>');
 			$('.productContent').append('<p>Allergene <br />'+productData["allergens"]+'</p>');
 			$('.productContent').append('<p>Beschreibung <br />'+productData["description"]+'</p>');
-			
-			console.log(productData["id"]);
 		});
 	});
 	
@@ -270,6 +265,40 @@ var main = function(){
 			$('#sendOrderForm').append('<input type="hidden" value="'+selectedDate+'" name="orderDate">');
 			$('#sendOrderForm').append('<input type="hidden" value="'+customerID+'" name="userID">');
 			$('#sendOrderForm').submit();
+			setTimeout(function(){showOrders(); }, 50);
+		}
+		else{
+			alert("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
+		}
+	});
+	$('.deleteOrderButton').click(function() {
+		//check dateinput and send ajax request
+		var selectedDate = $( "#ordersDatepicker" ).datepicker().val();
+		var regExp = /\d\d.\d\d.\d\d\d\d/;
+		if(regExp.test(selectedDate)){
+			var customerID = $('#userID').data("value");
+			$.ajax({
+				type: 'POST',
+				url: 'ajax/orders_deleteOrdersOfDay.php',
+				data: {
+					orderDate:selectedDate,
+					userID:customerID
+				}
+			}).done(function(response) {
+				//update orderSentSign
+				showOrderSentIcon();
+				
+				// Set the message text.
+				$(messages).text(response);
+				
+			}).fail(function(data) {
+				// Set the message text.
+				if (data.responseText !== '') {
+					$(messages).text(data.responseText);
+				} else {
+					$(messages).text('Fehler, Bestellungen konnten nicht gelöscht werden.');
+				}
+			});
 			setTimeout(function(){showOrders(); }, 50);
 		}
 		else{

@@ -16,7 +16,7 @@
 	min-height:50px;
 }
 
-#sendOrderForm{
+.listsHeight{
 	overflow:auto;
 	height: 600px;
 }
@@ -42,53 +42,64 @@ input[type="number"] {
 }
 
 /*left productlist*/
+ul.sidebarList{
+	margin:0px;
+	padding:0px;
+}
+
+li.subSidebarElement{
+	position: relative;
+}
+
 .buttonAddProduct{
-	margin-top:2px;
+	margin-top:3px;
 	visibility:hidden;
-	float: right;
+	position: absolute;
+	right:3px;
 }
 .iconAddProduct{
 	float: right;
+	top:0px;
 }
 
 
 	/* Custom, iPhone Retina */
 	@media only screen and (min-width : 0px){
-		#sendOrderForm{
+		.listsHeight{
 			height: 300px;
 		}
 	}
 	
 	@media only screen and (min-width : 320px){
-		#sendOrderForm{
+		.listsHeight{
 			height: 300px;
 		}
 	}
 
 	/* Extra Small Devices, Phones */
 	@media only screen and (min-width : 480px){
-		#sendOrderForm{
+		.listsHeight{
 			height: 300px;
 		}
 	}
 
 	/* Small Devices, Tablets */
 	@media only screen and (min-width : 768px){
-		#sendOrderForm{
+		.listsHeight{
 			height: 400px;
 		}
 	}
 
 	/* Medium Devices, Desktops */
 	@media only screen and (min-width : 992px){
-		#sendOrderForm{
+		.listsHeight{
 			height: 500px;
 		}
 	}
 
 	/* Large Devices, Wide Screens */
 	@media only screen and (min-width : 1200px){
-		#sendOrderForm{
+		.listsHeight{
 			height: 600px;
 		}
 	}

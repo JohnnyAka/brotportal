@@ -68,7 +68,7 @@ if(!isset($_SESSION['userid'])) {
 			<div class="row mainrow">
 				<div class="col-md-3 col-sm-6">
 					<h3>Produktliste</h3>
-					<ul class="sidebarList">
+					<ul class="sidebarList listsHeight">
 						<?php
 							include('queries/db_queries.php');
 							$db = new db_connection();
@@ -120,13 +120,16 @@ if(!isset($_SESSION['userid'])) {
 							<button type="button" class="btn btn-primary sendOrderButton">
 								abschicken
 							</button>
+							<button type="button" class="btn btn-primary deleteOrderButton">
+								löschen
+							</button>
 							<span id="orderSentSign" class="glyphicon glyphicon-check" aria-hidden="true"></span>
 							<!--glyphicon glyphicon-share
 							glyphicon glyphicon-check
 							-->
 						</div>
 					</div>
-					<form id="sendOrderForm" method="post" action="ajax/orders_sendOrder.php">					
+					<form id="sendOrderForm" class="listsHeight" method="post" action="ajax/orders_sendOrder.php">					
 					</form>
 				</div>
 				<div class="col-md-6 col-sm-12 col-md-pull-3 main-content">

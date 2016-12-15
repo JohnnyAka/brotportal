@@ -86,14 +86,75 @@ $(function() {
 
 //datepicker setup including onclose ajax orderlist load function
 $(function() {
-	$( "#ordersDatepicker" ).datepicker($.datepicker.regional[ "de" ]);
+	$( "#ordersDatepicker" ).datepicker({
+	dateFormat:"dd.mm.yy",
+	setDate:"+1",
+	minDate:"-380",
+	onClose:function(selectedDate, picker){
+		showOrders();
+	},
+	beforeShowDay:function(date){
+			day  = ('0' + date.getDate()).slice(-2);
+			month = ('0' + (date.getMonth() + 1)).slice(-2);
+			year =  date.getFullYear();
+			var formatedDate = year + '-' + month + '-' + day;
+			if ($.inArray(formatedDate, orderDates) !== -1) {
+				return [true, 'ui-state-orderDays', 'Bestellung vorhanden.'];
+			}
+			return [true, 'ui-state-noOrderDays', 'Keine Bestellung vorhanden.'];
+		}
+});
+	/*$( "#ordersDatepicker" ).datepicker($.datepicker.regional[ "de" ]);
 	$( "#ordersDatepicker" ).datepicker( "option", "dateFormat", "dd.mm.yy" );
 	$( "#ordersDatepicker" ).datepicker( "setDate", "+1" );
 	$( "#ordersDatepicker" ).datepicker( "option", "minDate", "-380" );
 	$( "#ordersDatepicker" ).datepicker( "option", "onClose", function(selectedDate, picker){
 		showOrders();
+	});*/
+	updateOrderDays();
+	//datepicker for take orders from selected date to current date
+	$( "#takeDatepicker" ).datepicker({
+		dateFormat:"dd.mm.yy",
+		setDate:"+1",
+		minDate:"-380",
+		beforeShowDay:function(date){
+			day  = ('0' + date.getDate()).slice(-2);
+			month = ('0' + (date.getMonth() + 1)).slice(-2);
+			year =  date.getFullYear();
+			var formatedDate = year + '-' + month + '-' + day;
+			if ($.inArray(formatedDate, orderDates) !== -1) {
+				return [true, 'ui-state-active', 'Bestellung vorhanden.'];
+			}
+			return [false, '', 'Keine Bestellung vorhanden.'];
+		}
 	});
 });
+
+var orderDates = [];
+var updateOrderDays = function(){
+	var customerID = $('#userID').data("value");
+	$.ajax({
+		type: 'POST',
+		url: 'ajax/orders_getOrderDays.php',
+		data: {
+			userID:customerID
+		}
+	}).done(function(response) {
+		var ordersData = JSON.parse(response);
+		orderDates = [];
+		for(var x=0; x < ordersData.length; x++){
+			orderDates.push(ordersData[x].orderDate);
+		}
+	}).fail(function(data) {
+		// Set the message text.
+		if (data.responseText !== '') {
+			$(messages).text(data.responseText);
+		} else {
+			$(messages).text('Fehler, Tage an denen bestellt wurde konnten nicht geladen werden.');
+		}
+	});
+}
+
 
 //displays orders of selected date and customer
 var showOrders = function(){
@@ -266,11 +327,13 @@ var main = function(){
 			$('#sendOrderForm').append('<input type="hidden" value="'+customerID+'" name="userID">');
 			$('#sendOrderForm').submit();
 			setTimeout(function(){showOrders(); }, 50);
+			setTimeout(function(){updateOrderDays(); }, 50);
 		}
 		else{
 			alert("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
 		}
 	});
+	
 	$('.deleteOrderButton').click(function() {
 		//check dateinput and send ajax request
 		var selectedDate = $( "#ordersDatepicker" ).datepicker().val();
@@ -287,6 +350,7 @@ var main = function(){
 			}).done(function(response) {
 				//update orderSentSign
 				showOrderSentIcon();
+				updateOrderDays();
 				
 				// Set the message text.
 				$(messages).text(response);
@@ -303,6 +367,50 @@ var main = function(){
 		}
 		else{
 			alert("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
+		}
+	});
+	
+	$('.takeOrdersFromButton').click(function() {
+		//check dateinput and send ajax request
+		var selectedDate = $( "#ordersDatepicker" ).datepicker().val();
+		var takeFromDateSelected = $( "#takeDatepicker" ).datepicker().val();
+		var regExp = /\d\d.\d\d.\d\d\d\d/;
+		if(regExp.test(selectedDate)){
+			//only take over orders, if no order exists on this date
+			if(!$('#sendOrderForm').children('.field').length){
+				var customerID = $('#userID').data("value");
+				$.ajax({
+					type: 'POST',
+					url: 'ajax/orders_takeOverOrdersFrom.php',
+					data: {
+						takeFromDate:takeFromDateSelected,
+						orderDate:selectedDate,
+						userID:customerID
+					}
+				}).done(function(response) {
+					//update orderSentSign
+					showOrderSentIcon();
+					updateOrderDays();
+					
+					// Set the message text.
+					$(messages).text(response);
+					
+				}).fail(function(data) {
+					// Set the message text.
+					if (data.responseText !== '') {
+						$(messages).text(data.responseText);
+					} else {
+						$(messages).text('Fehler, Bestellungen konnten nicht gelöscht werden.');
+					}
+				});
+				setTimeout(function(){showOrders(); }, 50);
+			}
+			else{
+				alert("Es sind noch Bestellungen an diesem Tag vorhanden. Bitte löschen Sie diese, bevor Sie eine Bestellung von einem anderen Tag übernehmen.");
+			}
+		}
+		else{
+			alert(" Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
 		}
 	});
 }

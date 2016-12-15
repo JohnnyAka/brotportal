@@ -61,7 +61,25 @@ li.subSidebarElement{
 	float: right;
 	top:0px;
 }
-
+/*datepicker colors*/
+.ui-state-orderDays a,
+.ui-state-orderDays a:link,
+.ui-state-orderDays a:visited {
+	color: #000000;
+	background:#939393;
+	border:1px solid #d3d3d3;
+}
+.ui-state-noOrderDays a,
+.ui-state-noOrderDays a:link,
+.ui-state-noOrderDays a:visited {
+	color: #000000;
+	border:1px solid #d3d3d3;
+}
+.ui-datepicker-current-day .ui-state-active{
+	color: #000000;
+	background:#006dcc !important;
+	border:1px solid #000000;
+}
 
 	/* Custom, iPhone Retina */
 	@media only screen and (min-width : 0px){

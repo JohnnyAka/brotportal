@@ -14,12 +14,13 @@ $telephone2 = strip_tags(trim($_POST["telephone2"]));
 $fax = strip_tags(trim($_POST["fax"]));
 $storeAdress = strip_tags(trim($_POST["storeAdress"]));
 $whereToPutOrder = strip_tags(trim($_POST["whereToPutOrder"]));
-
+$priceCategory = strip_tags(trim($_POST["priceCategory"]));
+$preOrderCustomerId = strip_tags(trim($_POST["preOrderCustomerId"]));
 
 $db = new db_connection();
 $result = $db->updateData("users", 
-array('customerID','name','password','customerCategory','mailAdressTo','mailAdressReceive','telephone1','telephone2','fax','storeAdress','whereToPutOrder'), 
-array($customerID,$name,$password,$customerCategory,$mailAdressTo,$mailAdressReceive,$telephone1,$telephone2,$fax,$storeAdress,$whereToPutOrder),
+array('customerID','name','password','customerCategory','mailAdressTo','mailAdressReceive','telephone1','telephone2','fax','storeAdress','whereToPutOrder','priceCategory','preOrderCustomerId'), 
+array($customerID,$name,$password,$customerCategory,$mailAdressTo,$mailAdressReceive,$telephone1,$telephone2,$fax,$storeAdress,$whereToPutOrder,$priceCategory,$preOrderCustomerId),
 "id=".$id);
 
 echo $result;

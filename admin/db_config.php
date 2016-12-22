@@ -42,7 +42,10 @@ $sql = "DROP TABLE categoryRelations;";
 $conn->query($sql);
 $sql = "DROP TABLE settings;";
 $conn->query($sql);
-
+$sql = "DROP TABLE calendars;";
+$conn->query($sql);
+$sql = "DROP TABLE calendarsDaysRelations;";
+$conn->query($sql);
 
 $sql = "CREATE TABLE products (
 id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -56,7 +59,13 @@ ingredients VARCHAR(200),
 allergens VARCHAR(200),
 weight VARCHAR(10),
 preBakeExp INT(3) UNSIGNED,
-featureExp VARCHAR(200)
+featureExp VARCHAR(200),
+price1 DECIMAL(8,2),
+price2 DECIMAL(8,2),
+price3 DECIMAL(8,2),
+price4 DECIMAL(8,2),
+price5 DECIMAL(8,2),
+idCalendar INT(6)
 )";
 if ($conn->query($sql) === TRUE) {
     echo "Table products created successfully<br>";
@@ -67,9 +76,11 @@ if ($conn->query($sql) === TRUE) {
 $sql = "CREATE TABLE users (
 id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 customerID VARCHAR(10) NOT NULL,
+preOrderCustomerId VARCHAR(10) NOT NULL,
 name VARCHAR (40),
 password VARCHAR(20),
 customerCategory INT(6),
+priceCategory INT(1),
 mailAdressTo VARCHAR (40),
 mailAdressReceive VARCHAR (40),
 telephone1 VARCHAR (25),
@@ -129,6 +140,27 @@ primary key (idUserCat, idProductCat)
 )";
 if ($conn->query($sql) === TRUE) {
     echo "Table categoryRelations created successfully<br>";
+} else {
+    echo "Error creating database: " . $conn->error."<br>";
+}
+
+$sql = "CREATE TABLE calendars(
+id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR (60)
+)";
+if ($conn->query($sql) === TRUE) {
+    echo "Table calendars created successfully<br>";
+} else {
+    echo "Error creating database: " . $conn->error."<br>";
+}
+
+$sql = "CREATE TABLE calendarsDaysRelations(
+idCalendar INT(6) UNSIGNED,
+date INT(6) UNSIGNED,
+primary key (idCalendar, date)
+)";
+if ($conn->query($sql) === TRUE) {
+    echo "Table calendarsDaysRelations created successfully<br>";
 } else {
     echo "Error creating database: " . $conn->error."<br>";
 }

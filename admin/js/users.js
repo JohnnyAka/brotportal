@@ -44,6 +44,8 @@ $(function() {
 			$('#fax').val('');
 			$('#storeAdress').val('');
 			$('#whereToPutOrder').val('');
+			$('#priceCategory').val('');
+			$('#preOrderCustomerId').val('');
 		})
 
 	// Set up an event listener for the createUser form.
@@ -99,6 +101,8 @@ $(function() {
 			$('#faxUp').val('');
 			$('#storeAdressUp').val('');
 			$('#whereToPutOrderUp').val('');
+			$('#priceCategoryUp').empty();
+			$('#preOrderCustomerIdUp').val('');
 		})
 
 	// Set up an event listener for the updateProduct form.
@@ -199,9 +203,12 @@ var main = function(){
 			$(".faxDisp").text(userData[0]["fax"]);
 			$(".storeAdressDisp").text(userData[0]["storeAdress"]);
 			$(".whereToPutOrderDisp").text(userData[0]["whereToPutOrder"]);
+			var pCat = userData[0]["priceCategory"];
+			if(pCat == 0) pCat = " 0 (Preise werden nicht angezeigt)";
+			$(".priceCategoryDisp").text(pCat);
+			$(".preOrderCustomerIdDisp").text(userData[0]["preOrderCustomerId"]);
 		});
 	});
-	
 	
 	
 	$('.createUserButton').click(function(){
@@ -260,6 +267,8 @@ var main = function(){
 				$('#storeAdress').val(userData[0]["storeAdress"]);
 				$('#whereToPutOrderUp').val(userData[0]["whereToPutOrder"]);
 				$('#idUp').val(userData[0]["id"]);
+				$("#priceCategoryUp").val(userData[0]["priceCategory"]);
+				$("#preOrderCustomerIdUp").val(userData[0]["preOrderCustomerId"]);
 				
 				//show modal
 				$("#updateUser").modal("show");

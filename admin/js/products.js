@@ -44,6 +44,12 @@ $(function() {
 			$('#weight').val('');
 			$('#preBakeExp').val('');
 			$('#featureExp').val('');
+			$('#price1').val('');
+			$('#price2').val('');
+			$('#price3').val('');
+			$('#price4').val('');
+			$('#price5').val('');
+			$('#idCalendar').empty();
 		})
 
 	// Set up an event listener for the createProduct form.
@@ -202,6 +208,12 @@ var main = function(){
 			$(".displayWeight").text(productData[0]["weight"]);
 			$(".displayPreBakeExp").text(productData[0]["preBakeExp"]);
 			$(".displayFeatureExp").text(productData[0]["featureExp"]);
+			$(".displayPrice1").text(productData[0]["price1"]);
+			$(".displayPrice2").text(productData[0]["price2"]);
+			$(".displayPrice3").text(productData[0]["price3"]);
+			$(".displayPrice4").text(productData[0]["price4"]);
+			$(".displayPrice5").text(productData[0]["price5"]);
+			$(".displayIdCalendar").text(productData[0]["idCalendar"]);
 		});
 	});
 	
@@ -268,8 +280,12 @@ var main = function(){
 				$('#weightUp').val(productData[0]["weight"]);
 				$('#preBakeExpUp').val(productData[0]["preBakeExp"]);
 				$('#featureExpUp').val(productData[0]["featureExp"]);
-				
-				
+				$("#price1Up").val(productData[0]["price1"]);
+				$("#price2Up").val(productData[0]["price2"]);
+				$("#price3Up").val(productData[0]["price3"]);
+				$("#price4Up").val(productData[0]["price4"]);
+				$("#price5Up").val(productData[0]["price5"]);
+				$("#idCalendarUp").val(productData[0]["idCalendar"]);
 				
 				//show modal
 				$("#updateProduct").modal("show");

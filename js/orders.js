@@ -88,7 +88,6 @@ $(function() {
 $(function() {
 	$( "#ordersDatepicker" ).datepicker({
 	dateFormat:"dd.mm.yy",
-	setDate:"+1",
 	minDate:"-380",
 	onClose:function(selectedDate, picker){
 		showOrders();
@@ -104,6 +103,8 @@ $(function() {
 			return [true, 'ui-state-noOrderDays', 'Keine Bestellung vorhanden.'];
 		}
 });
+$( "#ordersDatepicker" ).datepicker( "setDate", "+1" );
+
 	/*$( "#ordersDatepicker" ).datepicker($.datepicker.regional[ "de" ]);
 	$( "#ordersDatepicker" ).datepicker( "option", "dateFormat", "dd.mm.yy" );
 	$( "#ordersDatepicker" ).datepicker( "setDate", "+1" );
@@ -115,7 +116,6 @@ $(function() {
 	//datepicker for take orders from selected date to current date
 	$( "#takeDatepicker" ).datepicker({
 		dateFormat:"dd.mm.yy",
-		setDate:"+1",
 		minDate:"-380",
 		beforeShowDay:function(date){
 			day  = ('0' + date.getDate()).slice(-2);
@@ -123,9 +123,9 @@ $(function() {
 			year =  date.getFullYear();
 			var formatedDate = year + '-' + month + '-' + day;
 			if ($.inArray(formatedDate, orderDates) !== -1) {
-				return [true, 'ui-state-active', 'Bestellung vorhanden.'];
+				return [true, 'ui-state-orderDays', 'Bestellung vorhanden.'];
 			}
-			return [false, '', 'Keine Bestellung vorhanden.'];
+			return [false, 'ui-state-noOrderDays', 'Keine Bestellung vorhanden.'];
 		}
 	});
 });
@@ -375,7 +375,7 @@ var main = function(){
 		var selectedDate = $( "#ordersDatepicker" ).datepicker().val();
 		var takeFromDateSelected = $( "#takeDatepicker" ).datepicker().val();
 		var regExp = /\d\d.\d\d.\d\d\d\d/;
-		if(regExp.test(selectedDate)){
+		if(regExp.test(selectedDate) && regExp.test(takeFromDateSelected)){
 			//only take over orders, if no order exists on this date
 			if(!$('#sendOrderForm').children('.field').length){
 				var customerID = $('#userID').data("value");
@@ -410,7 +410,7 @@ var main = function(){
 			}
 		}
 		else{
-			alert(" Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
+			alert(" Mindestens eines der Daten entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
 		}
 	});
 }

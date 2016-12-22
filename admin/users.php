@@ -104,9 +104,11 @@ if(!isset($_SESSION['trustedUser'])) {
 		<h1>Ausgew&auml;hlter Benutzer</h1>
 		  <p>
 			Kunden Nr.: <span class="customerIDDisp"></span><br />
-		    Name: <span class="nameDisp"></span><br />
+			Vorbestell-Kundennummer: <span class="preOrderCustomerIdDisp"></span><br />
+		  Name: <span class="nameDisp"></span><br />
 			Passwort: <span class="passwordDisp"></span><br />
 			Kategorie: <span class="customerCategoryDisp"></span><br />
+			Preiskategorie: <span class="priceCategoryDisp"></span><br />
 			E-Mail: <span class="mailAdressToDisp"></span><br />
 			E-Mail-Verteiler: <span class="mailAdressReceiveDisp"></span><br />
 			Telefon Laden: <span class="telephone1Disp"></span><br />
@@ -137,6 +139,10 @@ if(!isset($_SESSION['trustedUser'])) {
 					<input type="text" id="customerid" name="customerid" required>
 				</div>
 				<div class="field">
+					<label for="preOrderCustomerId">Vorbestell-Kundennummer:</label>
+					<input type="text" id="preOrderCustomerId" name="preOrderCustomerId">
+				</div>
+				<div class="field">
 					<label for="name">Name:</label>
 					<input type="text" id="name" name="name" required>
 				</div>
@@ -147,6 +153,17 @@ if(!isset($_SESSION['trustedUser'])) {
 				<div class="field">
 					<label for="customerCategory">Kunden-Kategorie:</label>
 					<select id="customerCategory" name="customerCategory">
+					</select>
+				</div>
+				<div class="field">
+					<label for="priceCategory">Preiskategory:</label>
+					<select id="priceCategory" name="priceCategory">
+						<option value=0>Preis wird nicht angezeigt</option>
+						<option value=1>Preis 1</option>
+						<option value=2>Preis 2</option>
+						<option value=3>Preis 3</option>
+						<option value=4>Preis 4</option>
+						<option value=5>Preis 5</option>
 					</select>
 				</div>
 				<div class="field">
@@ -202,6 +219,10 @@ if(!isset($_SESSION['trustedUser'])) {
 					<input type="text" id="customeridUp" name="customerid" required>
 				</div>
 				<div class="field">
+					<label for="preOrderCustomerIdUp">Vorbestell-Kundennummer:</label>
+					<input type="text" id="preOrderCustomerIdUp" name="preOrderCustomerId">
+				</div>
+				<div class="field">
 					<input type="hidden" id="idUp" name="id">
 				</div>
 				<div class="field">
@@ -215,6 +236,17 @@ if(!isset($_SESSION['trustedUser'])) {
 				<div class="field">
 					<label for="customerCategoryUp">Kunden-Kategorie:</label>
 					<select id="customerCategoryUp" name="customerCategory">
+					</select>
+				</div>
+				<div class="field">
+					<label for="priceCategoryUp">Preiskategory:</label>
+					<select id="priceCategoryUp" name="priceCategory">
+						<option value=0>Preis wird nicht angezeigt</option>
+						<option value=1>Preis 1</option>
+						<option value=2>Preis 2</option>
+						<option value=3>Preis 3</option>
+						<option value=4>Preis 4</option>
+						<option value=5>Preis 5</option>
 					</select>
 				</div>
 				<div class="field">

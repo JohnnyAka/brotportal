@@ -114,6 +114,12 @@ if(!isset($_SESSION['trustedUser'])) {
 			Gewicht: <span class="displayWeight"></span><br />
 			Tage vorher backen: <span class="displayPreBakeExp"></span><br />
 			Notiz (Pre-Notification): <span class="displayFeatureExp"></span><br />
+			Preis1: <span class="displayPrice1"></span><br />
+			Preis2: <span class="displayPrice2"></span><br />
+			Preis3: <span class="displayPrice3"></span><br />
+			Preis4: <span class="displayPrice4"></span><br />
+			Preis5: <span class="displayPrice5"></span><br />
+			Kalender: <span class="displayIdCalendar"></span><br />
 		  </p>
 		</div>
 	  </div>
@@ -179,6 +185,32 @@ if(!isset($_SESSION['trustedUser'])) {
 				<div class="field">
 					<label for="featureExp">Besonderheiten (Pre-Notifikation):</label>
 					<textarea id="featureExp" name="featureExp"></textarea>
+				</div>
+				<div class="field">
+					<label for="price1">Preis 1:</label>
+					<input type="number" step="0.01" id="price1" name="price1">
+				</div>
+				<div class="field">
+					<label for="price2">Preis 2:</label>
+					<input type="number" step="0.01" id="price2" name="price2">
+				</div>
+				<div class="field">
+					<label for="price3">Preis 3:</label>
+					<input type="number" step="0.01" id="price3" name="price3">
+				</div>
+				<div class="field">
+					<label for="price4">Preis 4:</label>
+					<input type="number" step="0.01" id="price4" name="price4">
+				</div>
+				<div class="field">
+					<label for="price5">Preis 5:</label>
+					<input type="number" step="0.01" id="price5" name="price5">
+				</div>
+				<div class="field">
+					<label for="idCalendar">Kalender:</label>
+					<select id="idCalendar" name="idCalendar" required>
+					<option value=1>Kalender 1</option>
+					</select>
 				</div>
 			</form>
 		  </div>
@@ -251,6 +283,33 @@ if(!isset($_SESSION['trustedUser'])) {
 					<label for="featureExpUp">Besonderheiten (Pre-Notifikation):</label>
 					<textarea id="featureExpUp" name="featureExp"></textarea>
 				</div>
+				<div class="field">
+					<label for="price1Up">Preis 1:</label>
+					<input type="number" step="0.01" id="price1Up" name="price1">
+				</div>
+				<div class="field">
+					<label for="price2Up">Preis 2:</label>
+					<input type="number" step="0.01" id="price2Up" name="price2">
+				</div>
+				<div class="field">
+					<label for="price3Up">Preis 3:</label>
+					<input type="number" step="0.01" id="price3Up" name="price3">
+				</div>
+				<div class="field">
+					<label for="price4Up">Preis 4:</label>
+					<input type="number" step="0.01" id="price4Up" name="price4">
+				</div>
+				<div class="field">
+					<label for="price5Up">Preis 5:</label>
+					<input type="number" step="0.01" id="price5Up" name="price5">
+				</div>
+				<div class="field">
+					<label for="idCalendarUp">Kalender:</label>
+					<select id="idCalendarUp" name="idCalendar" required>
+					<option value=1>Kalender 1</option>
+					<option value=2>Kalender 2</option>
+					</select>
+				</div>				
 			</form>
 		  </div>
 		  <div class="modal-footer">

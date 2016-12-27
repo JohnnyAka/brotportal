@@ -209,7 +209,6 @@ if(!isset($_SESSION['trustedUser'])) {
 				<div class="field">
 					<label for="idCalendar">Kalender:</label>
 					<select id="idCalendar" name="idCalendar" required>
-					<option value=1>Kalender 1</option>
 					</select>
 				</div>
 			</form>
@@ -306,8 +305,6 @@ if(!isset($_SESSION['trustedUser'])) {
 				<div class="field">
 					<label for="idCalendarUp">Kalender:</label>
 					<select id="idCalendarUp" name="idCalendar" required>
-					<option value=1>Kalender 1</option>
-					<option value=2>Kalender 2</option>
 					</select>
 				</div>				
 			</form>

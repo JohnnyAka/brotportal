@@ -156,7 +156,7 @@ if ($conn->query($sql) === TRUE) {
 
 $sql = "CREATE TABLE calendarsDaysRelations(
 idCalendar INT(6) UNSIGNED,
-date INT(6) UNSIGNED,
+date DATE,
 primary key (idCalendar, date)
 )";
 if ($conn->query($sql) === TRUE) {

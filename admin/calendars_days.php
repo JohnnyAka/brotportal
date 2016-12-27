@@ -23,12 +23,13 @@ if(!isset($_SESSION['trustedUser'])) {
 		<link href="../../jquery-ui-1.11.4.custom/jquery-ui.css" rel="stylesheet">
 		<script src="../../jquery-ui-1.11.4.custom/external/jquery/jquery.js"></script>
 		<script src="../../jquery-ui-1.11.4.custom/jquery-ui.js"></script>
-		<!--datepicker language-->
-		<script src="../../jquery-ui-1.11.4.custom/datepicker-de.js"></script>
+		<!--Bootstrap Calendar-->
+		<script src="../external/calendar/bootstrap-year-calendar.js"></script>
+		<link href="../external/calendar/bootstrap-year-calendar.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
 	<link href="css/admin.css" rel="stylesheet">
-	<link href="css/calendar.css" rel="stylesheet">
+	<link href="css/calendars_days.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -89,77 +90,15 @@ if(!isset($_SESSION['trustedUser'])) {
 				</div>
 				<div class="col-md-9 main-content">
 					<div id="messages"></div>
-					<div class="button_group handleData">
-						<button type="button" class="btn btn-primary createCalendarButton">
-						Kalender anlegen
-						</button>
-						<button type="button" class="btn btn-primary updateCalendarButton" >
-						Kalender &auml;ndern
-						</button>
-						<button type="button" class="btn btn-primary deleteCalendarButton" >
-						Kalender l&ouml;schen
-						</button>
-					</div> 
-					<h1>Produkte mit diesem Kalender:</h1>
+					<div class="calendar"></div>
+					
 					<hr>
-					<ul class="productList"></ul>
 				</div>
 			</div>
     </div> <!-- /container -->
 
 
   </body>
-  
-  <!-- Modals for create and update row -->
-	<div class="modal" id="createCalendar" tabindex="-1" role="dialog" aria-labelledby="createCalendarLabel">
-	  <div class="modal-dialog" role="document">
-		<div class="modal-content">
-		  <div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h4 class="modal-title" id="createCalendarLabel">Kalender hinzufügen</h4>
-		  </div>
-		  <div class="modal-body">
-			<form id="createCalendarForm" method="post" action="ajax/calendars_create.php">
-				<div class="field">
-					<label for="calendarName">Kalender:</label>
-					<input id="calendarName" name="calendarName">
-				</div>
-			</form>
-		  </div>
-		  <div class="modal-footer">
-			<button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
-			<button type="submit" form="createCalendarForm" class="btn btn-primary createCalendar">Kalender speichern</button>
-		  </div>
-		</div>
-	  </div>
-	</div>
-	
-  <!-- Modal -->
-	<div class="modal" id="updateCalendar" tabindex="-1" role="dialog" aria-labelledby="updateCalendarLabel">
-	  <div class="modal-dialog" role="document">
-		<div class="modal-content">
-		  <div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h4 class="modal-title" id="updateCalendarLabel">Kalender &auml;ndern</h4>
-		  </div>
-		  <div class="modal-body">
-			<form id="updateCalendarForm" method="post" action="ajax/calendars_update.php">
-				<div class="field">
-					<label for="calendarNameUp">Kalender:</label>
-					<input id="calendarNameUp" name="calendarName">
-				</div>
-				<div class="field">
-					<input type="hidden" id="calendarIdUp" name="calendarId">
-				</div>
-			</form>
-		  </div>
-		  <div class="modal-footer">
-			<button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
-			<button type="submit" form="updateCalendarForm" class="btn btn-primary updateCalendar">&Auml;nderungen speichern</button>
-		  </div>
-		</div>
-	  </div>
-	</div>
 	
 	<!-- Bootstrap core JavaScript
     ================================================== -->
@@ -168,7 +107,7 @@ if(!isset($_SESSION['trustedUser'])) {
 		
 	<!-- Own js files-->
 	<script src="js/brotportal.js"></script>
-	<script src="js/calendars.js"></script>
+	<script src="js/calendars_days.js"></script>
 </html>
 
 

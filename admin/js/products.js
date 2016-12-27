@@ -22,6 +22,29 @@ $(function(){
 			}
 		});
 });
+
+//create calendar dictionary (id to name)
+$(function(){
+		$.ajax({
+			type: 'POST',
+			url: 'ajax/calendars_read.php'
+		}).done(function(response){
+			calendarsNameDict = new Object();
+			var calendarsData = JSON.parse(response);
+			//set product options of select
+			for (var x=0;x<calendarsData.length;x++) {
+				calendarsNameDict[calendarsData[x].id] = calendarsData[x].name;
+			}
+		}).fail(function(data){
+			// Set the message text.
+			if (data.responseText !== '') {
+				$(messages).text(data.responseText);
+			} else {
+				$(messages).text('Fehler, Kalender konnten nicht aus Datenbank gelesen werden.');
+				return;
+			}
+		});
+});
 		
 //create product form submit
 $(function() {
@@ -106,6 +129,12 @@ $(function() {
 			$('#weightUp').val('');
 			$('#preBakeExpUp').val('');
 			$('#featureExpUp').val('');
+			$('#price1Up').val('');
+			$('#price2Up').val('');
+			$('#price3Up').val('');
+			$('#price4Up').val('');
+			$('#price5Up').val('');
+			$('#idCalendarUp').empty();
 		})
 
 	// Set up an event listener for the updateProduct form.
@@ -213,7 +242,7 @@ var main = function(){
 			$(".displayPrice3").text(productData[0]["price3"]);
 			$(".displayPrice4").text(productData[0]["price4"]);
 			$(".displayPrice5").text(productData[0]["price5"]);
-			$(".displayIdCalendar").text(productData[0]["idCalendar"]);
+			$(".displayIdCalendar").text(calendarsNameDict[productData[0]["idCalendar"]]);
 		});
 	});
 	
@@ -229,6 +258,16 @@ var main = function(){
 				$('#productCategory').append($('<option>', {
 					value: key,
 					text: categoriesNameDict[key]
+				}));
+		}
+		//set calendar options of select
+		for (var key in calendarsNameDict) {
+				if (key === 'length' || !calendarsNameDict.hasOwnProperty(key)){ 
+					continue;
+				}
+				$('#idCalendar').append($('<option>', {
+					value: key,
+					text: calendarsNameDict[key]
 				}));
 		}
 		
@@ -261,6 +300,16 @@ var main = function(){
 						value: key,
 						text: categoriesNameDict[key]
 					}));
+				}
+				//set calendar options of select
+				for (var key in calendarsNameDict) {
+						if (key === 'length' || !calendarsNameDict.hasOwnProperty(key)){ 
+							continue;
+						}
+						$('#idCalendarUp').append($('<option>', {
+							value: key,
+							text: calendarsNameDict[key]
+						}));
 				}
 				
 				//set values of form

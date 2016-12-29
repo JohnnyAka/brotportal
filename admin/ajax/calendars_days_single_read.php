@@ -10,7 +10,7 @@
 		'idCalendar="'.$idCalendar.'"'
 	);
 	
+	$jsonData = json_encode($result);
 
-
-	echo $result;
+	echo $jsonData;
 ?>

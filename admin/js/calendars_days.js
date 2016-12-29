@@ -1,7 +1,7 @@
 /*This file contains event handlers for click events and form-submit events*/
 
 //displays categories
-var displayCategories = function(){
+var displayCalendars = function(){
 	$('ul.sidebarList').empty();
 	$.ajax({
 		type: 'POST',
@@ -17,14 +17,41 @@ var displayCategories = function(){
 			$('ul.sidebarList li').removeClass("active");
 			$(this).addClass("active");
 			
-			//load Calendar
-			$('.calendar').unbind("clickDay");
-			$('.calendar').calendar({
-				clickDay: function(element){
-					clickDayOnCalendar(element);
-				},
-				customDayRenderer: function(element, date){
-				//date.getDate();date.getMonth()+1;date.getFullYear();
+			var selectedCalendar = $(this).data('idcalendar');
+			$.ajax({
+				type: 'POST',
+				url: 'ajax/calendars_days_single_read.php',
+				data: {
+					idCalendar:selectedCalendar
+				}
+			}).done(function(response){
+				response = JSON.parse(response);
+				var daysOfCalendar= [], dayTemp;
+				for(var x=0; x<response.length;x++){
+					dayTemp = response[x].date.split('-');
+					dayTemp = dayTemp[0]+'-'+Number(dayTemp[1]).toString()+'-'+Number(dayTemp[2]).toString();
+					daysOfCalendar.push(dayTemp);
+				}
+				//load Calendar
+				$('.calendar').unbind("clickDay");
+				$('.calendar').calendar({
+					clickDay: function(element){
+						clickDayOnCalendar(element);
+					},
+					customDayRenderer: function(element, date){
+						var currentDay = date.getFullYear()+'-'+(Number(date.getMonth())+1)+'-'+date.getDate();
+						
+						if(daysOfCalendar.indexOf(currentDay) != -1){
+							element.addClass("activeDay");
+						}
+					}
+				});
+			}).fail(function(data){
+				// Set the message text.
+				if (data.responseText !== '') {
+					$(messages).text(data.responseText);
+				} else {
+					$(messages).text('Fehler, Kalendertage konnten nicht gelesen werden.');
 				}
 			});
 		});
@@ -51,7 +78,15 @@ var clickDayOnCalendar = function(element){
 			year:element.date.getFullYear()
 		}
 	}).done(function(response){
-	
+		response = JSON.parse(response);
+		dayId = 'dayID'+(element.date.getMonth()).toString()+(element.date.getDate()).toString();
+		if(response != -1){
+			$('.'+dayId).addClass("activeDay");
+		}
+		else{
+			$('.'+dayId).removeClass("activeDay");
+		}
+		
 	}).fail(function(data){
 		// Set the message text.
 		if (data.responseText !== '') {
@@ -69,7 +104,7 @@ var clickDayOnCalendar = function(element){
 //main function for click event handlers
 var main = function(){
 	
-	displayCategories();
+	displayCalendars();
 	
 	
 }

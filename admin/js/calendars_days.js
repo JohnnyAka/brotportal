@@ -79,7 +79,7 @@ var clickDayOnCalendar = function(element){
 		}
 	}).done(function(response){
 		response = JSON.parse(response);
-		dayId = 'dayID'+(element.date.getMonth()).toString()+(element.date.getDate()).toString();
+		dayId = 'dayID'+(element.date.getMonth()).toString()+'-'+(element.date.getDate()).toString();
 		if(response != -1){
 			$('.'+dayId).addClass("activeDay");
 		}

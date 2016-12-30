@@ -274,7 +274,7 @@
 						
 							var cellContent = $(document.createElement('div'));
 							cellContent.addClass('day-content');
-							var idString = 'dayID'+(currentDate.getMonth()).toString()+(currentDate.getDate()).toString();
+							var idString = 'dayID'+(currentDate.getMonth()).toString()+'-'+(currentDate.getDate()).toString();
 							cellContent.addClass(idString);
 							cellContent.text(currentDate.getDate());
 							cell.append(cellContent);

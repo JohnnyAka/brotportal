@@ -135,7 +135,6 @@ $(function() {
 	$( "#datepicker" ).datepicker($.datepicker.regional[ "de" ]);
 	$( "#datepicker" ).datepicker( "option", "dateFormat", "dd.mm.yy" );
 	$( "#datepicker" ).datepicker( "setDate", "+1" );
-	$( "#datepicker" ).datepicker( "option", "minDate", "-1" );
 	$( "#datepicker" ).datepicker( "option", "onClose", function(selectedDate, picker){
 		showOrders();
 	});

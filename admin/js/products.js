@@ -66,6 +66,7 @@ $(function() {
 			$('#allergens').val('');
 			$('#weight').val('');
 			$('#preBakeExp').val('');
+			$('#preBakeMax').val('');
 			$('#featureExp').val('');
 			$('#price1').val('');
 			$('#price2').val('');
@@ -96,7 +97,7 @@ $(function() {
 			//close modal
 			$("#createProduct").modal("hide");
 			//reload page to show new article
-			location.reload(); 
+			//location.reload(); 
 		}).fail(function(data) {
 			// Set the message text.
 			if (data.responseText !== '') {
@@ -128,6 +129,7 @@ $(function() {
 			$('#allergensUp').val('');
 			$('#weightUp').val('');
 			$('#preBakeExpUp').val('');
+			$('#preBakeMaxUp').val('');
 			$('#featureExpUp').val('');
 			$('#price1Up').val('');
 			$('#price2Up').val('');
@@ -158,7 +160,7 @@ $(function() {
 			//close modal
 			$("#updateProduct").modal("hide");
 			//reload page to show new article
-			location.reload(); 
+			//location.reload(); 
 		}).fail(function(data) {
 
 			// Set the message text.
@@ -236,6 +238,7 @@ var main = function(){
 			$(".displayAllergens").text(productData[0]["allergens"]);
 			$(".displayWeight").text(productData[0]["weight"]);
 			$(".displayPreBakeExp").text(productData[0]["preBakeExp"]);
+			$(".displayPreBakeMax").text(productData[0]["preBakeMax"]);
 			$(".displayFeatureExp").text(productData[0]["featureExp"]);
 			$(".displayPrice1").text(productData[0]["price1"]);
 			$(".displayPrice2").text(productData[0]["price2"]);
@@ -328,6 +331,7 @@ var main = function(){
 				$('#allergensUp').val(productData[0]["allergens"]);
 				$('#weightUp').val(productData[0]["weight"]);
 				$('#preBakeExpUp').val(productData[0]["preBakeExp"]);
+				$('#preBakeMaxUp').val(productData[0]["preBakeMax"]);
 				$('#featureExpUp').val(productData[0]["featureExp"]);
 				$("#price1Up").val(productData[0]["price1"]);
 				$("#price2Up").val(productData[0]["price2"]);

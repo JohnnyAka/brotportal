@@ -59,6 +59,7 @@ ingredients VARCHAR(200),
 allergens VARCHAR(200),
 weight VARCHAR(10),
 preBakeExp INT(3) UNSIGNED,
+preBakeMax INT(3) UNSIGNED,
 featureExp VARCHAR(200),
 price1 DECIMAL(8,2),
 price2 DECIMAL(8,2),
@@ -96,6 +97,7 @@ if ($conn->query($sql) === TRUE) {
     echo "Error creating database: " . $conn->error."<br>";
 }
 
+//hook=1 is Lieferung 1, hook=5 is Nachlieferung
 $sql = "CREATE TABLE orders(
 idProduct INT(6) UNSIGNED,
 idCustomer INT(6) UNSIGNED,

@@ -113,6 +113,7 @@ if(!isset($_SESSION['trustedUser'])) {
 			Allergene: <span class="displayAllergens"></span><br />
 			Gewicht: <span class="displayWeight"></span><br />
 			Tage vorher backen: <span class="displayPreBakeExp"></span><br />
+			Maximal Tage vorher backen: <span class="displayPreBakeMax"></span><br />
 			Notiz (Pre-Notification): <span class="displayFeatureExp"></span><br />
 			Preis1: <span class="displayPrice1"></span><br />
 			Preis2: <span class="displayPrice2"></span><br />
@@ -181,6 +182,10 @@ if(!isset($_SESSION['trustedUser'])) {
 				<div class="field">
 					<label for="preBakeExp">Tage vorher Backen:</label>
 					<input type="number" id="preBakeExp" name="preBakeExp">
+				</div>
+				<div class="field">
+					<label for="preBakeMax">Maximal Tage vorher Backen:</label>
+					<input type="number" id="preBakeMax" name="preBakeMax">
 				</div>
 				<div class="field">
 					<label for="featureExp">Besonderheiten (Pre-Notifikation):</label>
@@ -277,6 +282,10 @@ if(!isset($_SESSION['trustedUser'])) {
 				<div class="field">
 					<label for="preBakeExpUp">Tage vorher Backen:</label>
 					<input type="number" id="preBakeExpUp" name="preBakeExp">
+				</div>
+				<div class="field">
+					<label for="preBakeMaxUp">Maximal Tage vorher Backen:</label>
+					<input type="number" id="preBakeMaxUp" name="preBakeMax">
 				</div>
 				<div class="field">
 					<label for="featureExpUp">Besonderheiten (Pre-Notifikation):</label>

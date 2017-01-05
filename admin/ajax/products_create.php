@@ -11,6 +11,7 @@ $ingredients = strip_tags(trim($_POST["ingredients"]));
 $allergens = strip_tags(trim($_POST["allergens"]));
 $weight = strip_tags(trim($_POST["weight"]));
 $preBakeExp = strip_tags(trim($_POST["preBakeExp"]));
+$preBakeMax = strip_tags(trim($_POST["preBakeMax"]));
 $featureExp = strip_tags(trim($_POST["featureExp"]));
 $price1 = strip_tags(trim($_POST["price1"]));
 $price2 = strip_tags(trim($_POST["price2"]));
@@ -22,8 +23,8 @@ $idCalendar = (int)$_POST["idCalendar"];
 $db = new db_connection();
 	$result = $db->createData(
 	"products", 
-	array('productID','name','productCategory','visibleForUser','description','imagePath','ingredients','allergens','weight','preBakeExp','featureExp','price1','price2','price3','price4','price5','idCalendar'), 
-	array($productid,$name,$productCategory,$visibleForUser,$description,$imagePath,$ingredients,$allergens,$weight,$preBakeExp,$featureExp,$price1,$price2,$price3,$price4,$price5,$idCalendar)
+	array('productID','name','productCategory','visibleForUser','description','imagePath','ingredients','allergens','weight','preBakeExp','preBakeMax','featureExp','price1','price2','price3','price4','price5','idCalendar'), 
+	array($productid,$name,$productCategory,$visibleForUser,$description,$imagePath,$ingredients,$allergens,$weight,$preBakeExp,$preBakeMax,$featureExp,$price1,$price2,$price3,$price4,$price5,$idCalendar)
 );
 
 

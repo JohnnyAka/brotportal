@@ -19,12 +19,14 @@ include('../db_crud.php');
 	$orderList = getOrdersNormal($date);
 	
 	$preOrderList = getPreOrders($date);
-	array_push($orderList, $preOrderList);
+	//echo json_encode($preOrderList);
 	
 	$filename = 'bestellungen_'.$date.'_'.$time;
 	$file = fopen($filename.'.csv', 'w');
 	fputcsv($file, array('Artikelnummer', 'Kundennummer', 'Datum', 'Anzahl', 'Lieferung', 'LieferscheinNotiz'));
 	foreach ($orderList as $row)
+		{fputcsv($file, $row);}
+	foreach ($preOrderList as $row)
 		{fputcsv($file, $row);}
 	fclose($file);
 	
@@ -43,8 +45,12 @@ include('../db_crud.php');
 		return new DateTime($date);
 	}
 	
+	function getInteger($minDate){
+		return $minDate;
+	}
+	
 	function prepareOrdersForExport($data, $normal=true){
-		global $customerDict, $productDict, $preBakeDict;
+		global $db, $customerDict, $productDict, $preBakeDict;
 	
 		$orderList = [];
 		for($x=0;$x<count($data);$x++){
@@ -53,15 +59,17 @@ include('../db_crud.php');
 			unset($currentData->important);
 			
 			if($normal){
+				$currentData['idCustomer'] = $customerDict[$currentData['idCustomer']];
 				if(array_key_exists($currentData['idProduct'], $preBakeDict)){
 					$currentData['hook'] = 5;
 				}
 			}
+			else{
+				$data = $db->getData("users", array('preOrderCustomerId'), "id=".$currentData['idCustomer']);
+				$currentData['idCustomer'] = $data[0]['preOrderCustomerId'];
+			}
 			
-			$productIdReal = $productDict[$currentData['idProduct']];
-			$currentData['idProduct'] = $productIdReal;
-			$customerIdReal = $customerDict[$currentData['idCustomer']];
-			$currentData['idCustomer'] = $customerIdReal;
+			$currentData['idProduct'] = $productDict[$currentData['idProduct']];
 			
 			array_push($orderList, $currentData);
 		}
@@ -82,6 +90,8 @@ include('../db_crud.php');
 	function getPreOrders($date){
 		global $db, $customerDict, $productDict, $preBakeDict, $preBakeMaxDict, $preProductCalendarDict;
 		
+							$myfile = fopen("testfile.txt", "w") ;
+		
 		$orderList = [];
 		$exportDate = new DateTime($date);
 		//iterate all products with prebake
@@ -91,30 +101,54 @@ include('../db_crud.php');
 			
 			$calendarDatesRaw = $db->getData("calendarsDaysRelations", 
 			array('date'), "idCalendar='".$preProductCalendarDict[$productId]."'");
+
 			$calendarDates = [];
-			foreach($calendarDatesRaw as $cDate) 
+			foreach($calendarDatesRaw as $cDate){
 				array_push($calendarDates, $cDate['date']);
+			}
 			
 			$exportDate = date_format(getExportDate(), 'Y-m-d');
-			if(!in_array($exportDate, $calendarDates)) 
+			if(!in_array($exportDate, $calendarDates)){ 
 				continue;
+			}
+			
 			//check all possible dates for this product
-			$exportToday = true;
-			for($x=1; $x<=$maxDate-$minDate; $x++){
+			for($x=getInteger($minDate); $x<=$maxDate; $x++){
+				$exportToday = 'set';
 				$deliveryDate = getExportDate();
 				$deliveryDate->modify('+'.$x.' day');
-				$deliveryDate = date_format($deliveryDate,'Y-m-d');
-				if(in_array($deliveryDate, $calendarDates))
-				{
-					$exportToday = false;
-					break;
+				$deliveryDateFormated = date_format($deliveryDate,'Y-m-d');
+				//echo ' X: '.$x.' % ';
+				
+				for($y=$x-1;$y>$minDate;$y--){
+					//echo ' Y: '.$y.' % ';
+					//echo ' minDate: '.$minDate.' % ';
+					$productionDate = new DateTime($deliveryDateFormated);
+					$productionDate->modify('-'.$y.' day');
+					$productionDate = date_format($productionDate,'Y-m-d');
+					//echo '>>'.$productionDate.'<<';
+					if(in_array($productionDate, $calendarDates))
+					{
+						$exportToday = 'unset';
+						//echo '!';
+						break;
+					}
 				}
-			}
-			if($exportToday){
-				$data = $db->getData("orders", 
-				array('idProduct','idCustomer','orderDate','number','hook','important','noteBaking','noteDelivery'), 
-				"idProduct=".$productId." AND orderDate='".$deliveryDate."'");
-				array_push($orderList, prepareOrdersForExport($data, false));
+				if($exportToday=='set'){
+					//echo $productId.' ?'.$exportToday.'? '.$deliveryDateFormated.'| ';
+					$data = $db->getData("orders", 
+					array('idProduct','idCustomer','orderDate','number','hook','important','noteBaking','noteDelivery'), 
+					"idProduct=".$productId." AND orderDate='".$deliveryDateFormated."'");
+					$newOrders = prepareOrdersForExport($data, false);
+					
+					for($z=0;$z<count($newOrders);$z++){
+						$currentData = $newOrders[$z];
+						$currentData['orderDate'] = $exportDate;
+						$currentData['noteDelivery'] = 'Lieferung am '.date_format($deliveryDate, 'd.m.Y');
+						
+						array_push($orderList, $newOrders[$z]);
+					}
+				}
 			}
 		}
 		return $orderList;

@@ -65,6 +65,15 @@ if(!isset($_SESSION['trustedUser'])) {
                 <li><a href="categories_relations.php">Kunden - Produkte</a></li>
               </ul>
             </li>
+						<li class="dropdown">
+              <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Kalender <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="calendars.php">Kalender</a></li>
+								<li role="separator" class="divider"></li>
+                <li><a href="calendars_days.php">Kalender - Tage</a></li>
+              </ul>
+            </li>
+						<li><a href="export.php">Export</a></li>						
 						<li class="active"><a href="settings.php">Einstellungen</a></li>
 						<li><a href="logout.php">Logout</a></li>
           </ul>

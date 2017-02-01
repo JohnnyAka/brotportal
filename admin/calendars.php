@@ -73,6 +73,7 @@ if(!isset($_SESSION['trustedUser'])) {
                 <li><a href="calendars_days.php">Kalender - Tage</a></li>
               </ul>
             </li>
+						<li><a href="export.php">Export</a></li>
 						<li><a href="settings.php">Einstellungen</a></li>
 						<li><a href="logout.php">Logout</a></li>
           </ul>

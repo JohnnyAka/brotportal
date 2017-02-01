@@ -80,7 +80,21 @@ $(function() {
 	$(form).submit(function(event) {
 		// Stop the browser from submitting the form.
 		event.preventDefault();
-
+		//check input of form
+		var formArray = $(form).serializeArray();
+		var preBakeTmp=0;
+		for(var x=0;x<formArray.length;x++){
+			if(formArray[x].name=='preBakeExp'){
+				preBakeTmp=formArray[x].value;
+			}
+			if(formArray[x].name=='preBakeMax'){
+				if(Number(formArray[x].value) < Number(preBakeTmp)){
+					alert("Der Wert für 'Tage vorher backen' muss kleiner oder gleich sein, als der Wert für 'Maximal Tage vorher backen'.");
+					return;
+				}
+			}
+		}
+		
 		// Serialize the form data.
 		var formData = $(form).serialize();
 		
@@ -143,6 +157,21 @@ $(function() {
 	$(form).submit(function(event) {
 		// Stop the browser from submitting the form.
 		event.preventDefault();
+		
+		//check input of form
+		var formArray = $(form).serializeArray();
+		var preBakeTmp=0;
+		for(var x=0;x<formArray.length;x++){
+			if(formArray[x].name=='preBakeExp'){
+				preBakeTmp=formArray[x].value;
+			}
+			if(formArray[x].name=='preBakeMax'){
+				if(Number(formArray[x].value) < Number(preBakeTmp)){
+					alert("Der Wert für 'Tage vorher backen' muss kleiner oder gleich sein, als der Wert für 'Maximal Tage vorher backen'.");
+					return;
+				}
+			}
+		}
 
 		// Serialize the form data.
 		var formData = $(form).serialize();

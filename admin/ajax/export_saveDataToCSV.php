@@ -11,6 +11,7 @@ include('../db_crud.php');
 	$preProductCalendarDict = makeDict($db,'products', 'id', 'idCalendar', 'preBakeExp!=0');
 
 	$time = date('H-i-s');
+	//get export date
 	$day = strip_tags(trim($_POST["day"]));
 	$month = strip_tags(trim($_POST["month"]));
 	$year = strip_tags(trim($_POST["year"]));
@@ -21,7 +22,7 @@ include('../db_crud.php');
 	$preOrderList = getPreOrders($date);
 	//echo json_encode($preOrderList);
 	
-	$filename = 'bestellungen_'.$date.'_'.$time;
+	$filename = '../exports/bestellungen_'.$date.'_'.$time;
 	$file = fopen($filename.'.csv', 'w');
 	fputcsv($file, array('Artikelnummer', 'Kundennummer', 'Datum', 'Anzahl', 'Lieferung', 'LieferscheinNotiz'));
 	foreach ($orderList as $row)
@@ -51,10 +52,11 @@ include('../db_crud.php');
 	
 	function prepareOrdersForExport($data, $normal=true){
 		global $db, $customerDict, $productDict, $preBakeDict;
-	
+		
 		$orderList = [];
 		for($x=0;$x<count($data);$x++){
 			$currentData = $data[$x];
+			
 			unset($currentData->noteBaking);
 			unset($currentData->important);
 			
@@ -63,15 +65,17 @@ include('../db_crud.php');
 				if(array_key_exists($currentData['idProduct'], $preBakeDict)){
 					$currentData['hook'] = 5;
 				}
+				$currentData['idProduct'] = $productDict[$currentData['idProduct']];
+				array_push($orderList, $currentData);
 			}
 			else{
 				$data = $db->getData("users", array('preOrderCustomerId'), "id=".$currentData['idCustomer']);
 				$currentData['idCustomer'] = $data[0]['preOrderCustomerId'];
+				$currentData['idProduct'] = $productDict[$currentData['idProduct']];
+				$currentData['orderDate'] = date_format(getExportDate(), 'Y-m-d');
+				
+				$orderList[] = $currentData;
 			}
-			
-			$currentData['idProduct'] = $productDict[$currentData['idProduct']];
-			
-			array_push($orderList, $currentData);
 		}
 		return $orderList;
 	}
@@ -85,12 +89,11 @@ include('../db_crud.php');
 		
 		return prepareOrdersForExport($data);
 	}
+
 	
 	//only Production "today"
 	function getPreOrders($date){
 		global $db, $customerDict, $productDict, $preBakeDict, $preBakeMaxDict, $preProductCalendarDict;
-		
-							$myfile = fopen("testfile.txt", "w") ;
 		
 		$orderList = [];
 		$exportDate = new DateTime($date);
@@ -108,6 +111,7 @@ include('../db_crud.php');
 			}
 			
 			$exportDate = date_format(getExportDate(), 'Y-m-d');
+			//if today no production day of product, continue
 			if(!in_array($exportDate, $calendarDates)){ 
 				continue;
 			}
@@ -118,7 +122,7 @@ include('../db_crud.php');
 				$deliveryDate = getExportDate();
 				$deliveryDate->modify('+'.$x.' day');
 				$deliveryDateFormated = date_format($deliveryDate,'Y-m-d');
-				//echo ' X: '.$x.' % ';
+				//echo ' X: '.$x.' % '.$maxDate;
 				
 				for($y=$x-1;$y>$minDate;$y--){
 					//echo ' Y: '.$y.' % ';
@@ -139,14 +143,34 @@ include('../db_crud.php');
 					$data = $db->getData("orders", 
 					array('idProduct','idCustomer','orderDate','number','hook','important','noteBaking','noteDelivery'), 
 					"idProduct=".$productId." AND orderDate='".$deliveryDateFormated."'");
+					//echo json_encode($data);
 					$newOrders = prepareOrdersForExport($data, false);
 					
 					for($z=0;$z<count($newOrders);$z++){
 						$currentData = $newOrders[$z];
-						$currentData['orderDate'] = $exportDate;
 						$currentData['noteDelivery'] = 'Lieferung am '.date_format($deliveryDate, 'd.m.Y');
 						
-						array_push($orderList, $newOrders[$z]);
+						//check existing orders for multiple entries with same customer and product IDs
+						echo json_encode($orderList);
+						$found = false;
+						foreach($orderList as &$entry){
+							//echo "Kunde aus Liste: ".$entry['idCustomer']." |Kunde akut: ".$currentData['idCustomer'];
+							if($entry['idCustomer']==$currentData['idCustomer'] and $entry['idProduct']==$currentData['idProduct']){
+								echo " Number list: ".($entry['number']." Number current: ". $currentData['number'])." end\n";
+								echo " Number: ".($entry['number'] + $currentData['number'])." end\n";
+								$entry['number'] = ($entry['number'] + $currentData['number']);
+								//echo "in routine mit Anzahl: ".$entry['number'];
+								$found = true;
+							}
+						}
+						unset($entry);
+						// $echostr = ($found) ? 'true' : 'false';
+						// echo "entryfound: ".$echostr;
+						if($found == true){
+							continue;
+						}
+						
+						array_push($orderList, $currentData);
 					}
 				}
 			}

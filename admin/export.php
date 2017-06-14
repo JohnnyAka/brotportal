@@ -88,7 +88,7 @@ if(!isset($_SESSION['trustedUser'])) {
 					<ul class="sidebarList">
 					</ul>
 				</div>
-				<div class="col-md-9 main-content">
+				<div class="col-md-6 main-content">
 					<div id="messages"></div>
 					<input type="text" id="datepicker">
 					<div class="button_group handleData">
@@ -96,6 +96,12 @@ if(!isset($_SESSION['trustedUser'])) {
 							Bestellungen exportieren
 						</button>
 					</div> 
+				</div>
+				<div class="col-md-3">
+					<h5>Alte Bestellungen löschen</h5>
+					<button type="button" class="btn btn-primary deleteOldOrdersButton">
+						löschen
+					</button>
 				</div>
 			</div>
     </div> <!-- /container -->

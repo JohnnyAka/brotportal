@@ -40,10 +40,26 @@ var main = function(){
 		else{
 			alert("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
 		}
-		
-		
-		
 	});
+	
+	$('.deleteOldOrdersButton').click(function(){
+		$.ajax({
+			type: 'POST',
+			url: 'ajax/export_deleteOldOrders.php'
+		}).done(function(response){
+			alert(response);
+			$(messages).text("Bestellungen erfolgreich exportiert!");
+		}).fail(function(data){
+			// Set the message text.
+			if (data.responseText !== '') {
+				$(messages).text(data.responseText);
+			} else {
+				$(messages).text('Fehler, Bestellungen konnten nicht exportiert werden.');
+			}
+		});
+	});
+	
+	
 }
 
 $(document).ready(main);

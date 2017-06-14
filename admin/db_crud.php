@@ -119,9 +119,9 @@ EOT;
 		$sql = "DELETE FROM ".$table_name." WHERE ".$where_condition;
 		//execute query
 		if ($this->mysqli->query($sql)=== TRUE) {
-			return "Record deleted successfully";
+			return "Record/s deleted successfully";
 		} else {
-			return "Error deleting record: " . $this->mysqli->error;
+			return "Error deleting record/s: " . $this->mysqli->error;
 		}
 	}
 }

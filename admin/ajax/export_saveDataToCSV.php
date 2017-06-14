@@ -122,19 +122,14 @@ include('../db_crud.php');
 				$deliveryDate = getExportDate();
 				$deliveryDate->modify('+'.$x.' day');
 				$deliveryDateFormated = date_format($deliveryDate,'Y-m-d');
-				//echo ' X: '.$x.' % '.$maxDate;
 				
 				for($y=$x-1;$y>$minDate;$y--){
-					//echo ' Y: '.$y.' % ';
-					//echo ' minDate: '.$minDate.' % ';
 					$productionDate = new DateTime($deliveryDateFormated);
 					$productionDate->modify('-'.$y.' day');
 					$productionDate = date_format($productionDate,'Y-m-d');
-					//echo '>>'.$productionDate.'<<';
 					if(in_array($productionDate, $calendarDates))
 					{
 						$exportToday = 'unset';
-						//echo '!';
 						break;
 					}
 				}
@@ -151,21 +146,19 @@ include('../db_crud.php');
 						$currentData['noteDelivery'] = 'Lieferung am '.date_format($deliveryDate, 'd.m.Y');
 						
 						//check existing orders for multiple entries with same customer and product IDs
-						echo json_encode($orderList);
+						//echo json_encode($orderList);
 						$found = false;
 						foreach($orderList as &$entry){
 							//echo "Kunde aus Liste: ".$entry['idCustomer']." |Kunde akut: ".$currentData['idCustomer'];
 							if($entry['idCustomer']==$currentData['idCustomer'] and $entry['idProduct']==$currentData['idProduct']){
-								echo " Number list: ".($entry['number']." Number current: ". $currentData['number'])." end\n";
-								echo " Number: ".($entry['number'] + $currentData['number'])." end\n";
+								//echo " Number list: ".($entry['number']." Number current: ". $currentData['number'])." end\n";
+								//echo " Number: ".($entry['number'] + $currentData['number'])." end\n";
 								$entry['number'] = ($entry['number'] + $currentData['number']);
 								//echo "in routine mit Anzahl: ".$entry['number'];
 								$found = true;
 							}
 						}
 						unset($entry);
-						// $echostr = ($found) ? 'true' : 'false';
-						// echo "entryfound: ".$echostr;
 						if($found == true){
 							continue;
 						}

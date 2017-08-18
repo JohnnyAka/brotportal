@@ -1,0 +1,71 @@
+<?xml version ='1.0' encoding ='UTF-8' ?>
+<definitions name='Brotportal'
+  targetNamespace='http://joldelunder.de/Brotportal'
+  xmlns:tns='http://joldelunder.de/Brotportal'
+  xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/'
+  xmlns:xsd='http://www.w3.org/2001/XMLSchema'
+  xmlns:soapenc='http://schemas.xmlsoap.org/soap/encoding/'
+  xmlns:wsdl='http://schemas.xmlsoap.org/wsdl/'
+  xmlns='http://schemas.xmlsoap.org/wsdl/'> 
+
+<message name='exportBackupRequest'>
+  <part name='name' type='xsd:string'/>
+  <part name='password' type='xsd:string'/>
+</message>
+<message name='exportBackupResponse'>
+  <part name='Result' type='xsd:string'/>
+</message> 
+
+<message name='exportOrdersRequest'>
+  <part name='name' type='xsd:string'/>
+  <part name='password' type='xsd:string'/>
+  <part name='date' type='xsd:date'/>
+</message>
+<message name='exportOrdersResponse'>
+  <part name='Result' type='xsd:string'/>
+</message> 
+
+<portType name='brotportalPortType'>
+  <operation name='exportBackup'>
+    <input message='tns:exportBackupRequest'/>
+    <output message='tns:exportBackupResponse'/>
+  </operation>
+  <operation name='exportOrders'>
+    <input message='tns:exportOrdersRequest'/>
+    <output message='tns:exportOrdersResponse'/>
+  </operation>
+</portType> 
+
+<binding name='brotportalBinding' type='tns:brotportalPortType'>
+  <soap:binding style='rpc'
+    transport='http://schemas.xmlsoap.org/soap/http'/>
+  <operation name='exportBackup'>
+    <soap:operation soapAction='urn:Brotportal#exportBackup'/>
+    <input>
+      <soap:body use='encoded' namespace='urn:Brotportal'
+        encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+    </input>
+    <output>
+      <soap:body use='encoded' namespace='urn:Brotportal'
+        encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+    </output>
+  </operation>
+	 <operation name='exportOrders'>
+    <soap:operation soapAction='urn:Brotportal#exportOrders'/>
+    <input>
+      <soap:body use='encoded' namespace='urn:Brotportal'
+        encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+    </input>
+    <output>
+      <soap:body use='encoded' namespace='urn:Brotportal'
+        encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+    </output>
+  </operation>
+</binding> 
+
+<service name='brotportalService'>
+  <port name='brotportalPort' binding='tns:brotportalBinding'>
+    <soap:address location='http://localhost/brotportal/admin/soapserver.php'/>
+  </port>
+</service>
+</definitions>

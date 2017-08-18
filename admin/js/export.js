@@ -26,7 +26,7 @@ var main = function(){
 					year:selectedDate[2]
 				}
 			}).done(function(response){
-				alert(response);
+				//alert(response);
 				$(messages).text("Bestellungen erfolgreich exportiert!");
 			}).fail(function(data){
 				// Set the message text.

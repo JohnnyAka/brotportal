@@ -17,7 +17,10 @@ include('../db_crud.php');
 	$year = strip_tags(trim($_POST["year"]));
 	$date = $year.'-'.$month.'-'.$day;
 	
+	
+	//return "Hier gehts";
 	$orderList = getOrdersNormal($date);
+	//return "Hier nicht mehr. evtl Datenbankconnection";
 	
 	$preOrderList = getPreOrders($date);
 	//echo json_encode($preOrderList);
@@ -82,6 +85,7 @@ include('../db_crud.php');
 	
 	function getOrdersNormal($date){
 		global $db;
+		
 	
 		$data = $db->getData("orders", 
 		array('idProduct','idCustomer','orderDate','number','hook','important','noteBaking','noteDelivery'), 

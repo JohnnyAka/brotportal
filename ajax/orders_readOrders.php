@@ -1,5 +1,5 @@
 <?php
-include('../db_crud.php');
+include('../admin/db_crud.php');
 
 $strDate = $_POST["date"];
 

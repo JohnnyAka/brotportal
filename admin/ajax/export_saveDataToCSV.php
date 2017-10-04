@@ -1,5 +1,5 @@
 <?php
-include('../db_crud.php');
+include($_SERVER['DOCUMENT_ROOT']."/brotportal/admin/db_crud.php");
 	
 	$db = new db_connection();
 	
@@ -19,13 +19,13 @@ include('../db_crud.php');
 	
 	
 	//return "Hier gehts";
-	$orderList = getOrdersNormal($date);
-	//return "Hier nicht mehr. evtl Datenbankconnection";
+	$orderList = getOrdersNormal($db, $customerDict, $productDict, $preBakeDict, $date);
+	//return json_encode($orderList);
 	
-	$preOrderList = getPreOrders($date);
-	//echo json_encode($preOrderList);
+	$preOrderList = getPreOrders($db, $customerDict, $productDict, $preBakeDict, $preBakeMaxDict, $preProductCalendarDict, $date);
+	//return json_encode($preOrderList);
 	
-	$filename = '../exports/bestellungen_'.$date.'_'.$time;
+	$filename = $_SERVER['DOCUMENT_ROOT'].'/brotportal/admin/exports/bestellungen_'.$date.'_'.$time;
 	$file = fopen($filename.'.csv', 'w');
 	fputcsv($file, array('Artikelnummer', 'Kundennummer', 'Datum', 'Anzahl', 'Lieferung', 'LieferscheinNotiz'));
 	foreach ($orderList as $row)
@@ -53,8 +53,7 @@ include('../db_crud.php');
 		return $minDate;
 	}
 	
-	function prepareOrdersForExport($data, $normal=true){
-		global $db, $customerDict, $productDict, $preBakeDict;
+	function prepareOrdersForExport($db, $customerDict, $productDict, $preBakeDict, $data, $normal=true){
 		
 		$orderList = [];
 		for($x=0;$x<count($data);$x++){
@@ -83,21 +82,18 @@ include('../db_crud.php');
 		return $orderList;
 	}
 	
-	function getOrdersNormal($date){
-		global $db;
-		
+	function getOrdersNormal($db, $customerDict, $productDict, $preBakeDict, $date){
 	
 		$data = $db->getData("orders", 
 		array('idProduct','idCustomer','orderDate','number','hook','important','noteBaking','noteDelivery'), 
 		"orderDate='".$date."'");
 		
-		return prepareOrdersForExport($data);
+		return prepareOrdersForExport($db, $customerDict, $productDict, $preBakeDict, $data);
 	}
 
 	
 	//only Production "today"
-	function getPreOrders($date){
-		global $db, $customerDict, $productDict, $preBakeDict, $preBakeMaxDict, $preProductCalendarDict;
+	function getPreOrders($db, $customerDict, $productDict, $preBakeDict, $preBakeMaxDict, $preProductCalendarDict, $date){
 		
 		$orderList = [];
 		$exportDate = new DateTime($date);
@@ -143,7 +139,7 @@ include('../db_crud.php');
 					array('idProduct','idCustomer','orderDate','number','hook','important','noteBaking','noteDelivery'), 
 					"idProduct=".$productId." AND orderDate='".$deliveryDateFormated."'");
 					//echo json_encode($data);
-					$newOrders = prepareOrdersForExport($data, false);
+					$newOrders = prepareOrdersForExport($db, $customerDict, $productDict, $preBakeDict, $data, false);
 					
 					for($z=0;$z<count($newOrders);$z++){
 						$currentData = $newOrders[$z];

@@ -1,7 +1,6 @@
 <?php
 
-
-
+//include($_SERVER['DOCUMENT_ROOT']."/brotportal/admin/db_crud.php");
 
 
 function exportOrders($name, $password, $dateOriginal){
@@ -11,10 +10,10 @@ function exportOrders($name, $password, $dateOriginal){
 		return "Der Name oder das Passwort ist nicht richtig.";
 	}
 	else{
-		$date= new DateTime($dateOriginal);
-		$_POST["day"]=$date->format('d');
-		$_POST["month"]=$date->format('m');
-		$_POST["year"]=$date->format('Y');
+		$dateServer= new DateTime($dateOriginal);
+		$_POST["day"]=$dateServer->format('d');
+		$_POST["month"]=$dateServer->format('m');
+		$_POST["year"]=$dateServer->format('Y');
 		$csvString = include 'ajax/export_saveDataToCSV.php';
 	}
 	
@@ -103,6 +102,6 @@ EOT;
 			return $result;
 		}
 	}
-}
+} 
 
 ?>

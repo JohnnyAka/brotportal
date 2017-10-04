@@ -1,6 +1,6 @@
 <?php
 session_start(); 
-include('../queries/db_queries.php');
+include('../admin/db_crud.php');
 
 $db = new db_connection();
 $result = $db->getData("users", array('id','name','password'), "customerID='".$_POST["name"]."'");

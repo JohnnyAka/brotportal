@@ -1,5 +1,5 @@
 <?php
-include('../db_crud.php');
+include('../admin/db_crud.php');
 
 $db = new db_connection();
 $data = $db->getData("productCategories", array('id','name'));

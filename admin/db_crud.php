@@ -46,7 +46,7 @@ EOT;
 	}
 
 	//returns array of items (array of array)
-	function getData($table_name, $args_names, $where_condition = NULL){
+	function getData($table_name, $args_names, $where_condition = NULL, $noDuplicateEntries = NULL){
 		$mysqli = $this->mysqli;
 		
 		//prepare names of arguments
@@ -63,13 +63,18 @@ EOT;
 		}
 		
 		//put query
-		$sql = <<<EOT
-		SELECT {$strArgsNames} FROM {$table_name}
+		$distinct= '';
+		if (!is_null($noDuplicateEntries)){
+			$distinct = 'distinct';
+		}
+			$sql = <<<EOT
+			SELECT {$distinct} {$strArgsNames} FROM {$table_name}
 EOT;
 		if (!is_null($where_condition)){
 			$sql .= " WHERE " . $where_condition;
 		}
 		//execute query
+		
 		$result = $this->mysqli->query($sql);
 		if($result){
 			return mysqli_fetch_all($result, MYSQLI_ASSOC);

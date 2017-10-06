@@ -10,8 +10,7 @@ $(function() {
 		
 	//clear formfields after modal close (event)
 	$('#createProductCat').on('hidden.bs.modal', function () {
-		$('#productCatName').val('');
-		$('#catId').val('');
+		$(this).find(form)[0].reset();
 	})
 
 	// Set up an event listener for the createProduct form.
@@ -173,6 +172,7 @@ var main = function(){
 				var productData = JSON.parse(response);
 				//set values of form
 				$('#productCatNameUp').val(productData[0]['name']);
+				$('#orderPriorityUp').val(productData[0]['orderPriority']);
 				
 				//set hidden formfields
 				$('#catIdUp').val(selectedCategory);

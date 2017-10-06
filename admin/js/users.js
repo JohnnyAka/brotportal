@@ -33,19 +33,7 @@ $(function() {
 		
 		//clear formfields after modal close (event)
 		$('#createUser').on('hidden.bs.modal', function () {
-			$('#customerid').val('');
-			$('#name').val('');
-			$('#password').val('');
-			$('#customerCategory').empty();
-			$('#mailAdressTo').val('');
-			$('#mailAdressReceive').val('');
-			$('#telephone1').val('');
-			$('#telephone2').val('');
-			$('#fax').val('');
-			$('#storeAdress').val('');
-			$('#whereToPutOrder').val('');
-			$('#priceCategory').val('');
-			$('#preOrderCustomerId').val('');
+			$(this).find(form)[0].reset();
 		})
 
 	// Set up an event listener for the createUser form.
@@ -90,19 +78,7 @@ $(function() {
 		
 			//clear formfields after modal close (event)
 		$('#updateUser').on('hidden.bs.modal', function () {
-			$('#customeridUp').val('');
-			$('#nameUp').val('');
-			$('#passwordUp').val('');
-			$('#customerCategoryUp').empty();
-			$('#mailAdressToUp').val('');
-			$('#mailAdressReceiveUp').val('');
-			$('#telephone1Up').val('');
-			$('#telephone2Up').val('');
-			$('#faxUp').val('');
-			$('#storeAdressUp').val('');
-			$('#whereToPutOrderUp').val('');
-			$('#priceCategoryUp').empty();
-			$('#preOrderCustomerIdUp').val('');
+			$(this).find(form)[0].reset();
 		})
 
 	// Set up an event listener for the updateProduct form.

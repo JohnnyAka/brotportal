@@ -6,6 +6,7 @@ $id = strip_tags(trim($_POST["id"]));
 $productid = strip_tags(trim($_POST["productid"]));
 $name = strip_tags(trim($_POST["name"]));
 $productCategory = strip_tags(trim($_POST["productCategory"]));
+$orderPriority = strip_tags(trim($_POST["orderPriority"]));
 $visibleForUser = (int)$_POST["visibleForUser"];
 $description = strip_tags(trim($_POST["description"]));
 $imagePath = strip_tags(trim($_POST["imagePath"]));
@@ -24,8 +25,8 @@ $idCalendar = (int)$_POST["idCalendar"];
 
 $db = new db_connection();
 $result = $db->updateData("products", 
-array('productID','name','productCategory','visibleForUser','description','imagePath','ingredients','allergens','weight','preBakeExp','preBakeMax','featureExp','price1','price2','price3','price4','price5','idCalendar'), 
-array($productid,$name,$productCategory,$visibleForUser,$description,$imagePath,$ingredients,$allergens,$weight,$preBakeExp,$preBakeMax,$featureExp,$price1,$price2,$price3,$price4,$price5,$idCalendar),
+array('productID','name','productCategory', 'orderPriority', 'visibleForUser','description','imagePath','ingredients','allergens','weight','preBakeExp','preBakeMax','featureExp','price1','price2','price3','price4','price5','idCalendar'), 
+array($productid,$name,$productCategory, $orderPriority, $visibleForUser,$description,$imagePath,$ingredients,$allergens,$weight,$preBakeExp,$preBakeMax,$featureExp,$price1,$price2,$price3,$price4,$price5,$idCalendar),
 "id=".$id);
 
 echo $result;

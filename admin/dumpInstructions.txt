@@ -1,0 +1,8 @@
+
+in apache shell use:
+
+mysqldump -u root -p --databases brotportal > brotportalDump.sql
+
+to reload a dumpfile in shell:
+
+mysql -u root -p < brotportalDump.sql

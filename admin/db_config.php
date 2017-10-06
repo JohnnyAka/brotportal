@@ -52,6 +52,7 @@ id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 productID VARCHAR(10) NOT NULL,
 name VARCHAR(40) NOT NULL,
 productCategory INT(6),
+orderPriority INT(2) DEFAULT '50',
 visibleForUser TINYINT(1),
 description VARCHAR(140),
 imagePath VARCHAR(140),
@@ -117,7 +118,8 @@ if ($conn->query($sql) === TRUE) {
 
 $sql = "CREATE TABLE productCategories(
 id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-name VARCHAR (60)
+name VARCHAR (60),
+orderPriority INT(2) DEFAULT '50'
 )";
 if ($conn->query($sql) === TRUE) {
     echo "Table productCategories created successfully<br>";

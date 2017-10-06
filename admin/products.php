@@ -116,6 +116,7 @@ if(!isset($_SESSION['trustedUser'])) {
 		  Name: <span class="displayName"></span><br />
 			Veröffentlicht: <span class="displayVisibleForUser"></span><br />
 			Kategorie: <span class="displayProductCategory"></span><br />
+			Listen Priorit&auml;t: <span class="displayOrderPriority"></span><br />
 			Beschreibung: <span class="displayDescription"></span><br />
 			Bildpfad: <span class="displayImagePath"></span><br />
 			Inhaltsstoffe: <span class="displayIngredients"></span><br />
@@ -171,6 +172,10 @@ if(!isset($_SESSION['trustedUser'])) {
 					<label for="productCategory">Produkt-Kategorie:</label>
 					<select id="productCategory" name="productCategory" required>
 					</select>
+				</div>
+				<div class="field">
+					<label for="orderPriority">Listen Priorität:</label>
+					<input type="number" min="1" max="99" value="50" id="orderPriority" name="orderPriority">
 				</div>
 				<div class="field">
 					<label for="imagePath">Bild-Pfad:</label>
@@ -264,6 +269,10 @@ if(!isset($_SESSION['trustedUser'])) {
 					<label for="productCategoryUp">Produkt-Kategorie:</label>
 					<select id="productCategoryUp" name="productCategory" required>
 					</select>
+				</div>
+				<div class="field">
+					<label for="orderPriorityUp">Listen Priorität:</label>
+					<input type="number" min="1" max="99" id="orderPriorityUp" name="orderPriority">
 				</div>
 				<div class="field">
 					<label for="descriptionUp">Beschreibung:</label>

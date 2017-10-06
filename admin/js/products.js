@@ -56,24 +56,7 @@ $(function() {
 		
 		//clear formfields after modal close (event)
 		$('#createProduct').on('hidden.bs.modal', function () {
-			$('#productid').val('');
-			$('#name').val('');
-			$('#productCategory').empty();
-			$('#visibleForUser').val('');
-			$('#description').val('');
-			$('#imagePath').val('');
-			$('#ingredients').val('');
-			$('#allergens').val('');
-			$('#weight').val('');
-			$('#preBakeExp').val('');
-			$('#preBakeMax').val('');
-			$('#featureExp').val('');
-			$('#price1').val('');
-			$('#price2').val('');
-			$('#price3').val('');
-			$('#price4').val('');
-			$('#price5').val('');
-			$('#idCalendar').empty();
+			$(this).find(form)[0].reset();
 		})
 
 	// Set up an event listener for the createProduct form.
@@ -133,24 +116,7 @@ $(function() {
 		
 			//clear formfields after modal close (event)
 		$('#updateProduct').on('hidden.bs.modal', function () {
-			$('#productidUp').val('');
-			$('#nameUp').val('');
-			$('#productCategoryUp').empty();
-			$('#visibleForUserUp').val('');
-			$('#descriptionUp').val('');
-			$('#imagePathUp').val('');
-			$('#ingredientsUp').val('');
-			$('#allergensUp').val('');
-			$('#weightUp').val('');
-			$('#preBakeExpUp').val('');
-			$('#preBakeMaxUp').val('');
-			$('#featureExpUp').val('');
-			$('#price1Up').val('');
-			$('#price2Up').val('');
-			$('#price3Up').val('');
-			$('#price4Up').val('');
-			$('#price5Up').val('');
-			$('#idCalendarUp').empty();
+			$(this).find(form)[0].reset();
 		})
 
 	// Set up an event listener for the updateProduct form.
@@ -262,6 +228,7 @@ var main = function(){
 			if(productData[0]["visibleForUser"]!=0) visableFUText = "Ja";
 			$(".displayVisibleForUser").text(visableFUText);
 			$(".displayProductCategory").text(categoriesNameDict[productData[0]["productCategory"]]);
+			$(".displayOrderPriority").text(productData[0]["orderPriority"]);
 			$(".displayImagePath").text(productData[0]["imagePath"]);
 			$(".displayIngredients").text(productData[0]["ingredients"]);
 			$(".displayAllergens").text(productData[0]["allergens"]);
@@ -355,6 +322,7 @@ var main = function(){
 				else{visForU = false}
 				$('#visibleForUserUp').prop('checked', visForU);
 				$('#productCategoryUp').val(productData[0]["productCategory"]);
+				$('#orderPriorityUp').val(productData[0]["orderPriority"]);
 				$('#imagePathUp').val(productData[0]["imagePath"]);
 				$('#ingredientsUp').val(productData[0]["ingredients"]);
 				$('#allergensUp').val(productData[0]["allergens"]);

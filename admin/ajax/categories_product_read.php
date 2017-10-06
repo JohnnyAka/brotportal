@@ -2,7 +2,7 @@
 include('../db_crud.php');
 
 $db = new db_connection();
-$data = $db->getData("productCategories", array('id','name'));
+$data = $db->getData("productCategories", array('id','name', 'orderPriority'));
 
 
 $jsonData = json_encode($data);

@@ -38,13 +38,7 @@ $(function() {
 		
 	//clear formfields after modal close (event)
 	$('#createOrder').on('hidden.bs.modal', function () {
-		$('#idProduct').empty();
-		$('#number').val('');
-		$('#hook').val('');
-		$('#noteDelivery').val('');
-		$('#noteBaking').val('');
-		$('#idCustomer').val('');
-		$('#orderDate').val('');
+		$(this).find(form)[0].reset();
 	})
 
 	// Set up an event listener for the createProduct form.
@@ -91,7 +85,7 @@ $(function() {
 	
 	//clear formfields after modal close (event)
 	$('#updateOrder').on('hidden.bs.modal', function () {
-		$('#idProductUp').empty();
+		$(this).find(form)[0].reset();
 	})
 
 	// Set up an event listener for the updateProduct form.

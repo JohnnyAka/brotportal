@@ -83,7 +83,7 @@ if(!isset($_SESSION['userid'])) {
 							//example: $productDict['8']['name'] ; $categoryDict['5']
 							$productDict = array(); $categoryDict = array();
 							foreach($visibleCats as $category){
-								$queryResult = $db->getData("products",array("id","productID","name","productCategory","visibleForUser"), "productCategory=".$category['idProductCat']);
+								$queryResult = $db->getData("products",array("id","productID","name","productCategory","visibleForUser"), "productCategory=".$category['idProductCat']." AND visibleForUser=1");
 								$arrayLength = count($queryResult);
 								for($x=0; $x < $arrayLength; $x++){
 									$productDict[$queryResult[$x]['id']] = $queryResult[$x];

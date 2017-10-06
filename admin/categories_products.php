@@ -125,6 +125,10 @@ if(!isset($_SESSION['trustedUser'])) {
 					<label for="productCatName">Produktkategorie:</label>
 					<input id="productCatName" name="productCatName">
 				</div>
+				<div class="field">
+					<label for="orderPriority">Listen Priorität:</label>
+					<input type="number" min="1" max="99" value="50" id="orderPriority" name="orderPriority">
+				</div>
 			</form>
 		  </div>
 		  <div class="modal-footer">
@@ -148,6 +152,10 @@ if(!isset($_SESSION['trustedUser'])) {
 				<div class="field">
 					<label for="productCatNameUp">Produktkategorie:</label>
 					<input id="productCatNameUp" name="productCatName">
+				</div>
+				<div class="field">
+					<label for="orderPriorityUp">Listen Priorität:</label>
+					<input type="number" min="1" max="99" id="orderPriorityUp" name="orderPriority">
 				</div>
 				<div class="field">
 					<input type="hidden" id="catIdUp" name="catId">

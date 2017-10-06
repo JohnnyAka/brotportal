@@ -10,8 +10,7 @@ $(function() {
 		
 	//clear formfields after modal close (event)
 	$('#createUserCat').on('hidden.bs.modal', function () {
-		$('#userCatName').val('');
-		$('#catId').val('');
+		$(this).find(form)[0].reset();
 	})
 
 	// Set up an event listener for the createUser form.
@@ -57,7 +56,7 @@ $(function() {
 	
 	//clear formfields after modal close (event)
 	$('#updateUserCat').on('hidden.bs.modal', function () {
-		$('#userCatNameUp').val('');
+		$(this).find(form)[0].reset();
 	})
 
 	// Set up an event listener for the updateUser form.

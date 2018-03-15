@@ -48,13 +48,13 @@ var main = function(){
 			url: 'ajax/export_deleteOldOrders.php'
 		}).done(function(response){
 			alert(response);
-			$(messages).text("Bestellungen erfolgreich exportiert!");
+			$(messages).text("Bestellungen erfolgreich gelöscht!");
 		}).fail(function(data){
 			// Set the message text.
 			if (data.responseText !== '') {
 				$(messages).text(data.responseText);
 			} else {
-				$(messages).text('Fehler, Bestellungen konnten nicht exportiert werden.');
+				$(messages).text('Fehler, Bestellungen konnten nicht gelöscht werden.');
 			}
 		});
 	});

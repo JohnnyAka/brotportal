@@ -43,7 +43,7 @@ if(isset($_SESSION['userid'])) {
 	<h1>Login</h1>
 	<form id="loginForm" method="post" action="ajax/login.php">
 		<div class="field">
-			<label for="name">Name:</label>
+			<label for="name">Kundennummer:</label>
 			<input id="name" name="name">
 		</div>
 		<div class="field">

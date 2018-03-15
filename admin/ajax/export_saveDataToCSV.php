@@ -6,9 +6,9 @@ include($_SERVER['DOCUMENT_ROOT']."/brotportal/admin/db_crud.php");
 	$customerDict = makeDict($db,'users', 'id', 'customerID');
 	$preOrderCustomerDict = makeDict($db,'users', 'id', 'preOrderCustomerId');
 	$productDict = makeDict($db,'products', 'id', 'productID');
-	$preBakeDict = makeDict($db,'products', 'id', 'preBakeExp','preBakeExp!=0');	
-	$preBakeMaxDict = makeDict($db,'products', 'id', 'preBakeMax','preBakeExp!=0');
-	$preProductCalendarDict = makeDict($db,'products', 'id', 'idCalendar', 'preBakeExp!=0');
+	$preBakeDict = makeDict($db,'products', 'id', 'preBakeExp','preBakeMax!=0');	
+	$preBakeMaxDict = makeDict($db,'products', 'id', 'preBakeMax','preBakeMax!=0');
+	$preProductCalendarDict = makeDict($db,'products', 'id', 'idCalendar');
 
 	$time = date('H-i-s');
 	//get export date
@@ -19,7 +19,7 @@ include($_SERVER['DOCUMENT_ROOT']."/brotportal/admin/db_crud.php");
 	
 	
 	//return "Hier gehts";
-	$orderList = getOrdersNormal($db, $customerDict, $productDict, $preBakeDict, $date);
+	$orderList = getOrdersNormal($db, $customerDict, $productDict, $preBakeDict, $preProductCalendarDict, $date);
 	//return json_encode($orderList);
 	
 	$preOrderList = getPreOrders($db, $customerDict, $productDict, $preBakeDict, $preBakeMaxDict, $preProductCalendarDict, $date);
@@ -53,42 +53,64 @@ include($_SERVER['DOCUMENT_ROOT']."/brotportal/admin/db_crud.php");
 		return $minDate;
 	}
 	
-	function prepareOrdersForExport($db, $customerDict, $productDict, $preBakeDict, $data, $normal=true){
-		
-		$orderList = [];
-		for($x=0;$x<count($data);$x++){
-			$currentData = $data[$x];
-			
-			unset($currentData->noteBaking);
-			unset($currentData->important);
-			
-			if($normal){
-				$currentData['idCustomer'] = $customerDict[$currentData['idCustomer']];
-				if(array_key_exists($currentData['idProduct'], $preBakeDict)){
-					$currentData['hook'] = 5;
-				}
-				$currentData['idProduct'] = $productDict[$currentData['idProduct']];
-				array_push($orderList, $currentData);
-			}
-			else{
-				$data = $db->getData("users", array('preOrderCustomerId'), "id=".$currentData['idCustomer']);
-				$currentData['idCustomer'] = $data[0]['preOrderCustomerId'];
-				$currentData['idProduct'] = $productDict[$currentData['idProduct']];
-				$currentData['orderDate'] = date_format(getExportDate(), 'Y-m-d');
-				
-				$orderList[] = $currentData;
-			}
+	//checks, whether a product is being baked on specified date; returns true or false
+	function isBakedOnDate($db, $productId, $specifiedDate, $preProductCalendarDict){
+		//get calendar for product
+		$calendarDatesRaw = $db->getData("calendarsDaysRelations", 
+		array('date'), "idCalendar='".$preProductCalendarDict[$productId]."'");
+
+		$calendarDates = [];
+		foreach($calendarDatesRaw as $cDate){
+			array_push($calendarDates, $cDate['date']);
 		}
-		return $orderList;
+		//is date in calendar?
+		$date = date_format($specifiedDate, 'Y-m-d');
+		if(!in_array($date, $calendarDates)){ 
+			return false;
+		}
+		else{
+			return true;
+		}
 	}
 	
-	function getOrdersNormal($db, $customerDict, $productDict, $preBakeDict, $date){
+	function prepareOrdersForExport($db, $customerDict, $productDict, $preBakeDict, $preProductCalendarDict, $data, $normal=true){
+		if($data) {
+            $orderList = [];
+            for ($x = 0; $x < count($data); $x++) {
+                $currentData = $data[$x];
+
+                unset($currentData->noteBaking);
+                unset($currentData->important);
+
+                if ($normal) {
+                    $currentData['idCustomer'] = $customerDict[$currentData['idCustomer']];
+                    //stattdessen: wenn es heut nicht produziert wird oder wenn es einen prebake von >0 hat, bekommt es hook 5
+                    if ($preBakeDict[$currentData['idProduct']] != 0 OR !isBakedOnDate($db, $currentData['idProduct'], getExportDate(), $preProductCalendarDict)) {
+                        $currentData['hook'] = 5;
+                    }
+                    $currentData['idProduct'] = $productDict[$currentData['idProduct']];
+                    array_push($orderList, $currentData);
+                } else {
+                    $data = $db->getData("users", array('preOrderCustomerId'), "id=" . $currentData['idCustomer']);
+                    $currentData['idCustomer'] = $data[0]['preOrderCustomerId'];
+                    $currentData['idProduct'] = $productDict[$currentData['idProduct']];
+                    $currentData['orderDate'] = date_format(getExportDate(), 'Y-m-d');
+
+                    $orderList[] = $currentData;
+                }
+            }
+            return $orderList;
+        }
+        else false;
+	}
+	
+	function getOrdersNormal($db, $customerDict, $productDict, $preBakeDict, $preProductCalendarDict, $date){
 	
 		$data = $db->getData("orders", 
 		array('idProduct','idCustomer','orderDate','number','hook','important','noteBaking','noteDelivery'), 
 		"orderDate='".$date."'");
 		
-		return prepareOrdersForExport($db, $customerDict, $productDict, $preBakeDict, $data);
+		return prepareOrdersForExport($db, $customerDict, $productDict, $preBakeDict, $preProductCalendarDict, $data);
 	}
 
 	
@@ -98,11 +120,16 @@ include($_SERVER['DOCUMENT_ROOT']."/brotportal/admin/db_crud.php");
 		$orderList = [];
 		$exportDate = new DateTime($date);
 		//iterate all products with prebake
-		foreach($preBakeDict as $productId => $preBake){
-			$minDate = $preBake;
-			$maxDate = $preBakeMaxDict[$productId];
-			
-			$calendarDatesRaw = $db->getData("calendarsDaysRelations", 
+		foreach($preBakeMaxDict as $productId => $preBakeMax){
+			$minDate = $preBakeDict[$productId];
+			$maxDate = $preBakeMax;
+
+
+			$productNow = $productDict[$productId];
+			$productNow;
+
+
+			$calendarDatesRaw = $db->getData("calendarsDaysRelations",
 			array('date'), "idCalendar='".$preProductCalendarDict[$productId]."'");
 
 			$calendarDates = [];
@@ -117,13 +144,16 @@ include($_SERVER['DOCUMENT_ROOT']."/brotportal/admin/db_crud.php");
 			}
 			
 			//check all possible dates for this product
+			$minDateOriginal = $minDate;
+			if($minDate == 0) $minDate += 1; //do not check delivery date (already covered in "normal" case)
+			// x Schleife stellt den möglichen Tag der Lieferung ein
 			for($x=getInteger($minDate); $x<=$maxDate; $x++){
 				$exportToday = 'set';
 				$deliveryDate = getExportDate();
 				$deliveryDate->modify('+'.$x.' day');
 				$deliveryDateFormated = date_format($deliveryDate,'Y-m-d');
-				
-				for($y=$x-1;$y>$minDate;$y--){
+				// y Schleife wandert die möglichen näheren Produktionsdaten ab; wird eins gefunden -> unset
+				for($y=$x-1;$y>=$minDateOriginal;$y--){
 					$productionDate = new DateTime($deliveryDateFormated);
 					$productionDate->modify('-'.$y.' day');
 					$productionDate = date_format($productionDate,'Y-m-d');
@@ -139,32 +169,33 @@ include($_SERVER['DOCUMENT_ROOT']."/brotportal/admin/db_crud.php");
 					array('idProduct','idCustomer','orderDate','number','hook','important','noteBaking','noteDelivery'), 
 					"idProduct=".$productId." AND orderDate='".$deliveryDateFormated."'");
 					//echo json_encode($data);
-					$newOrders = prepareOrdersForExport($db, $customerDict, $productDict, $preBakeDict, $data, false);
-					
-					for($z=0;$z<count($newOrders);$z++){
-						$currentData = $newOrders[$z];
-						$currentData['noteDelivery'] = 'Lieferung am '.date_format($deliveryDate, 'd.m.Y');
-						
-						//check existing orders for multiple entries with same customer and product IDs
-						//echo json_encode($orderList);
-						$found = false;
-						foreach($orderList as &$entry){
-							//echo "Kunde aus Liste: ".$entry['idCustomer']." |Kunde akut: ".$currentData['idCustomer'];
-							if($entry['idCustomer']==$currentData['idCustomer'] and $entry['idProduct']==$currentData['idProduct']){
-								//echo " Number list: ".($entry['number']." Number current: ". $currentData['number'])." end\n";
-								//echo " Number: ".($entry['number'] + $currentData['number'])." end\n";
-								$entry['number'] = ($entry['number'] + $currentData['number']);
-								//echo "in routine mit Anzahl: ".$entry['number'];
-								$found = true;
-							}
-						}
-						unset($entry);
-						if($found == true){
-							continue;
-						}
-						
-						array_push($orderList, $currentData);
-					}
+					$newOrders = prepareOrdersForExport($db, $customerDict, $productDict, $preBakeDict, $preProductCalendarDict, $data, false);
+					if($newOrders != false) {
+                        for ($z = 0; $z < count($newOrders); $z++) {
+                            $currentData = $newOrders[$z];
+                            $currentData['noteDelivery'] = 'Lieferung am ' . date_format($deliveryDate, 'd.m.Y');
+
+                            //check existing orders for multiple entries with same customer and product IDs
+                            //echo json_encode($orderList);
+                            $found = false;
+                            foreach ($orderList as &$entry) {
+                                //echo "Kunde aus Liste: ".$entry['idCustomer']." |Kunde akut: ".$currentData['idCustomer'];
+                                if ($entry['idCustomer'] == $currentData['idCustomer'] and $entry['idProduct'] == $currentData['idProduct']) {
+                                    //echo " Number list: ".($entry['number']." Number current: ". $currentData['number'])." end\n";
+                                    //echo " Number: ".($entry['number'] + $currentData['number'])." end\n";
+                                    $entry['number'] = ($entry['number'] + $currentData['number']);
+                                    //echo "in routine mit Anzahl: ".$entry['number'];
+                                    $found = true;
+                                }
+                            }
+                            unset($entry);
+                            if ($found == true) {
+                                continue;
+                            }
+
+                            array_push($orderList, $currentData);
+                        }
+                    }
 				}
 			}
 		}

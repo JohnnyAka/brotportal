@@ -81,24 +81,36 @@ if(!isset($_SESSION['userid'])) {
 							//produces a an associative array with key = product ID and objects with keys: "id","productID","name","productCategory","visibleForUser"
 							//for category dict: associative array with key = category ID and value = name
 							//example: $productDict['8']['name'] ; $categoryDict['5']
-							$productDict = array(); $categoryDict = array();
+							$productDict = array(); $categoryNameDict = array(); $categoryOrderDict = array();
 							foreach($visibleCats as $category){
-								$queryResult = $db->getData("products",array("id","productID","name","productCategory","visibleForUser"), "productCategory=".$category['idProductCat']." AND visibleForUser=1");
+								$queryResult = $db->getData("products",array("id","productID","name","productCategory", "orderPriority","visibleForUser"), "productCategory=".$category['idProductCat']." AND visibleForUser=1");
 								$arrayLength = count($queryResult);
 								for($x=0; $x < $arrayLength; $x++){
 									$productDict[$queryResult[$x]['id']] = $queryResult[$x];
 								}
-								$categoryDict[$category['idProductCat']] = $db->getData("productCategories",array("id","name"), "id=".$category['idProductCat'])[0]['name'];
+								$categoryEntry = $db->getData("productCategories",array("id","name","orderPriority"), "id=".$category['idProductCat'])[0];
+								$categoryNameDict[$category['idProductCat']] = $categoryEntry['name'];
+								$categoryOrderDict[$category['idProductCat']] = $categoryEntry['orderPriority'];
 							}
-							uasort($categoryDict, function($a, $b){
-								return strcasecmp($a,$b);
+							uasort($categoryOrderDict, function($a, $b){
+								if(intval($a)<intval($b)){return -1;}
+								return 1;
 							});
-							foreach($categoryDict as $catId => $catName){
+							foreach($categoryOrderDict as $catId => $orderPriority){
+								$catName = $categoryNameDict[$catId];
 								echo "<li class='sidebarElement showMultipleArticles' data-id=".$catId.">".$catName."</li>";
 								echo '<ul class="subSidebarList">';
 								$productsOfCategory = search($productDict, 'productCategory', $catId);
 								usort($productsOfCategory, function($a, $b) {
-									return strcasecmp($a['name'], $b['name']);
+									if($a['orderPriority'] == $b['orderPriority']){
+										return strcasecmp($a['name'], $b['name']);
+									}
+									elseif($a['orderPriority'] < $b['orderPriority']){
+										return -1;
+									}
+									else{
+										return 1;
+									}
 								});
 								foreach($productsOfCategory as $product){
 									echo "<li class='subSidebarElement showSingleArticle' data-id=".$product['id'].">".$product['name']."<button class='btn btn-default btn-xs buttonAddProduct' type='button'><span class='glyphicon glyphicon-triangle-right iconAddProduct' aria-hidden='true'></span></button></li>";

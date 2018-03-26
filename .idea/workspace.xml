@@ -2,23 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0cdd6549-f14e-4b23-9fc3-2f4488eb10f2" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/admin/exports/bestellungen_2017-08-15_16-48-04.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/admin/exports/bestellungen_2017-08-15_16-49-59.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/admin/exports/bestellungen_2017-08-19_09-09-24.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/admin/exports/bestellungen_2017-08-19_14-17-59.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/admin/exports/bestellungen_2017-08-19_14-18-10.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/admin/exports/bestellungen_2017-08-19_14-18-48.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/admin/exports/bestellungen_2017-09-27_19-21-46.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/admin/exports/bestellungen_2017-09-28_17-28-20.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/admin/exports/bestellungen_2017-09-29_15-20-26.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/admin/exports/bestellungen_2017-09-29_17-23-07.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/admin/exports/bestellungen_2017-09-29_17-30-05.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/admin/exports/bestellungen_2017-09-29_19-22-11.csv" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/ajax/export_saveDataToCSV.php" afterPath="$PROJECT_DIR$/admin/ajax/export_saveDataToCSV.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/js/export.js" afterPath="$PROJECT_DIR$/admin/js/export.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.php" afterPath="$PROJECT_DIR$/index.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/orders.php" afterPath="$PROJECT_DIR$/orders.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -32,8 +17,8 @@
       <file leaf-file-name="export_saveDataToCSV.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/admin/ajax/export_saveDataToCSV.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="243">
-              <caret line="144" column="12" lean-forward="true" selection-start-line="144" selection-start-column="12" selection-end-line="144" selection-end-column="12" />
+            <state relative-caret-position="190">
+              <caret line="28" column="4" lean-forward="true" selection-start-line="28" selection-start-column="4" selection-end-line="28" selection-end-column="4" />
               <folding />
             </state>
           </provider>
@@ -45,6 +30,7 @@
     <findStrings>
       <find>db_crud</find>
       <find>queries</find>
+      <find>Artikelnummer</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -90,7 +76,7 @@
   <component name="PhpWebServerValidation" path_to_validation_script="C:\xampp\htdocs\brotportal" selected_validation_type="LOCAL" web_path_to_validation_script="http://127.0.0.1/brotportal" />
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" interpreter_name="PHP 5.6 XAMPP" />
   <component name="PhpXdebugProxy" ide_key="phpstorm" />
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="362" />
     <option name="y" value="-9" />
     <option name="width" value="1292" />
@@ -111,6 +97,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -127,7 +114,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scratches" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -178,15 +164,20 @@
       <workItem from="1521122818038" duration="948000" />
       <workItem from="1521123879145" duration="1771000" />
       <workItem from="1521125700966" duration="1734000" />
-      <workItem from="1521127510733" duration="1010000" />
+      <workItem from="1521127510733" duration="1445000" />
+      <workItem from="1521129688876" duration="129000" />
+      <workItem from="1522059038626" duration="683000" />
+      <workItem from="1522059742258" duration="1417000" />
+      <workItem from="1522061548074" duration="1814000" />
+      <workItem from="1522063399055" duration="120000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="31878000" />
+    <option name="totallyTimeSpent" value="36476000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="39" width="1938" height="1170" extended-state="7" />
+    <frame x="-9" y="39" width="1938" height="1170" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.225" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -198,7 +189,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.29150578" sideWeight="0.48958334" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29150578" sideWeight="0.48958334" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="PHP-CGI Server" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -594,8 +585,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/ajax/export_saveDataToCSV.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="243">
-          <caret line="144" column="12" lean-forward="true" selection-start-line="144" selection-start-column="12" selection-end-line="144" selection-end-column="12" />
+        <state relative-caret-position="190">
+          <caret line="28" column="4" lean-forward="true" selection-start-line="28" selection-start-column="4" selection-end-line="28" selection-end-column="4" />
           <folding />
         </state>
       </provider>

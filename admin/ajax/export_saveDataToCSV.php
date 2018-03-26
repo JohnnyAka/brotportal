@@ -1,4 +1,6 @@
 <?php
+//Note: Produkte mit mindest Vorbestell-Zeit werden mindestens X(prebake) vor der Auslieferung produziert, nicht X(prebake) Produktionstage
+
 include($_SERVER['DOCUMENT_ROOT']."/brotportal/admin/db_crud.php");
 	
 	$db = new db_connection();
@@ -27,7 +29,7 @@ include($_SERVER['DOCUMENT_ROOT']."/brotportal/admin/db_crud.php");
 	
 	$filename = $_SERVER['DOCUMENT_ROOT'].'/brotportal/admin/exports/bestellungen_'.$date.'_'.$time;
 	$file = fopen($filename.'.csv', 'w');
-	fputcsv($file, array('Artikelnummer', 'Kundennummer', 'Datum', 'Anzahl', 'Lieferung', 'LieferscheinNotiz'));
+	fputcsv($file, array('Artikelnummer', 'Kundennummer', 'Datum', 'Anzahl', 'Lieferung','wichtig','BackzettelNotiz', 'LieferscheinNotiz'));
 	foreach ($orderList as $row)
 		{fputcsv($file, $row);}
 	foreach ($preOrderList as $row)
@@ -173,7 +175,7 @@ include($_SERVER['DOCUMENT_ROOT']."/brotportal/admin/db_crud.php");
 					if($newOrders != false) {
                         for ($z = 0; $z < count($newOrders); $z++) {
                             $currentData = $newOrders[$z];
-                            $currentData['noteDelivery'] = 'Lieferung am ' . date_format($deliveryDate, 'd.m.Y');
+                            $currentData['noteDelivery'] = 'Lieferung: '. $currentData['number'] .' am ' . date_format($deliveryDate, 'd.m.Y');
 
                             //check existing orders for multiple entries with same customer and product IDs
                             //echo json_encode($orderList);
@@ -184,6 +186,7 @@ include($_SERVER['DOCUMENT_ROOT']."/brotportal/admin/db_crud.php");
                                     //echo " Number list: ".($entry['number']." Number current: ". $currentData['number'])." end\n";
                                     //echo " Number: ".($entry['number'] + $currentData['number'])." end\n";
                                     $entry['number'] = ($entry['number'] + $currentData['number']);
+                                    $entry['noteDelivery'] .= ', Lieferung: '. $currentData['number'] .' am ' . date_format($deliveryDate, 'd.m.Y');
                                     //echo "in routine mit Anzahl: ".$entry['number'];
                                     $found = true;
                                 }

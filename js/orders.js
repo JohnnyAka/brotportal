@@ -264,6 +264,8 @@ var main = function(){
 	$('.showMultipleArticles').click(function() {
 		$('ul.sidebarList').find('*').removeClass("active");
 		$(this).addClass("active");
+		//remove addToOrder Button
+        $(".subSidebarElement").find(".buttonAddProduct").css('visibility','hidden');
 		
 		//ajax call for product data
 		//$.post("ajax/products_read.php", {id:$(this).data('id')}, function(response, status){

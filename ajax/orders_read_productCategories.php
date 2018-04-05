@@ -6,7 +6,9 @@ $db = new db_connection();
 
 $userId = $_SESSION['userid'];
 
-$visibleCategories = $db->getData("categoryrelations", "idProductCat", "idUserCat = '".$userId."'");
+$userCategoryId = $db->getData("users", "customerCategory", "id = '".$userId."'")[0]['customerCategory'];
+
+$visibleCategories = $db->getData("categoryrelations", "idProductCat", "idUserCat = '".$userCategoryId."'");
 
 $whereCondition = "";
 foreach($visibleCategories as $category){

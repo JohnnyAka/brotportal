@@ -47,6 +47,10 @@ ul.sidebarList{
 	padding:0px;
 }
 
+.icon-list-collapse{
+	margin-left: 5px;
+}
+
 li.subSidebarElement{
 	position: relative;
 }

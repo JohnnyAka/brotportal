@@ -300,13 +300,24 @@ var main = function(){
 			$('.productContent').append('<p>Beschreibung <br />'+productData["description"]+'</p>');
 		});
 	});
-	
+
+	//toggle product-list icon
+    $('.icon-list-collapse').click(function() {
+        $(this).parent().next("ul").toggle();
+        $(this).toggleClass("glyphicon-collapse-up glyphicon-collapse-down");
+    });
+
 	//show and hide addProduct button
 	$(".subSidebarElement").mouseenter(function() { 
 		$(this).find(".buttonAddProduct").css('visibility','visible'); 
 	}).mouseleave(function() {
-    $(this).find(".buttonAddProduct").css('visibility','hidden'); 
-  });
+		if(!$(this).hasClass("active")){
+            $(this).find(".buttonAddProduct").css('visibility','hidden');
+		}
+  	}).click(function(){
+        $(".subSidebarElement").find(".buttonAddProduct").css('visibility','hidden');
+        $(this).find(".buttonAddProduct").css('visibility','visible');
+    });
 	
 	$('.buttonAddProduct').click(function(event) {
 		event.stopPropagation();

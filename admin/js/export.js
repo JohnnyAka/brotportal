@@ -7,6 +7,35 @@ $(function() {
 	$( "#datepicker" ).datepicker( "setDate", "+1" );
 });
 
+//update the list of Orderexportfiles available for download
+function updateExportList(){
+    $.ajax({
+        type: 'POST',
+        url: 'ajax/export_updateExportList.php'
+    }).done(function(response){
+        //alert(response);
+		var files = JSON.parse(response);
+		var listnode = $("#listExportFiles");
+		listnode.empty();
+		listnode.html("<h3>Export-Dateien</h3>")
+		for(i = files.length-1; i>=0;i--){
+			var filename = files[i];
+			if(!(filename=="." || filename=="..")) {
+                listnode.append("<a href='exports/"+filename+"' download><li>" + filename + "</li></a>");
+            }
+		}
+        $(messages).text("Erfolgreiches Update!");
+    }).fail(function(data){
+        // Set the message text.
+        if (data.responseText !== '') {
+            $(messages).text(data.responseText);
+        } else {
+            $(messages).text('Fehler, Update der Exportfiles konnte nicht durchgeführt werden.');
+        }
+    });
+}
+updateExportList();
+
 //main function for click event handlers
 var main = function(){
 	var messages = $("#messages");
@@ -40,6 +69,7 @@ var main = function(){
 		else{
 			alert("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
 		}
+		updateExportList();
 	});
 	
 	$('.deleteOldOrdersButton').click(function(){

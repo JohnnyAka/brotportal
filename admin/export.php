@@ -95,7 +95,8 @@ if(!isset($_SESSION['trustedUser'])) {
 						<button type="button" class="btn btn-primary exportOrdersButton">
 							Bestellungen exportieren
 						</button>
-					</div> 
+					</div>
+                    <ul id="listExportFiles" style="list-style-type: none;"></ul>
 				</div>
 				<div class="col-md-3">
 					<h5>Alte Bestellungen löschen</h5>

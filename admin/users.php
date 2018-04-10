@@ -23,9 +23,13 @@ if(!isset($_SESSION['trustedUser'])) {
 		<link href="../../jquery-ui-1.11.4.custom/jquery-ui.css" rel="stylesheet">
 		<script src="../../jquery-ui-1.11.4.custom/external/jquery/jquery.js"></script>
 		<script src="../../jquery-ui-1.11.4.custom/jquery-ui.js"></script>
-		
-    <!-- Custom styles for this template -->
-	<link href="css/admin.css" rel="stylesheet">
+
+      <?php
+      require '../orders_functions.php';
+      ?>
+      <!-- Custom styles for this template -->
+      <link href="css/admin.css" rel="stylesheet">
+      <link href="css/users.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -82,20 +86,44 @@ if(!isset($_SESSION['trustedUser'])) {
     <div class="container">
 	  <div class="row mainrow">
 	    <div class="col-md-3">
-			<h3>Benutzer</h3>
-			<ul class="sidebarList">
-			  <?php
-			    include('db_crud.php');
-			    $db = new db_connection();
-				$sidebarList = $db->getData("users",array("id","name"));
-				
-				
-			    foreach($sidebarList as $item){
-				  echo "<li class='sidelist' data-id=".$item['id'].">".$item['name']."</li>";
-				}	
-				
-			  ?>
-			</ul>
+            <h3>Kunden</h3>
+            <ul class="sidebarList listsHeight">
+                <?php
+                include('db_crud.php');
+                $db = new db_connection();
+                //get cats
+                $Cats = $db->getData("userCategories",array("id"));
+                //get products and make products dictionary and category dictionary
+                //produces a an associative array with key = product ID and objects with keys: "id","productID","name","productCategory","visibleForUser"
+                //for category dict: associative array with key = category ID and value = name
+                //example: $productDict['8']['name'] ; $categoryDict['5']
+                $userDict = array(); $categoryNameDict = array(); $categoryOrderDict = array();
+                foreach($Cats as $category){
+                    $queryResult = $db->getData("users",array("id","customerID","name","customerCategory"), "customerCategory=".$category['id']);
+                    $arrayLength = count($queryResult);
+                    for($x=0; $x < $arrayLength; $x++){
+                        $userDict[$queryResult[$x]['id']] = $queryResult[$x];
+                    }
+                    $categoryEntry = $db->getData("userCategories",array("id","name"), "id=".$category['id'])[0];
+                    $categoryNameDict[$category['id']] = $categoryEntry['name'];
+                }
+                uasort($categoryNameDict, function($a, $b){
+                    return strcasecmp($a, $b);
+                });
+                foreach($categoryNameDict as $catId => $name){
+                    echo "<li class='sidebarElement showMultipleArticles' data-id=".$catId.">".$name."<span class='icon-list-collapse glyphicon glyphicon-collapse-down' aria-hidden=\"true\"></span></li>";
+                    echo '<ul class="subSidebarList" style="display:none;">';
+                    $usersOfCategory = search($userDict, 'customerCategory', $catId);
+                    usort($usersOfCategory, function($a, $b) {
+                        return strcasecmp($a['name'], $b['name']);
+                    });
+                    foreach($usersOfCategory as $user){
+                        echo "<li class='subSidebarElement showSingleArticle' data-id=".$user['id'].">".$user['name']."</li>";
+                    }
+                    echo '</ul>';
+                }
+                ?>
+            </ul>
 	    </div>
 	    <div class="col-md-9 main-content">
 		<div id="messages"></div>

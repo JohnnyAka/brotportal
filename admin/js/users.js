@@ -161,7 +161,7 @@ var deleteUserAndOrders = function(userID, deleteOrders = false){
 var main = function(){
 
 	// click-event to retrieve data-id and alert
-	$('ul.sidebarList li').click(function() {
+	$('ul.subSidebarList li').click(function() {
 		$('ul.sidebarList li').removeClass("active");
 		$(this).addClass("active");
 		
@@ -185,6 +185,12 @@ var main = function(){
 			$(".preOrderCustomerIdDisp").text(userData[0]["preOrderCustomerId"]);
 		});
 	});
+
+    //toggle product-list icon
+    $('.icon-list-collapse').click(function() {
+        $(this).parent().next("ul").toggle();
+        $(this).toggleClass("glyphicon-collapse-down glyphicon-collapse-up");
+    });
 	
 	
 	$('.createUserButton').click(function(){

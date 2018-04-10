@@ -90,14 +90,14 @@ if(!isset($_SESSION['trustedUser'])) {
                 <?php
                 include('db_crud.php');
                 $db = new db_connection();
-                //get visible cats
-                $visibleCats = $db->getData("productCategories",array("id"));
+                //get cats
+                $Cats = $db->getData("productCategories",array("id"));
                 //get products and make products dictionary and category dictionary
                 //produces a an associative array with key = product ID and objects with keys: "id","productID","name","productCategory","visibleForUser"
                 //for category dict: associative array with key = category ID and value = name
                 //example: $productDict['8']['name'] ; $categoryDict['5']
                 $productDict = array(); $categoryNameDict = array(); $categoryOrderDict = array();
-                foreach($visibleCats as $category){
+                foreach($Cats as $category){
                     $queryResult = $db->getData("products",array("id","productID","name","productCategory", "orderPriority"), "productCategory=".$category['id']);
                     $arrayLength = count($queryResult);
                     for($x=0; $x < $arrayLength; $x++){

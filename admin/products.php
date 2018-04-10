@@ -1,7 +1,7 @@
 <?php
 session_start();
 if(!isset($_SESSION['trustedUser'])) {
-   die("Bitte erst einloggen");  
+   die("Bitte erst einloggen");
 }
 ?>
 <!DOCTYPE html>
@@ -24,6 +24,9 @@ if(!isset($_SESSION['trustedUser'])) {
 		<script src="../../jquery-ui-1.11.4.custom/external/jquery/jquery.js"></script>
 		<script src="../../jquery-ui-1.11.4.custom/jquery-ui.js"></script>
 
+      <?php
+        require '../orders_functions.php';
+      ?>
     <!-- Custom styles for this template -->
 	<link href="css/admin.css" rel="stylesheet">
 	<link href="css/products.css" rel="stylesheet">
@@ -82,19 +85,54 @@ if(!isset($_SESSION['trustedUser'])) {
     <div class="container">
 	  <div class="row mainrow">
 	    <div class="col-md-3">
-			<h3>Produkte</h3>
-			<ul class="sidebarList">
-			  <?php
-			    include('db_crud.php');
-			    $db = new db_connection();
-					$sidebarList = $db->getData("products",array("id","name"));
-				
-				
-			    foreach($sidebarList as $item){
-				  echo "<li class='sidelist' data-id=".$item['id'].">".$item['name']."</li>";
-				}	
-				
-			  ?>
+            <h3>Produktliste</h3>
+            <ul class="sidebarList listsHeight">
+                <?php
+                include('db_crud.php');
+                $db = new db_connection();
+                //get visible cats
+                $visibleCats = $db->getData("productCategories",array("id"));
+                //get products and make products dictionary and category dictionary
+                //produces a an associative array with key = product ID and objects with keys: "id","productID","name","productCategory","visibleForUser"
+                //for category dict: associative array with key = category ID and value = name
+                //example: $productDict['8']['name'] ; $categoryDict['5']
+                $productDict = array(); $categoryNameDict = array(); $categoryOrderDict = array();
+                foreach($visibleCats as $category){
+                    $queryResult = $db->getData("products",array("id","productID","name","productCategory", "orderPriority"), "productCategory=".$category['id']);
+                    $arrayLength = count($queryResult);
+                    for($x=0; $x < $arrayLength; $x++){
+                        $productDict[$queryResult[$x]['id']] = $queryResult[$x];
+                    }
+                    $categoryEntry = $db->getData("productCategories",array("id","name","orderPriority"), "id=".$category['id'])[0];
+                    $categoryNameDict[$category['id']] = $categoryEntry['name'];
+                    $categoryOrderDict[$category['id']] = $categoryEntry['orderPriority'];
+                }
+                uasort($categoryOrderDict, function($a, $b){
+                    if(intval($a)<intval($b)){return -1;}
+                    return 1;
+                });
+                foreach($categoryOrderDict as $catId => $orderPriority){
+                    $catName = $categoryNameDict[$catId];
+                    echo "<li class='sidebarElement showMultipleArticles' data-id=".$catId.">".$catName."<span class='icon-list-collapse glyphicon glyphicon-collapse-down' aria-hidden=\"true\"></span></li>";
+                    echo '<ul class="subSidebarList">';
+                    $productsOfCategory = search($productDict, 'productCategory', $catId);
+                    usort($productsOfCategory, function($a, $b) {
+                        if($a['orderPriority'] == $b['orderPriority']){
+                            return strcasecmp($a['name'], $b['name']);
+                        }
+                        elseif($a['orderPriority'] < $b['orderPriority']){
+                            return -1;
+                        }
+                        else{
+                            return 1;
+                        }
+                    });
+                    foreach($productsOfCategory as $product){
+                        echo "<li class='subSidebarElement showSingleArticle' data-id=".$product['id'].">".$product['name']."</li>";
+                    }
+                    echo '</ul>';
+                }
+                ?>
 			</ul>
 	    </div>
 	    <div class="col-md-9 main-content">

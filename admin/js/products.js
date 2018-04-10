@@ -208,6 +208,11 @@ var deleteProductAndOrders = function(itemID, deleteOrders = false){
 	}
 	$('#deleteProductChoice').modal("hide");
 }
+
+//initialize sidebar as collapsed
+$(function(){
+	$('.subSidebarList').hide();
+})
 			
 //main function for click event handlers
 var main = function(){
@@ -244,8 +249,12 @@ var main = function(){
 			$(".displayIdCalendar").text(calendarsNameDict[productData[0]["idCalendar"]]);
 		});
 	});
-	
-	
+
+    //toggle product-list icon
+    $('.icon-list-collapse').click(function() {
+        $(this).parent().next("ul").toggle();
+        $(this).toggleClass("glyphicon-collapse-down glyphicon-collapse-up");
+    });
 	
 	$('.createProductButton').click(function(){
 		
@@ -274,7 +283,7 @@ var main = function(){
 	});
 	
 	$('.updateProductButton').click(function(){
-		var item = $("li.active.sidelist");
+		var item = $("li.active.subSidebarElement");
 		if (item.length){
 			// Get the messages div.
 			var messages = $('#messages');
@@ -355,7 +364,7 @@ var main = function(){
 	$('.deleteProductButton').click(function(){
 		var messages = $('#messages');
 		
-		var item = $("li.active.sidelist");
+		var item = $("li.active.subSidebarElement");
 		var itemID = item.data('id');
 		if (item.length){
 			//delete only if not present in any order
@@ -389,7 +398,7 @@ var main = function(){
 	});
 	
 	$('.deleteProductAndOrdersButton').click(function(){
-		var itemID = $("li.active.sidelist").data('id');
+		var itemID = $("li.active.subSidebarElement").data('id');
 		deleteProductAndOrders(itemID, true);
 	});
 }

@@ -257,6 +257,10 @@ var showOrderSentIcon = function(){
 	orderSent.addClass('glyphicon-check');
 }
 
+//initialize sidebar as collapsed
+$(function(){
+    $('.subSidebarList').hide();
+})
 
 //main function for click event handlers
 var main = function(){
@@ -306,7 +310,7 @@ var main = function(){
 	//toggle product-list icon
     $('.icon-list-collapse').click(function() {
         $(this).parent().next("ul").toggle();
-        $(this).toggleClass("glyphicon-collapse-up glyphicon-collapse-down");
+        $(this).toggleClass("glyphicon-collapse-down glyphicon-collapse-up");
     });
 
 	//show and hide addProduct button

@@ -257,10 +257,7 @@ var showOrderSentIcon = function(){
 	orderSent.addClass('glyphicon-check');
 }
 
-//initialize sidebar as collapsed
-$(function(){
-    $('.subSidebarList').hide();
-})
+
 
 //main function for click event handlers
 var main = function(){

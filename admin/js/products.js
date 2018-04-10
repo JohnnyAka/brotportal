@@ -208,17 +208,12 @@ var deleteProductAndOrders = function(itemID, deleteOrders = false){
 	}
 	$('#deleteProductChoice').modal("hide");
 }
-
-//initialize sidebar as collapsed
-$(function(){
-	$('.subSidebarList').hide();
-})
 			
 //main function for click event handlers
 var main = function(){
 
 	// click-event to retrieve data-id and alert
-	$('ul.sidebarList li').click(function() {
+	$('ul.subSidebarList li').click(function() {
 		$('ul.sidebarList li').removeClass("active");
 		$(this).addClass("active");
 		

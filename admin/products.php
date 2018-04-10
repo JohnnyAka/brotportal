@@ -114,7 +114,7 @@ if(!isset($_SESSION['trustedUser'])) {
                 foreach($categoryOrderDict as $catId => $orderPriority){
                     $catName = $categoryNameDict[$catId];
                     echo "<li class='sidebarElement showMultipleArticles' data-id=".$catId.">".$catName."<span class='icon-list-collapse glyphicon glyphicon-collapse-down' aria-hidden=\"true\"></span></li>";
-                    echo '<ul class="subSidebarList">';
+                    echo '<ul class="subSidebarList" style="display:none;">';
                     $productsOfCategory = search($productDict, 'productCategory', $catId);
                     usort($productsOfCategory, function($a, $b) {
                         if($a['orderPriority'] == $b['orderPriority']){

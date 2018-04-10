@@ -7,8 +7,13 @@ $(function() {
 	$( "#datepicker" ).datepicker( "setDate", "+1" );
 });
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 //update the list of Orderexportfiles available for download
-function updateExportList(){
+async function updateExportList(){
+		await sleep(50);//wait for the file to be able to be spotted
     $.ajax({
         type: 'POST',
         url: 'ajax/export_updateExportList.php'
@@ -35,6 +40,23 @@ function updateExportList(){
     });
 }
 updateExportList();
+
+//is triggered on button-click of export orders button
+function deleteOldOrders(){
+		$.ajax({
+			type: 'POST',
+			url: 'ajax/export_deleteOldOrders.php'
+		}).done(function(response){
+			$(messages).text("Bestellungen erfolgreich gelöscht!");
+		}).fail(function(data){
+			// Set the message text.
+			if (data.responseText !== '') {
+				$(messages).text(data.responseText);
+			} else {
+				$(messages).text('Fehler, Bestellungen konnten nicht gelöscht werden.');
+			}
+		});
+}
 
 //main function for click event handlers
 var main = function(){
@@ -70,23 +92,12 @@ var main = function(){
 			alert("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
 		}
 		updateExportList();
+		//delete old orders in database, according to the number of days in settings
+		deleteOldOrders();
 	});
 	
 	$('.deleteOldOrdersButton').click(function(){
-		$.ajax({
-			type: 'POST',
-			url: 'ajax/export_deleteOldOrders.php'
-		}).done(function(response){
-			alert(response);
-			$(messages).text("Bestellungen erfolgreich gelöscht!");
-		}).fail(function(data){
-			// Set the message text.
-			if (data.responseText !== '') {
-				$(messages).text(data.responseText);
-			} else {
-				$(messages).text('Fehler, Bestellungen konnten nicht gelöscht werden.');
-			}
-		});
+		
 	});
 	
 	

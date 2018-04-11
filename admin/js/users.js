@@ -209,7 +209,7 @@ var main = function(){
 	});
 	
 	$('.updateUserButton').click(function(){
-		var item = $("li.active.sidelist");
+		var item = $("li.active.subSidebarElement");
 		if (item.length){
 			// Get the messages div.
 			var messages = $('#messages');
@@ -271,7 +271,7 @@ var main = function(){
 	$('.deleteUserButton').click(function(){
 		var messages = $('#messages');
 		
-		var item = $("li.active.sidelist");
+		var item = $("li.active.subSidebarElement");
 		var itemID = item.data('id');
 		if (item.length){
 			$.ajax({

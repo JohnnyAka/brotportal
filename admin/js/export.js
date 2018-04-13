@@ -97,7 +97,7 @@ var main = function(){
 	});
 	
 	$('.deleteOldOrdersButton').click(function(){
-		
+		alert("not working at the moment...")
 	});
 	
 	

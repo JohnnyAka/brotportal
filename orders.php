@@ -57,8 +57,10 @@ if(!isset($_SESSION['userid'])) {
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li><a href="orders.php">Bestellungen</a></li>
-						<li><a href="logout.php">Logout</a></li>
+            <li class="active"><a href="orders.php">Bestellungen</a></li>
+              <li><a href="info.php">Info</a></li>
+              <li><a href="settings.php">Einstellungen</a></li>
+			<li><a href="logout.php">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>

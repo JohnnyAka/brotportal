@@ -8,7 +8,7 @@ $userId = $_SESSION['userid'];
 
 $userCategoryId = $db->getData("users", "customerCategory", "id = '".$userId."'")[0]['customerCategory'];
 
-$visibleCategories = $db->getData("categoryrelations", "idProductCat", "idUserCat = '".$userCategoryId."'");
+$visibleCategories = $db->getData("categoryRelations", "idProductCat", "idUserCat = '".$userCategoryId."'");
 
 $whereCondition = "";
 foreach($visibleCategories as $category){

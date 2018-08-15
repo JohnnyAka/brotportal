@@ -8,7 +8,7 @@ $userId = $_SESSION['userid'];
 
 $userCategoryId = $db->getData("users", "customerCategory", "id = '".$userId."'")[0]['customerCategory'];
 
-$visibleCategories = $db->getData("categoryrelations", "idProductCat", "idUserCat = '".$userCategoryId."'");
+$visibleCategories = $db->getData("categoryRelations", "idProductCat", "idUserCat = '".$userCategoryId."'");
 
 $whereCondition = "";
 foreach($visibleCategories as $category){
@@ -17,7 +17,6 @@ foreach($visibleCategories as $category){
 $whereCondition = rtrim($whereCondition, " or ");
 
 $data = $db->getData("products", array('id','productID','name','productCategory'), "productCategory = ".$whereCondition);
-
 
 $jsonData = json_encode($data);
 echo $jsonData;

@@ -1,5 +1,76 @@
 /*This file contains event handlers for click events and form-submit events*/
 
+//datepicker setup including onclose ajax orderlist load function
+$(function() {
+	$( "#ordersDatepicker" ).datepicker({
+	dateFormat:"dd.mm.yy",
+	minDate:"-380",
+	onClose:function(selectedDate, picker){
+		showOrders();
+	},
+	beforeShowDay:function(date){
+			day  = ('0' + date.getDate()).slice(-2);
+			month = ('0' + (date.getMonth() + 1)).slice(-2);
+			year =  date.getFullYear();
+			var formatedDate = year + '-' + month + '-' + day;
+			if ($.inArray(formatedDate, orderDates) !== -1) {
+				return [true, 'ui-state-orderDays', 'Bestellung vorhanden.'];
+			}
+			return [true, 'ui-state-noOrderDays', 'Keine Bestellung vorhanden.'];
+		}
+});
+$( "#ordersDatepicker" ).datepicker( "setDate", "+1" );
+
+	/*$( "#ordersDatepicker" ).datepicker($.datepicker.regional[ "de" ]);
+	$( "#ordersDatepicker" ).datepicker( "option", "dateFormat", "dd.mm.yy" );
+	$( "#ordersDatepicker" ).datepicker( "setDate", "+1" );
+	$( "#ordersDatepicker" ).datepicker( "option", "minDate", "-380" );
+	$( "#ordersDatepicker" ).datepicker( "option", "onClose", function(selectedDate, picker){
+		showOrders();
+	});*/
+	updateOrderDays();
+	//datepicker for take orders from selected date to current date
+	$( "#takeDatepicker" ).datepicker({
+		dateFormat:"dd.mm.yy",
+		minDate:"-380",
+		beforeShowDay:function(date){
+			day  = ('0' + date.getDate()).slice(-2);
+			month = ('0' + (date.getMonth() + 1)).slice(-2);
+			year =  date.getFullYear();
+			var formatedDate = year + '-' + month + '-' + day;
+			if ($.inArray(formatedDate, orderDates) !== -1) {
+				return [true, 'ui-state-orderDays', 'Bestellung vorhanden.'];
+			}
+			return [false, 'ui-state-noOrderDays', 'Keine Bestellung vorhanden.'];
+		}
+	});
+});
+
+var orderDates = [];
+var updateOrderDays = function(){
+	var customerID = $('#userID').data("value");
+	$.ajax({
+		type: 'POST',
+		url: 'ajax/orders_getOrderDays.php',
+		data: {
+			userID:customerID
+		}
+	}).done(function(response) {
+		var ordersData = JSON.parse(response);
+		orderDates = [];
+		for(var x=0; x < ordersData.length; x++){
+			orderDates.push(ordersData[x].orderDate);
+		}
+	}).fail(function(data) {
+		// Set the message text.
+		if (data.responseText !== '') {
+			$(messages).text(data.responseText);
+		} else {
+			$(messages).text('Fehler, Tage an denen bestellt wurde konnten nicht geladen werden.');
+		}
+	});
+}
+
 //create product list(dictionary) for name retrieval via id, product-category list for category retrieval via id
 //and category list for category name retrieval via id --- then show orders
 //productsNameDict, productsCategoryDict, categoriesNameDict
@@ -82,78 +153,6 @@ $(function() {
 		});
 	});
 });
-
-
-//datepicker setup including onclose ajax orderlist load function
-$(function() {
-	$( "#ordersDatepicker" ).datepicker({
-	dateFormat:"dd.mm.yy",
-	minDate:"-380",
-	onClose:function(selectedDate, picker){
-		showOrders();
-	},
-	beforeShowDay:function(date){
-			day  = ('0' + date.getDate()).slice(-2);
-			month = ('0' + (date.getMonth() + 1)).slice(-2);
-			year =  date.getFullYear();
-			var formatedDate = year + '-' + month + '-' + day;
-			if ($.inArray(formatedDate, orderDates) !== -1) {
-				return [true, 'ui-state-orderDays', 'Bestellung vorhanden.'];
-			}
-			return [true, 'ui-state-noOrderDays', 'Keine Bestellung vorhanden.'];
-		}
-});
-$( "#ordersDatepicker" ).datepicker( "setDate", "+1" );
-
-	/*$( "#ordersDatepicker" ).datepicker($.datepicker.regional[ "de" ]);
-	$( "#ordersDatepicker" ).datepicker( "option", "dateFormat", "dd.mm.yy" );
-	$( "#ordersDatepicker" ).datepicker( "setDate", "+1" );
-	$( "#ordersDatepicker" ).datepicker( "option", "minDate", "-380" );
-	$( "#ordersDatepicker" ).datepicker( "option", "onClose", function(selectedDate, picker){
-		showOrders();
-	});*/
-	updateOrderDays();
-	//datepicker for take orders from selected date to current date
-	$( "#takeDatepicker" ).datepicker({
-		dateFormat:"dd.mm.yy",
-		minDate:"-380",
-		beforeShowDay:function(date){
-			day  = ('0' + date.getDate()).slice(-2);
-			month = ('0' + (date.getMonth() + 1)).slice(-2);
-			year =  date.getFullYear();
-			var formatedDate = year + '-' + month + '-' + day;
-			if ($.inArray(formatedDate, orderDates) !== -1) {
-				return [true, 'ui-state-orderDays', 'Bestellung vorhanden.'];
-			}
-			return [false, 'ui-state-noOrderDays', 'Keine Bestellung vorhanden.'];
-		}
-	});
-});
-
-var orderDates = [];
-var updateOrderDays = function(){
-	var customerID = $('#userID').data("value");
-	$.ajax({
-		type: 'POST',
-		url: 'ajax/orders_getOrderDays.php',
-		data: {
-			userID:customerID
-		}
-	}).done(function(response) {
-		var ordersData = JSON.parse(response);
-		orderDates = [];
-		for(var x=0; x < ordersData.length; x++){
-			orderDates.push(ordersData[x].orderDate);
-		}
-	}).fail(function(data) {
-		// Set the message text.
-		if (data.responseText !== '') {
-			$(messages).text(data.responseText);
-		} else {
-			$(messages).text('Fehler, Tage an denen bestellt wurde konnten nicht geladen werden.');
-		}
-	});
-}
 
 
 //displays orders of selected date and customer

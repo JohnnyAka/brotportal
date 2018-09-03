@@ -40,23 +40,24 @@ if(isset($_SESSION['userid'])) {
 	
 	
 	<div id="messages"></div>
-	<h1>Login</h1>
-	<form id="loginForm" method="post" action="ajax/login.php">
-		<div class="field">
-			<label for="name">Kundennummer:</label>
-			<input id="name" name="name">
-		</div>
-		<div class="field">
-			<label for="password">Passwort:</label>
-			<input type="password" id="password" name="password">
-		</div>
-	</form>
-	<div class="button_group handleData">
-		<button type="submit" form="loginForm" class="btn btn-primary loginButton">
-			Login
-		</button>
-	</div> 
-					
+		<div id="login-controls">
+			<h1>Login</h1>
+			<form id="loginForm" method="post" action="ajax/login.php">
+				<div class="field">
+					<label for="name">Kundennummer:</label>
+					<input id="name" name="name">
+				</div>
+				<div class="field">
+					<label for="password">Passwort:</label>
+					<input type="password" id="password" name="password">
+				</div>
+			</form>
+			<div class="button_group handleData">
+				<button type="submit" form="loginForm" class="btn btn-primary loginButton">
+					Login
+				</button>
+			</div> 
+		</div> 
 	</body>
 	
 	

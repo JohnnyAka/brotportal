@@ -36,21 +36,23 @@
 	
 	
 	<div id="messages"></div>
-	<h1>Admin Login</h1>
-	<form id="adminLoginForm" method="post" action="ajax/login_admin.php">
-		<div class="field">
-			<label for="adminName">Name:</label>
-			<input id="adminName" name="adminName">
+	<div id="login-controls">
+		<h1>Admin Login</h1>
+		<form id="adminLoginForm" method="post" action="ajax/login_admin.php">
+			<div class="field">
+				<label for="adminName">Name:</label>
+				<input id="adminName" name="adminName">
+			</div>
+			<div class="field">
+				<label for="adminPassword">Passwort:</label>
+				<input type="password" id="adminPassword" name="adminPassword">
+			</div>
+		</form>
+		<div class="button_group handleData">
+			<button type="submit" form="adminLoginForm" class="btn btn-primary adminLoginButton">
+				Login
+			</button>
 		</div>
-		<div class="field">
-			<label for="adminPassword">Passwort:</label>
-			<input type="password" id="adminPassword" name="adminPassword">
-		</div>
-	</form>
-	<div class="button_group handleData">
-		<button type="submit" form="adminLoginForm" class="btn btn-primary adminLoginButton">
-			Login
-		</button>
 	</div> 
 					
 	</body>

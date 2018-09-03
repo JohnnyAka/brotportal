@@ -132,6 +132,7 @@ if(!isset($_SESSION['trustedUser'])) {
 			<form id="createOrderForm" method="post" action="ajax/orders_create.php">
 				
 				<div class="field">
+					<label for="idProduct">Produkt:</label>
 					<select id="idProduct" name="idProduct" required>
 					</select>
 				</div>

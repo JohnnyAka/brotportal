@@ -29,6 +29,7 @@ if(!isset($_SESSION['userid'])) {
 
     <!-- Custom styles for this template -->
 	<link href="css/brotportal.css" rel="stylesheet">
+	<link href="css/settings.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>

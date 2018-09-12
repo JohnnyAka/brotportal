@@ -34,6 +34,8 @@ $(function() {
 		//clear formfields after modal close (event)
 		$('#createUser').on('hidden.bs.modal', function () {
 			$(this).find(form)[0].reset();
+			//clear selects separately
+			$('#customerCategory').empty();
 		})
 
 	// Set up an event listener for the createUser form.
@@ -79,6 +81,8 @@ $(function() {
 			//clear formfields after modal close (event)
 		$('#updateUser').on('hidden.bs.modal', function () {
 			$(this).find(form)[0].reset();
+			//clear selects separately
+			$('#customerCategoryUp').empty();
 		})
 
 	// Set up an event listener for the updateProduct form.

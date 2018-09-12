@@ -119,40 +119,38 @@ if(!isset($_SESSION['userid'])) {
 								}
 								echo '</ul>';
 							}
-							
 						?>
 					</ul>
 				</div>
 				<div class="col-md-3 col-sm-6 col-md-push-6">
-					<div class="productActionsWrapper">
-						<div class="productActions">
-							<!-- share the session variables with orders.js -->
-							<?php
-							echo '<input type="hidden" id="userID" data-value="'.$_SESSION["userid"].'">'
-							?>
-							<input type="text" id="ordersDatepicker">
-							<button type="button" class="btn btn-primary sendOrderButton">
-								abschicken
-							</button>
-							<button type="button" class="btn btn-primary deleteOrderButton">
-								löschen
-							</button>
-							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pickDateModal">
-								übernehmen
-							</button>
-							<span id="orderSentSign" class="glyphicon glyphicon-check" aria-hidden="true"></span>
-							<!--glyphicon glyphicon-share
-							glyphicon glyphicon-check
-							-->
-						</div>
-					</div>
+					<hr class="controlsDivider">
+					<!-- share the session variables with orders.js -->
+					<?php
+					echo '<input type="hidden" id="userID" data-value="'.$_SESSION["userid"].'">'
+					?>
+					<h3>Bestellung</h3>
+					<input type="text" id="ordersDatepicker">
+					<button type="button" class="btn btn-primary sendOrderButton">
+						abschicken
+					</button>
+					<button type="button" class="btn btn-primary deleteOrderButton">
+						löschen
+					</button>
+					<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pickDateModal">
+						übernehmen
+					</button>
+					<span id="orderSentSign" class="btn glyphicon glyphicon-check sendOrderButton" aria-hidden="true"></span>
+					<!--glyphicon glyphicon-share
+					glyphicon glyphicon-check
+					-->
+					<hr class="orderListDivider">
 					<form id="sendOrderForm" class="listsHeight" method="post" action="ajax/orders_sendOrder.php">					
 					</form>
 				</div>
 				<div class="col-md-6 col-sm-12 col-md-pull-3 main-content">
 					<div id="messages"></div>
+					<hr class="productDivider">
 					<div class="productContent"></div>
-					<hr>
 				</div>
 			</div>
     </div> <!-- /container -->

@@ -56,7 +56,10 @@ $(function() {
 		
 		//clear formfields after modal close (event)
 		$('#createProduct').on('hidden.bs.modal', function () {
-			$(this).find(form)[0].reset();
+			form[0].reset();
+			//clear selects separately
+			$('#productCategory').empty();
+			$('#idCalendar').empty();
 		})
 
 	// Set up an event listener for the createProduct form.
@@ -116,7 +119,10 @@ $(function() {
 		
 			//clear formfields after modal close (event)
 		$('#updateProduct').on('hidden.bs.modal', function () {
-			$(this).find(form)[0].reset();
+			$(this).find('form')[0].reset();
+			//clear selects separately
+			$('#productCategoryUp').empty();
+			$('#idCalendarUp').empty();
 		})
 
 	// Set up an event listener for the updateProduct form.
@@ -252,7 +258,6 @@ var main = function(){
     });
 	
 	$('.createProductButton').click(function(){
-		
 		//set product options of select
 		for (var key in categoriesNameDict) {
 				if (key === 'length' || !categoriesNameDict.hasOwnProperty(key)){ 

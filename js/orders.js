@@ -139,6 +139,8 @@ $(function() {
 		}).done(function(response) {
 			//update orderSentSign
 			showOrderSentIcon();
+			showOrders();
+			updateOrderDays();
 			
 			// Set the message text.
 			$(messages).text(response);
@@ -202,8 +204,8 @@ var showOrders = function(){
 				if (productList.hasOwnProperty(category)) {
 					var currentList = productList[category];
 					currentList.sort(function(a,b){
-						var one = productsNameDict[a[0].toUpperCase()]; 
-						var two = productsNameDict[b[0].toUpperCase()];
+						var one = productsNameDict[a[0]].toUpperCase(); 
+						var two = productsNameDict[b[0]].toUpperCase();
 						if(one < two) return -1;
 						if(one > two) return 1;
 						return 0;
@@ -212,7 +214,7 @@ var showOrders = function(){
 					for(var x = 0; x < currentList.length; x++){
 						appendToProductList($('#sendOrderForm'), currentList[x][0], currentList[x][1], true);
 					}
-					$('#sendOrderForm').append('<hr>');
+					$('#sendOrderForm').append('<hr class="orderListDivider">');
 				}
 			}
 			
@@ -342,8 +344,6 @@ var main = function(){
 			$('#sendOrderForm').append('<input type="hidden" value="'+selectedDate+'" name="orderDate">');
 			$('#sendOrderForm').append('<input type="hidden" value="'+customerID+'" name="userID">');
 			$('#sendOrderForm').submit();
-			setTimeout(function(){showOrders(); }, 50);
-			setTimeout(function(){updateOrderDays(); }, 50);
 		}
 		else{
 			alert("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");

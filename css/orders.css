@@ -5,16 +5,13 @@
 	height:auto;
 	float: right;
 }
+
+.productDivider, .controlsDivider{
+	border-color: #000;
+}
+
 /*right productlist*/
-.productActions{
-	/*position:fixed;
-	background-color: #333;
-	margin:0px,0px,0px,0px;
-	padding:20px, 20px, 20px, 20px;*/
-}
-.productActionsWrapper{
-	min-height:50px;
-}
+
 
 .listsHeight{
 	overflow:auto;
@@ -39,6 +36,12 @@ input[type="number"] {
 
 #orderSentSign{
 	font-size: 2em;
+	margin: 0px;
+	padding: 0px;
+}
+
+.orderListDivider{
+	margin: 3px;
 }
 
 /*left productlist*/
@@ -53,6 +56,11 @@ ul.sidebarList{
 
 li.subSidebarElement{
 	position: relative;
+}
+
+.btn{
+position: relative;
+	margin: 3px;
 }
 
 .buttonAddProduct{
@@ -110,12 +118,18 @@ li.subSidebarElement{
 		.listsHeight{
 			height: 400px;
 		}
+		.controlsDivider{
+			display: none;
+		}
 	}
 
 	/* Medium Devices, Desktops */
 	@media only screen and (min-width : 992px){
 		.listsHeight{
 			height: 500px;
+		}
+		.productDivider{
+			display: none;
 		}
 	}
 

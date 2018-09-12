@@ -39,6 +39,8 @@ $(function() {
 	//clear formfields after modal close (event)
 	$('#createOrder').on('hidden.bs.modal', function () {
 		$(this).find(form)[0].reset();
+		//clear selects separately
+			$('#idProduct').empty();
 	})
 
 	// Set up an event listener for the createProduct form.

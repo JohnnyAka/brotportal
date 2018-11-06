@@ -1,5 +1,6 @@
 <?php
 include('../admin/db_crud.php');
+include('../admin/permission_check_helpers.php');
 
 
 $important = '';
@@ -26,17 +27,33 @@ $year = strtok(".");
 $takeFromDate = $year."-".$month."-".$day;
 
 $db = new db_connection();
+$preProductCalendarDict = makeDict($db,'products', 'id', 'idCalendar');
+
+if(!checkForPastAndAfterhour($db, $orderDate)){
+    return;
+}
+
 $data = $db->getData("orders", 
 	array('idProduct','idCustomer','orderDate','number','hook','important','noteBaking','noteDelivery'), 
 	"idCustomer=".$idCustomer." AND orderDate='".$takeFromDate."'");
 
 foreach ($data as $order) {
 	$order['orderDate'] = $orderDate;
-	$result = $db->createData("orders",
-		array('idProduct','idCustomer','orderDate','number','hook','important','noteDelivery','noteBaking'),
-		$order);
+	
+	if(!checkForPermission($db, $order['idProduct'], $orderDate, $preProductCalendarDict)){
+		$productName = $db->getData("products", array('name'), "id='".$order['idProduct']."'")[0]['name'];
+		echo "Die Bestellung von ".$productName." kann nicht abgeschickt werden. Der Artikel wird nicht in angemessener Zeit hergestellt. ";
+		continue;
+	}
+	else{
+		$result = $db->createData("orders",
+			array('idProduct','idCustomer','orderDate','number','hook','important','noteDelivery','noteBaking'),
+			$order);
+	}
 }
 echo $result;
+
+
 /*
 foreach ($_POST as $id => $number) {
 	if($number<0){
@@ -66,5 +83,7 @@ foreach ($_POST as $id => $number) {
 	}
 echo $result;
 }*/
+
+
 
 ?>

@@ -1,5 +1,6 @@
 <?php
 include('../admin/db_crud.php');
+include('../admin/permission_check_helpers.php');
 
 
 $important = '';
@@ -19,6 +20,10 @@ $orderDate = $year."-".$month."-".$day;
 
 
 $db = new db_connection();
+
+if(!checkForPastAndAfterhour($db, $orderDate)){
+    return;
+}
 
 $result = $db->deleteData("orders",
 "idCustomer=".$idCustomer." AND orderDate='".$orderDate."' AND hook='1'");

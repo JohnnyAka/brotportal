@@ -108,6 +108,7 @@ hook INT(1),
 important TINYINT(1),
 noteBaking VARCHAR(200),
 noteDelivery VARCHAR(200),
+locked TINYINT(1) Default '0',
 PRIMARY KEY(idProduct, idCustomer, orderDate, hook)
 )";
 if ($conn->query($sql) === TRUE) {
@@ -174,7 +175,7 @@ adminName VARCHAR(40),
 adminPassword VARCHAR(40),
 deleteOrdersInDays INT(6),
 imagesPath VARCHAR(400),
-autoExportOrdersTime TIME,
+endOfOrderTime TIME,
 exportOrdersTo VARCHAR(400),
 saveDatabaseTo VARCHAR(400)
 )";

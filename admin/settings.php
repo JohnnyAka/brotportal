@@ -107,8 +107,8 @@ if(!isset($_SESSION['trustedUser'])) {
 								<input id="imagesPath" name="imagesPath">
 							</div>-->
 							<div class="field">
-								<label for="autoExportOrdersTime">Automatischer Export der Bestellungen (in hh:mm:ss):</label>
-								<input id="autoExportOrdersTime" name="autoExportOrdersTime">
+								<label for="endOfOrderTime">Bestellschluss für Morgen (hh:mm:ss):</label>
+								<input id="endOfOrderTime" name="endOfOrderTime">
 							</div>
 							<div class="field">
 								<label for="exportOrdersTo">Exportadresse:</label>

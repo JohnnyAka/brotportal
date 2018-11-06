@@ -53,7 +53,7 @@ var displaySettings = function(){
 		$('#adminPassword').val(settingsData[0]["adminPassword"]);
 		$('#deleteOrdersInDays').val(settingsData[0]["deleteOrdersInDays"]);
 		$('#imagesPath').val(settingsData[0]["imagesPath"]);
-		$('#autoExportOrdersTime').val(settingsData[0]["autoExportOrdersTime"]);
+		$('#endOfOrderTime').val(settingsData[0]["endOfOrderTime"]);
 		$('#exportOrdersTo').val(settingsData[0]["exportOrdersTo"]);
 		$('#saveDatabaseTo').val(settingsData[0]["saveDatabaseTo"]);
 		

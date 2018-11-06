@@ -1,5 +1,6 @@
 <?php
 include('../admin/db_crud.php');
+include('../admin/permission_check_helpers.php');
 
 
 $important = '';
@@ -20,6 +21,10 @@ $orderDate = $year."-".$month."-".$day;
 $db = new db_connection();
 $preProductCalendarDict = makeDict($db,'products', 'id', 'idCalendar');
 
+if(!checkForPastAndAfterhour($db, $orderDate)){
+    return;
+}
+
 foreach ($_POST as $id => $number) {
 	if($number<0){
 		echo "Values smaller than 0 are not processed";
@@ -30,11 +35,11 @@ foreach ($_POST as $id => $number) {
 	"idProduct=".$id." AND idCustomer=".$idCustomer." AND orderDate='".$orderDate."' AND hook=".$hook);
 
 	if($number!=0){
-	    if(!checkForPermission($db, $id, $orderDate, $preProductCalendarDict)){
-            $productName = $db->getData("products", array('name'), "id='".$id."'")[0]['name'];
-            echo "Die Bestellung von ".$productName." kann nicht abgeschickt werden. Der Artikel wird nicht in angemessener Zeit hergestellt. ";
-            continue;
-        }
+		if(!checkForPermission($db, $id, $orderDate, $preProductCalendarDict)){
+					$productName = $db->getData("products", array('name'), "id='".$id."'")[0]['name'];
+					echo "Die Bestellung von ".$productName." kann nicht abgeschickt werden. Der Artikel wird nicht in angemessener Zeit hergestellt. \n";
+					continue;
+		}
 		if($orderExists){
 			$result = $db->updateData("orders",
 			array('number','important','noteDelivery','noteBaking'),
@@ -54,40 +59,6 @@ foreach ($_POST as $id => $number) {
 echo $result;
 }
 
-function makeDict($db, $table, $nameKey, $nameValue, $whereStatement=NULL){
-    $list = $db->getData($table, array($nameKey,$nameValue),$whereStatement);
-    $dict = NULL;
 
-    foreach($list as $obj){
-        $dict[$obj[$nameKey]] = $obj[$nameValue];
-    }
-    return $dict;
-}
-
-function checkForPermission($db, $productId, $specifiedDate, $preProductCalendarDict){
-    //get calendar for product
-    $calendarDatesRaw = $db->getData("calendarsDaysRelations",
-        array('date'), "idCalendar='".$preProductCalendarDict[$productId]."'");
-
-    $dateNow = new DateTime("now");
-
-    //hole min und max; rechne die Daten aus und packe sie in array
-    $orderDate = new DateTime($specifiedDate);
-    $productDetails = $db->getData("products", array('preBakeExp','preBakeMax'), "id='".$productId."'")[0];
-    $minDate = clone $orderDate;
-    $minDate->modify('-'.$productDetails['preBakeExp'].' day');
-    $maxDate = clone $orderDate;
-    $maxDate->modify('-'.$productDetails['preBakeMax'].' day');
-    //for schleife->ist eines der min-max daten in calendarDates?
-    $check = false;
-    foreach ($calendarDatesRaw as $cDate){
-        $currentDate = new DateTime($cDate['date']);
-        if($currentDate <= $minDate && $currentDate >= $maxDate && $currentDate >= $dateNow){
-            $check = true;
-            continue;
-        }
-    }
-    return $check;
-}
 
 ?>

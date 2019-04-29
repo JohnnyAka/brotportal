@@ -11,6 +11,7 @@ if($result != false){
 if ($result != false AND $result['password'] == $_POST['password']){
 	$_SESSION['username'] = $result['name'];
 	$_SESSION['userid'] = $result['id'];
+	$_SESSION['dataBlockedForDisplay'] = false;
 	echo true;
 }
 else{

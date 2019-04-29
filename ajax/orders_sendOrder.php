@@ -1,7 +1,11 @@
 <?php
+session_start();
+
 include('../admin/db_crud.php');
 include('../admin/permission_check_helpers.php');
 
+//block reload of shopping list
+$_SESSION['dataBlockedForDisplay'] = true;
 
 $important = '';
 $noteDelivery = '';
@@ -56,6 +60,8 @@ foreach ($_POST as $id => $number) {
 		$result = $db->deleteData("orders",
 		"idProduct=".$id." AND idCustomer=".$idCustomer." AND orderDate='".$orderDate."' AND hook=".$hook);
 	}
+	//unblock reload of shopping list
+	$_SESSION['dataBlockedForDisplay'] = false;
 echo $result;
 }
 

@@ -108,7 +108,6 @@ hook INT(1),
 important TINYINT(1),
 noteBaking VARCHAR(200),
 noteDelivery VARCHAR(200),
-locked TINYINT(1) Default '0',
 PRIMARY KEY(idProduct, idCustomer, orderDate, hook)
 )";
 if ($conn->query($sql) === TRUE) {

@@ -159,77 +159,96 @@ $(function() {
 
 //displays orders of selected date and customer
 var showOrders = function(){
-	var selectedDate = $( "#ordersDatepicker" ).datepicker().val();
-	//check dateinput and send ajax request
-	var regExp = /\d\d.\d\d.\d\d\d\d/;
-	if(regExp.test(selectedDate)){
-		var customerID = $('#userID').data("value");
+	//check if data is still being created
 		$.ajax({
 			type: 'POST',
-			url: 'ajax/orders_readOrders.php',
-			data: {
-				id:customerID,
-				date:selectedDate
-			}
-		}).done(function(response){
-			//reset list
-			$('#sendOrderForm').empty();
-			showOrderSentIcon();
-			var ordersData = JSON.parse(response);
-			//set Item List/Form
-			var productList = Object();
-			for(var x=0; x < ordersData.length; x++){
-				//create ordered Product-List with category headings
-				singleOrder = ordersData[x];
-				productCategory = productsCategoryDict[singleOrder.idProduct];
-				
-				if(!productList.hasOwnProperty(productCategory)){
-					productList[productCategory] = [];
-				}
-				productList[productCategory].push([singleOrder.idProduct, singleOrder.number]);
-			}
-			//sort categories
-			var keys = [];
-			for(k in productList){
-				if(productList.hasOwnProperty(k)){
-					keys.push(k);
-				}
-			}
-			keys.sort(function(a,b){
-				return categoriesNameDict[a].localeCompare(categoriesNameDict[b]);
-			});
-			//sort products and build form
-			for (var y=0; y < keys.length; y++){
-				var category = keys[y];
-				if (productList.hasOwnProperty(category)) {
-					var currentList = productList[category];
-					currentList.sort(function(a,b){
-						var one = productsNameDict[a[0]].toUpperCase(); 
-						var two = productsNameDict[b[0]].toUpperCase();
-						if(one < two) return -1;
-						if(one > two) return 1;
-						return 0;
-					});
-					$('#sendOrderForm').append('<p>'+categoriesNameDict[category]+'</p>');
-					for(var x = 0; x < currentList.length; x++){
-						appendToProductList($('#sendOrderForm'), currentList[x][0], currentList[x][1], true);
+			url: 'ajax/orders_checkDataBlockedForDisplay.php'
+		}).done(function(response) {
+			$(messages).text(response);
+			//alert("stop!");
+			var selectedDate = $( "#ordersDatepicker" ).datepicker().val();
+			//check dateinput and send ajax request
+			var regExp = /\d\d.\d\d.\d\d\d\d/;
+			if(regExp.test(selectedDate)){
+				var customerID = $('#userID').data("value");
+				$.ajax({
+					type: 'POST',
+					url: 'ajax/orders_readOrders.php',
+					data: {
+						id:customerID,
+						date:selectedDate
 					}
-					$('#sendOrderForm').append('<hr class="orderListDivider">');
-				}
+				}).done(function(response){
+					//reset list
+					$('#sendOrderForm').empty();
+					showOrderSentIcon();
+					var ordersData = JSON.parse(response);
+					//set Item List/Form
+					var productList = Object();
+					for(var x=0; x < ordersData.length; x++){
+						//create ordered Product-List with category headings
+						singleOrder = ordersData[x];
+						productCategory = productsCategoryDict[singleOrder.idProduct];
+						
+						if(!productList.hasOwnProperty(productCategory)){
+							productList[productCategory] = [];
+						}
+						productList[productCategory].push([singleOrder.idProduct, singleOrder.number]);
+					}
+					//sort categories
+					var keys = [];
+					for(k in productList){
+						if(productList.hasOwnProperty(k)){
+							keys.push(k);
+						}
+					}
+					keys.sort(function(a,b){
+						return categoriesNameDict[a].localeCompare(categoriesNameDict[b]);
+					});
+					//sort products and build form
+					for (var y=0; y < keys.length; y++){
+						var category = keys[y];
+						if (productList.hasOwnProperty(category)) {
+							var currentList = productList[category];
+							currentList.sort(function(a,b){
+								var one = productsNameDict[a[0]].toUpperCase(); 
+								var two = productsNameDict[b[0]].toUpperCase();
+								if(one < two) return -1;
+								if(one > two) return 1;
+								return 0;
+							});
+							$('#sendOrderForm').append('<p>'+categoriesNameDict[category]+'</p>');
+							for(var x = 0; x < currentList.length; x++){
+								appendToProductList($('#sendOrderForm'), currentList[x][0], currentList[x][1], true);
+							}
+							$('#sendOrderForm').append('<hr class="orderListDivider">');
+						}
+					}
+					
+				}).fail(function(data){
+					// Set the message text.
+					if (data.responseText !== '') {
+						$(messages).text(data.responseText);
+					} else {
+						$(messages).text('Fehler, Bestellung konnte nicht geladen werden.');
+					}
+				});
+			}
+			else{
+				alert("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
 			}
 			
-		}).fail(function(data){
+		}).fail(function(data) {
 			// Set the message text.
 			if (data.responseText !== '') {
 				$(messages).text(data.responseText);
 			} else {
-				$(messages).text('Fehler, Bestellung konnte nicht geladen werden.');
+				$(messages).text('Fehler, Verbindung zum Server ist unterbrochen. (Stichwort: dataBlockedForDisplay)');
 			}
 		});
-	}
-	else{
-		alert("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
-	}
+	
+		
+
 };
 var appendToProductList = function(formObj,idProduct, number, init){
 	var productName = productsNameDict[idProduct];
@@ -419,7 +438,7 @@ var main = function(){
 						$(messages).text('Fehler, Bestellungen konnten nicht gelöscht werden.');
 					}
 				});
-				setTimeout(function(){showOrders(); }, 50);
+				setTimeout(function(){showOrders(); }, 100);
 			}
 			else{
 				alert("Es sind noch Bestellungen an diesem Tag vorhanden. Bitte löschen Sie diese, bevor Sie eine Bestellung von einem anderen Tag übernehmen.");

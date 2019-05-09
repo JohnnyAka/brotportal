@@ -18,7 +18,6 @@ async function updateExportList(){
         type: 'POST',
         url: 'ajax/export_updateExportList.php'
     }).done(function(response){
-        //alert(response);
 		var files = JSON.parse(response);
 		var listnode = $("#listExportFiles");
 		listnode.empty();

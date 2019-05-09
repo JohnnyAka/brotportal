@@ -312,7 +312,8 @@ var main = function(){
 						date:selectedDate
 					}
 				}).done(function(response){
-					$(".messages").text("Bestellung erfolgreich gel&ouml;scht!");
+					var test = JSON.stringify(response);
+					$(".messages").text(JSON.stringify(response));
 					showOrders();
 				}).fail(function(data){
 					// Set the message text.

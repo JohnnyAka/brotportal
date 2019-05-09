@@ -24,14 +24,28 @@ $orderDate = $year."-".$month."-".$day;
 $db = new db_connection();
 
 if(!checkForPastAndAfterhour($db, $orderDate)){
+    $_SESSION['dataBlockedForDisplay'] = false;
     return;
 }
 
-$result = $db->deleteData("orders",
-"idCustomer=".$idCustomer." AND orderDate='".$orderDate."' AND hook='1'");
+$data = $db->getData("orders", array('idProduct','locked','hook'),
+    "idCustomer=".$idCustomer." AND orderDate='".$orderDate."'");
+
+foreach ($data as $entry) {
+    if($entry['locked']){
+        $productName = $db->getData("products", array('name'), "id='".$entry['idProduct']."'")[0]['name'];
+        echo "Die Bestellung von ".$productName." kann nicht abgeschickt werden. Der Artikel wurde schon exportiert. Bitte melden Sie sich diesbezüglich bei der Bestellannahme. \n";
+        continue;
+    }
+    else{
+        $result = $db->deleteData("orders","idCustomer=".$idCustomer." AND orderDate='".$orderDate."' AND idProduct=".$entry['idProduct']." AND hook=".$entry['hook']);
+        echo $result;
+    }
+}
+
+//old solution
+//$result = $db->deleteData("orders","idCustomer=".$idCustomer." AND orderDate='".$orderDate."' AND hook='1'");
 
 $_SESSION['dataBlockedForDisplay'] = false;
-
-echo $result;
 
 ?>

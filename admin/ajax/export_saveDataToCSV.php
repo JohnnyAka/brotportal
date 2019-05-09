@@ -83,6 +83,9 @@ include($_SERVER['DOCUMENT_ROOT']."/brotportal/admin/db_crud.php");
 
                 unset($currentData->noteBaking);
                 unset($currentData->important);
+								
+				//set locked property to indicate that it has been exported
+                $db->updateData("orders", array('locked'), array('1'), "orderDate='".$currentData['orderDate']."' AND idCustomer=".$currentData['idCustomer']." AND idProduct=".$currentData['idProduct']." AND hook=".$currentData['hook']);
 
                 if ($normal) {
                     $currentData['idCustomer'] = $customerDict[$currentData['idCustomer']];

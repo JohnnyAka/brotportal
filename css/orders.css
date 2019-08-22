@@ -12,8 +12,7 @@
 
 /*right productlist*/
 
-
-.listsHeight{
+.rightListHeight{
 	overflow:auto;
 	height: 600px;
 }
@@ -45,6 +44,12 @@ input[type="number"] {
 }
 
 /*left productlist*/
+
+.listsHeight{
+	overflow:auto;
+	height: 600px;
+}
+
 ul.sidebarList{
 	margin:0px;
 	padding:0px;
@@ -98,10 +103,16 @@ position: relative;
 		.listsHeight{
 			height: 300px;
 		}
+		.rightListHeight{
+			height: 300px;
+		}
 	}
 	
 	@media only screen and (min-width : 320px){
 		.listsHeight{
+			height: 300px;
+		}
+		.rightListHeight{
 			height: 300px;
 		}
 	}
@@ -111,12 +122,18 @@ position: relative;
 		.listsHeight{
 			height: 300px;
 		}
+		.rightListHeight{
+			height: 300px;
+		}
 	}
 
 	/* Small Devices, Tablets */
 	@media only screen and (min-width : 768px){
 		.listsHeight{
 			height: 400px;
+		}
+		.rightListHeight{
+			height: 310px;
 		}
 		.controlsDivider{
 			display: none;
@@ -126,7 +143,10 @@ position: relative;
 	/* Medium Devices, Desktops */
 	@media only screen and (min-width : 992px){
 		.listsHeight{
-			height: 500px;
+			height: 78vh;
+		}
+		.rightListHeight{
+			height: 60vh;
 		}
 		.productDivider{
 			display: none;
@@ -136,7 +156,10 @@ position: relative;
 	/* Large Devices, Wide Screens */
 	@media only screen and (min-width : 1200px){
 		.listsHeight{
-			height: 600px;
+			height: 78vh;
+		}
+		.rightListHeight{
+			height: 65vh ;
 		}
 	}
 

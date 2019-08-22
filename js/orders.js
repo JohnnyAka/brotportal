@@ -1,5 +1,7 @@
 /*This file contains event handlers for click events and form-submit events*/
 
+
+
 //datepicker setup including onclose ajax orderlist load function
 $(function() {
 	$( "#ordersDatepicker" ).datepicker({
@@ -62,11 +64,11 @@ var updateOrderDays = function(){
 			orderDates.push(ordersData[x].orderDate);
 		}
 	}).fail(function(data) {
-		// Set the message text.
+		displayMessage('Fehler, Tage an denen bestellt wurde konnten nicht geladen werden.');
 		if (data.responseText !== '') {
-			$(messages).text(data.responseText);
+			logMessage(data.responseText);
 		} else {
-			$(messages).text('Fehler, Tage an denen bestellt wurde konnten nicht geladen werden.');
+			logMessage('Fehler, Tage an denen bestellt wurde konnten nicht geladen werden.');
 		}
 	});
 }
@@ -75,8 +77,6 @@ var updateOrderDays = function(){
 //and category list for category name retrieval via id --- then show orders
 //productsNameDict, productsCategoryDict, categoriesNameDict
 $(function() {
-	// Get the messages div.
-	var messages = $('#messages');
 
 	// Submit the form using AJAX.
 	$.ajax({
@@ -104,19 +104,19 @@ $(function() {
 			}
 			showOrders();
 		}).fail(function(data) {
-			// Set the message text.
+			displayMessage('Fehler, Kategorienamensliste konnte nicht erstellt werden.');
 			if (data.responseText !== '') {
-				$(messages).text(data.responseText);
+				logMessage(data.responseText);
 			} else {
-				$(messages).text('Fehler, Kategorienamensliste konnte nicht erstellt werden.');
+				logMessage('Fehler, Kategorienamensliste konnte nicht erstellt werden.');
 			}
 		});
 	}).fail(function(data) {
-		// Set the message text.
+		displayMessage('Fehler, Artikelnamensliste konnte nicht erstellt werden.');
 		if (data.responseText !== '') {
-			$(messages).text(data.responseText);
+			logMessage(data.responseText);
 		} else {
-			$(messages).text('Fehler, Artikelnamensliste konnte nicht erstellt werden.');
+			logMessage('Fehler, Artikelnamensliste konnte nicht erstellt werden.');
 		}
 	});
 });
@@ -137,20 +137,18 @@ $(function() {
 			url: $(form).attr('action'),
 			data: formData
 		}).done(function(response) {
+			//resData = JSON.parse(response);
 			//update orderSentSign
 			showOrderSentIcon();
 			showOrders();
-			updateOrderDays();
-			
-			// Set the message text.
-			$(messages).text(response);
-			
+			updateOrderDays();			
+			displayMessage("Nachricht", response);
 		}).fail(function(data) {
-			// Set the message text.
+			displayMessage('Fehler, Artikel konnte nicht erstellt werden.');
 			if (data.responseText !== '') {
-				$(messages).text(data.responseText);
+				logMessage(data.responseText);
 			} else {
-				$(messages).text('Fehler, Artikel konnte nicht erstellt werden.');
+				logMessage('Fehler, Artikel konnte nicht erstellt werden.');
 			}
 		});
 	});
@@ -164,8 +162,6 @@ var showOrders = function(){
 			type: 'POST',
 			url: 'ajax/orders_checkDataBlockedForDisplay.php'
 		}).done(function(response) {
-			$(messages).text(response);
-			//alert("stop!");
 			var selectedDate = $( "#ordersDatepicker" ).datepicker().val();
 			//check dateinput and send ajax request
 			var regExp = /\d\d.\d\d.\d\d\d\d/;
@@ -226,24 +222,24 @@ var showOrders = function(){
 					}
 					
 				}).fail(function(data){
-					// Set the message text.
+					displayMessage('Fehler, Bestellung konnte nicht geladen werden.');
 					if (data.responseText !== '') {
-						$(messages).text(data.responseText);
+						logMessage(data.responseText);
 					} else {
-						$(messages).text('Fehler, Bestellung konnte nicht geladen werden.');
+						logMessage('Fehler, Bestellung konnte nicht geladen werden.');
 					}
 				});
 			}
 			else{
-				alert("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
+				displayMessage("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
 			}
 			
 		}).fail(function(data) {
-			// Set the message text.
+			displayMessage('Fehler, Verbindung zum Server ist unterbrochen. (Stichwort: dataBlockedForDisplay)');
 			if (data.responseText !== '') {
-				$(messages).text(data.responseText);
+				logMessage(data.responseText);
 			} else {
-				$(messages).text('Fehler, Verbindung zum Server ist unterbrochen. (Stichwort: dataBlockedForDisplay)');
+				logMessage('Fehler, Verbindung zum Server ist unterbrochen. (Stichwort: dataBlockedForDisplay)');
 			}
 		});
 	
@@ -365,7 +361,7 @@ var main = function(){
 			$('#sendOrderForm').submit();
 		}
 		else{
-			alert("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
+			displayMessage("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
 		}
 	});
 	
@@ -385,23 +381,19 @@ var main = function(){
 			}).done(function(response) {
 				//update orderSentSign
 				showOrderSentIcon();
-				updateOrderDays();
-				
-				// Set the message text.
-				$(messages).text(response);
-				
+				updateOrderDays();				
 			}).fail(function(data) {
-				// Set the message text.
+				displayMessage('Fehler, Bestellungen konnten nicht gelöscht werden.');
 				if (data.responseText !== '') {
-					$(messages).text(data.responseText);
+					logMessage(data.responseText);
 				} else {
-					$(messages).text('Fehler, Bestellungen konnten nicht gelöscht werden.');
+					logMessage('Fehler, Bestellungen konnten nicht gelöscht werden.');
 				}
 			});
 			setTimeout(function(){showOrders(); }, 50);
 		}
 		else{
-			alert("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
+			displayMessage("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
 		}
 	});
 	
@@ -426,28 +418,25 @@ var main = function(){
 					//update orderSentSign
 					showOrderSentIcon();
 					updateOrderDays();
-					
-					// Set the message text.
-					$(messages).text(response);
-					
 				}).fail(function(data) {
-					// Set the message text.
 					if (data.responseText !== '') {
-						$(messages).text(data.responseText);
+						logMessage("Fehler",data.responseText);
 					} else {
-						$(messages).text('Fehler, Bestellungen konnten nicht gelöscht werden.');
+						logMessage("Fehler", 'Fehler, Bestellungen konnten nicht übernommen werden.');
 					}
+					displayMessage("Fehler", 'Fehler, Bestellungen konnten nicht übernommen werden.');
 				});
 				setTimeout(function(){showOrders(); }, 100);
 			}
 			else{
-				alert("Es sind noch Bestellungen an diesem Tag vorhanden. Bitte löschen Sie diese, bevor Sie eine Bestellung von einem anderen Tag übernehmen.");
+				displayMessage("Nachricht","Es sind noch Bestellungen an diesem Tag vorhanden. Bitte löschen Sie diese, bevor Sie eine Bestellung von einem anderen Tag übernehmen.");
 			}
 		}
 		else{
-			alert(" Mindestens eines der Daten entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
+			displayMessage("Nachricht"," Mindestens eines der Daten entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
 		}
 	});
+	
 }
 $(document).ready(main);
 

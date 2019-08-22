@@ -144,7 +144,7 @@ if(!isset($_SESSION['userid'])) {
 					glyphicon glyphicon-check
 					-->
 					<hr class="orderListDivider">
-					<form id="sendOrderForm" class="listsHeight" method="post" action="ajax/orders_sendOrder.php">					
+					<form id="sendOrderForm" class="rightListHeight" method="post" action="ajax/orders_sendOrder.php">					
 					</form>
 				</div>
 				<div class="col-md-6 col-sm-12 col-md-pull-3 main-content">
@@ -158,28 +158,46 @@ if(!isset($_SESSION['userid'])) {
 
   </body>
 
-<!-- Modal -->
-<div id="pickDateModal" class="modal fade" role="dialog">
-  <div class="modal-dialog modal-sm">
+	<!-- Modal -->
+	<div id="pickDateModal" class="modal fade" role="dialog">
+		<div class="modal-dialog modal-sm">
 
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Bestellung übernehmen</h4>
-      </div>
-      <div class="modal-body">
-				<p>Bitte wähle Datum</p>
-        <input type="text" id="takeDatepicker">
-      </div>
-      <div class="modal-footer">
-			<button type="button" class="btn btn-default takeOrdersFromButton">Übernehmen</button>
-      <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
-      </div>
-    </div>
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Bestellung übernehmen</h4>
+				</div>
+				<div class="modal-body">
+					<p>Bitte wähle Datum</p>
+					<input type="text" id="takeDatepicker">
+				</div>
+				<div class="modal-footer">
+				<button type="button" class="btn btn-default takeOrdersFromButton">Übernehmen</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+				</div>
+			</div>
 
+		</div>
+	</div>
+
+	<!-- Modal -->
+  <div class="modal" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="alertModal">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title" id="alertMessageTitle">Nachricht</h4>
+              </div>
+              <div class="modal-body">
+								<span id="alertMessageText">Text</span>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+              </div>
+          </div>
+      </div>
   </div>
-</div>
 	
 	<!-- Bootstrap core JavaScript
     ================================================== -->

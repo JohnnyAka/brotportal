@@ -3,6 +3,7 @@ session_start();
 
 include('../admin/db_crud.php');
 include('../admin/permission_check_helpers.php');
+//include('../admin/classAjaxResponseMessage.php');
 
 //block reload of shopping list
 $_SESSION['dataBlockedForDisplay'] = true;
@@ -24,6 +25,8 @@ $orderDate = $year."-".$month."-".$day;
 
 $db = new db_connection();
 $preProductCalendarDict = makeDict($db,'products', 'id', 'idCalendar');
+
+//$responseMessage = new AjaxResponseMessage;
 
 if(!checkForPastAndAfterhour($db, $orderDate)){
     $_SESSION['dataBlockedForDisplay'] = false;

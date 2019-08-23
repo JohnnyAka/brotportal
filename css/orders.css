@@ -1,4 +1,5 @@
 
+
 /*product content*/
 #productImgSingle{
 	width:60%;
@@ -96,6 +97,11 @@ position: relative;
 	color: #000000;
 	background:#006dcc !important;
 	border:1px solid #000000;
+}
+
+/*alertModal linebreaks*/
+#alertMessageText{
+	white-space: pre-line;
 }
 
 	/* Custom, iPhone Retina */

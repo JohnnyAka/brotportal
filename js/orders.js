@@ -64,11 +64,11 @@ var updateOrderDays = function(){
 			orderDates.push(ordersData[x].orderDate);
 		}
 	}).fail(function(data) {
-		displayMessage('Fehler, Tage an denen bestellt wurde konnten nicht geladen werden.');
+		displayMessage('Fehler', 'Tage an denen bestellt wurde konnten nicht geladen werden.');
 		if (data.responseText !== '') {
 			logMessage(data.responseText);
 		} else {
-			logMessage('Fehler, Tage an denen bestellt wurde konnten nicht geladen werden.');
+			logMessage('Fehler', 'Tage an denen bestellt wurde konnten nicht geladen werden.');
 		}
 	});
 }
@@ -104,19 +104,19 @@ $(function() {
 			}
 			showOrders();
 		}).fail(function(data) {
-			displayMessage('Fehler, Kategorienamensliste konnte nicht erstellt werden.');
+			displayMessage('Fehler', 'Kategorienamensliste konnte nicht erstellt werden.');
 			if (data.responseText !== '') {
 				logMessage(data.responseText);
 			} else {
-				logMessage('Fehler, Kategorienamensliste konnte nicht erstellt werden.');
+				logMessage('Fehler', 'Kategorienamensliste konnte nicht erstellt werden.');
 			}
 		});
 	}).fail(function(data) {
-		displayMessage('Fehler, Artikelnamensliste konnte nicht erstellt werden.');
+		displayMessage('Fehler', 'Artikelnamensliste konnte nicht erstellt werden.');
 		if (data.responseText !== '') {
 			logMessage(data.responseText);
 		} else {
-			logMessage('Fehler, Artikelnamensliste konnte nicht erstellt werden.');
+			logMessage('Fehler', 'Artikelnamensliste konnte nicht erstellt werden.');
 		}
 	});
 });
@@ -137,18 +137,22 @@ $(function() {
 			url: $(form).attr('action'),
 			data: formData
 		}).done(function(response) {
-			//resData = JSON.parse(response);
+			resData = JSON.parse(response);
 			//update orderSentSign
 			showOrderSentIcon();
 			showOrders();
-			updateOrderDays();			
-			displayMessage("Nachricht", response);
+			updateOrderDays();		
+			//alert(resData.success);
+			if(!resData.success){
+				displayMessage("Nachricht", resData.displayMessage);
+				logMessage("Fehler", resData.logMessage);
+			}
 		}).fail(function(data) {
-			displayMessage('Fehler, Artikel konnte nicht erstellt werden.');
+			displayMessage('Fehler', 'Artikel konnte nicht erstellt werden.');
 			if (data.responseText !== '') {
 				logMessage(data.responseText);
 			} else {
-				logMessage('Fehler, Artikel konnte nicht erstellt werden.');
+				logMessage('Fehler', 'Artikel konnte nicht erstellt werden.');
 			}
 		});
 	});
@@ -222,11 +226,11 @@ var showOrders = function(){
 					}
 					
 				}).fail(function(data){
-					displayMessage('Fehler, Bestellung konnte nicht geladen werden.');
+					displayMessage('Fehler', 'Bestellung konnte nicht geladen werden.');
 					if (data.responseText !== '') {
 						logMessage(data.responseText);
 					} else {
-						logMessage('Fehler, Bestellung konnte nicht geladen werden.');
+						logMessage('Fehler', 'Bestellung konnte nicht geladen werden.');
 					}
 				});
 			}
@@ -235,11 +239,11 @@ var showOrders = function(){
 			}
 			
 		}).fail(function(data) {
-			displayMessage('Fehler, Verbindung zum Server ist unterbrochen. (Stichwort: dataBlockedForDisplay)');
+			displayMessage('Fehler', 'Verbindung zum Server ist unterbrochen. (Stichwort: dataBlockedForDisplay)');
 			if (data.responseText !== '') {
 				logMessage(data.responseText);
 			} else {
-				logMessage('Fehler, Verbindung zum Server ist unterbrochen. (Stichwort: dataBlockedForDisplay)');
+				logMessage('Fehler', 'Verbindung zum Server ist unterbrochen. (Stichwort: dataBlockedForDisplay)');
 			}
 		});
 	
@@ -361,7 +365,7 @@ var main = function(){
 			$('#sendOrderForm').submit();
 		}
 		else{
-			displayMessage("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
+			displayMessage("Nachricht","Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
 		}
 	});
 	
@@ -383,17 +387,17 @@ var main = function(){
 				showOrderSentIcon();
 				updateOrderDays();				
 			}).fail(function(data) {
-				displayMessage('Fehler, Bestellungen konnten nicht gelöscht werden.');
+				displayMessage('Fehler', 'Bestellungen konnten nicht gelöscht werden.');
 				if (data.responseText !== '') {
 					logMessage(data.responseText);
 				} else {
-					logMessage('Fehler, Bestellungen konnten nicht gelöscht werden.');
+					logMessage('Fehler', 'Bestellungen konnten nicht gelöscht werden.');
 				}
 			});
 			setTimeout(function(){showOrders(); }, 50);
 		}
 		else{
-			displayMessage("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
+			displayMessage("Nachricht","Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
 		}
 	});
 	

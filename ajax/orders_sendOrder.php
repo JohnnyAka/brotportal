@@ -30,7 +30,11 @@ $responseMessage = new AjaxResponseMessage;
 $notProducedExport = [];
 $notProducedTime = [];
 
-if(!checkForPastAndAfterhour($db, $orderDate)){
+$responseTmp = checkForPastAndAfterhour($db, $orderDate); //Abbruch, wenn es nach dem Bestellschluss oder in der Vergangenheit ist
+if(!$responseTmp[0]){
+		$responseMessage->appendDisplayMessage($responseTmp[1]);
+		$responseMessage->success = false;
+		echo json_encode($responseMessage);
     $_SESSION['dataBlockedForDisplay'] = false;
     return;
 }

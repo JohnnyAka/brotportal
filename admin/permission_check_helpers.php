@@ -6,15 +6,13 @@ function checkForPastAndAfterhour($db, $orderDate){
     $endOfOrderDateTime->modify('-1 day');
     $currentTime = new DateTime('now');
     if($endOfOrderDateTime <= $currentTime AND $endOfOrderDateTime->format('Y-m-d') == $currentTime->format('Y-m-d')){
-        echo "Der Bestellschluss für morgen ist um ".$endOfOrderDateTime->format('H:i')." Uhr. Eine Änderung der Bestellung für morgen ist jetzt leider nicht mehr möglich.";
-        return false;
+        return [false,"Der Bestellschluss für morgen ist um ".$endOfOrderDateTime->format('H:i')." Uhr. Eine Änderung der Bestellung für morgen ist jetzt leider nicht mehr möglich."];
     }
     elseif($endOfOrderDateTime <= $currentTime AND $endOfOrderDateTime->format('Y-m-d') != $currentTime->format('Y-m-d')){
-        echo "Der Bestellschluss dieser Bestellung liegt in der Vergangenheit. Somit kann die Bestellung nicht mehr geändert werden.";
-        return false;
+        return [false, "Der Bestellschluss dieser Bestellung liegt in der Vergangenheit. Somit kann die Bestellung nicht mehr geändert werden."];
     }
     else{
-        return true;
+        return [true,""];
     }
 }
 

@@ -137,7 +137,7 @@ $(function() {
 			url: $(form).attr('action'),
 			data: formData
 		}).done(function(response) {
-			alert(response);
+			//alert(response);
 			resData = JSON.parse(response);
 			//update orderSentSign
 			showOrderSentIcon();

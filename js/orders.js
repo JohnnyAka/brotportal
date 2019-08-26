@@ -137,16 +137,17 @@ $(function() {
 			url: $(form).attr('action'),
 			data: formData
 		}).done(function(response) {
+			alert(response);
 			resData = JSON.parse(response);
 			//update orderSentSign
 			showOrderSentIcon();
 			showOrders();
 			updateOrderDays();		
-			//alert(resData.success);
 			if(!resData.success){
 				displayMessage("Nachricht", resData.displayMessage);
 				logMessage("Fehler", resData.logMessage);
 			}
+			
 		}).fail(function(data) {
 			displayMessage('Fehler', 'Artikel konnte nicht erstellt werden.');
 			if (data.responseText !== '') {

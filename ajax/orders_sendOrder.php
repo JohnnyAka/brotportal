@@ -45,64 +45,72 @@ foreach ($_POST as $id => $number) {
 	"idProduct=".$id." AND idCustomer=".$idCustomer." AND orderDate='".$orderDate."' AND hook=".$hook);
 
 	if(isset($orderData[0]) and $orderData[0]['locked']){   //check, ob Artikel schon exportiert wurde
-			if(!($number==$orderData[0]['number'] and $hook == $orderData[0]['hook'])){
-				array_push($notProducedExport, $productName);
-			}
-			continue;
-    }
+		if(!($number==$orderData[0]['number'] and $hook == $orderData[0]['hook'])){
+			array_push($notProducedExport, $productName);
+		}
+		continue;
+	}
 
-    if(!checkForPermission($db, $id, $orderDate, $preProductCalendarDict)){   //check, ob Artikel noch in angemessener Zeit hergestellt wird
-			if(!($number==$orderData[0]['number'] and $hook == $orderData[0]['hook'])){
-				array_push($notProducedTime, $productName);
+	if(!checkForPermission($db, $id, $orderDate, $preProductCalendarDict)) {   //check, ob Artikel noch in angemessener Zeit hergestellt wird
+		if(isset($orderData[0]) and $number == $orderData[0]['number'] and $hook == $orderData[0]['hook']) {
+				//do nothing
+		}
+		else{
+			array_push($notProducedTime, $productName);
+		}
+		continue;
+	}
+	if($orderData){//same as orderExists
+			if($number==0) {
+					$result = $db->deleteData("orders",
+							"idProduct=" . $id . " AND idCustomer=" . $idCustomer . " AND orderDate='" . $orderDate . "' AND hook=" . $hook);
+					//Fehler abfangen und ausgeben
+					if(substr($result, 0, 1) != "R"){   //Der Anfang des Antwortstrings von createData in db_crud.php in admin/. Zugegeben, das ist Pfusch, aber derzeit scheint es sinnvoller, als ALLE query Antworten neu zu schreiben.
+						$responseMessage->appendLogMessage("Die Bestellung von ".$productName." konnte nicht gelöscht werden. Fehlermeldung: ".$result);
+						$responseMessage->appendDisplayMessage("Programmfehler: Die Bestellung von ".$productName." konnte nicht gelöscht werden. Bitte melden Sie sich in der Bäckerei\n");
+					}
 			}
-			continue;
-    }
-    if($orderData){//same as orderExists
-        if($number==0) {
-            $result = $db->deleteData("orders",
-                "idProduct=" . $id . " AND idCustomer=" . $idCustomer . " AND orderDate='" . $orderDate . "' AND hook=" . $hook);
-						//Fehler abfangen und ausgeben
-						if(substr($result, 0, 1) != "R"){   //Der Anfang des Antwortstrings von createData in db_crud.php in admin/. Zugegeben, das ist Pfusch, aber derzeit scheint es sinnvoller, als ALLE query Antworten neu zu schreiben.
-							$responseMessage->appendLogMessage("Die Bestellung von ".$productName." konnte nicht gelöscht werden. Fehlermeldung: ".$result);
-							$responseMessage->appendDisplayMessage("Programmfehler: Die Bestellung von ".$productName." konnte nicht gelöscht werden. Bitte melden Sie sich in der Bäckerei\n");
-						}
-        }
-        else {
-            $result = $db->updateData("orders",
-                array('number', 'important', 'noteDelivery', 'noteBaking'),
-                array($number, $important, $noteDelivery, $noteBaking),
-								"idProduct=" . $id . " AND idCustomer=" . $idCustomer . " AND orderDate='" . $orderDate . "' AND hook=" . $hook);
-						if(substr($result, 0, 1) != "R"){   //Der Anfang des Antwortstrings von createData in db_crud.php in admin/. Zugegeben, das ist Pfusch, aber derzeit scheint es sinnvoller, als ALLE query Antworten neu zu schreiben.
-							$responseMessage->appendLogMessage("Die Bestellung von ".$productName." konnte nicht geändert werden. Fehlermeldung: ".$result);
-							$responseMessage->appendDisplayMessage("Programmfehler: Die Bestellung von ".$productName." konnte nicht geändert werden. Bitte melden Sie sich in der Bäckerei\n");
-						}
-        }
-    }
-    else{
-        $result = $db->createData("orders",
-        array('idProduct','idCustomer','orderDate','number','hook','important','noteDelivery','noteBaking'),
-        array($id,$idCustomer,$orderDate,$number,$hook,$important,$noteDelivery,$noteBaking));
-        if(substr($result, 0, 1) != "N"){//Der Anfang des Antwortstrings von createData in db_crud.php in admin/. Zugegeben, das ist Pfusch, aber derzeit scheint es sinnvoller, als ALLE query Antworten neu zu schreiben.
-            $responseMessage->appendLogMessage("Die Bestellung von ".$productName." konnte nicht gespeichert werden. Fehlermeldung: ".$result);
-            $responseMessage->appendDisplayMessage("Programmfehler: Die Bestellung von ".$productName." konnte nicht gespeichert werden. Bitte melden Sie sich in der Bäckerei\n");
-        }
-    }
+			else {
+					$result = $db->updateData("orders",
+							array('number', 'important', 'noteDelivery', 'noteBaking'),
+							array($number, $important, $noteDelivery, $noteBaking),
+							"idProduct=" . $id . " AND idCustomer=" . $idCustomer . " AND orderDate='" . $orderDate . "' AND hook=" . $hook);
+					if(substr($result, 0, 1) != "R"){   //Der Anfang des Antwortstrings von createData in db_crud.php in admin/. Zugegeben, das ist Pfusch, aber derzeit scheint es sinnvoller, als ALLE query Antworten neu zu schreiben.
+						$responseMessage->appendLogMessage("Die Bestellung von ".$productName." konnte nicht geändert werden. Fehlermeldung: ".$result);
+						$responseMessage->appendDisplayMessage("Programmfehler: Die Bestellung von ".$productName." konnte nicht geändert werden. Bitte melden Sie sich in der Bäckerei\n");
+					}
+			}
+	}
+	else{
+			$result = $db->createData("orders",
+			array('idProduct','idCustomer','orderDate','number','hook','important','noteDelivery','noteBaking'),
+			array($id,$idCustomer,$orderDate,$number,$hook,$important,$noteDelivery,$noteBaking));
+			if(substr($result, 0, 1) != "N"){//Der Anfang des Antwortstrings von createData in db_crud.php in admin/. Zugegeben, das ist Pfusch, aber derzeit scheint es sinnvoller, als ALLE query Antworten neu zu schreiben.
+					$responseMessage->appendLogMessage("Die Bestellung von ".$productName." konnte nicht gespeichert werden. Fehlermeldung: ".$result);
+					$responseMessage->appendDisplayMessage("Programmfehler: Die Bestellung von ".$productName." konnte nicht gespeichert werden. Bitte melden Sie sich in der Bäckerei\n");
+			}
+	}
 }
 
 if(count($notProducedExport)){
 	$responseMessage->appendDisplayMessage("Die Bestellung von ".compileNameString($notProducedExport)." kann nicht aufgegeben werden. Der Artikel wurde schon exportiert. Bitte melden Sie sich diesbezüglich bei der Bestellannahme.\n");
+	$responseMessage->success = false;
 }
 if(count($notProducedTime)){
 	$responseMessage->appendDisplayMessage("Die Bestellung von ".compileNameString($notProducedTime)." kann nicht aufgegeben werden. Der Artikel wird nicht in angemessener Zeit hergestellt.\n");
+	$responseMessage->success = false;
 }
 
+
 echo json_encode($responseMessage);
+//echo json_encode([$responseMessage->success,$responseMessage->logMessage,$responseMessage->displayMessage]);
+//echo json_encode(["success"=>$responseMessage->success,"logMessage"=>$responseMessage->logMessage,"displayMessage"=>$responseMessage->displayMessage]);//json_encode($responseMessage);
 
 //unblock reload of shopping list
 $_SESSION['dataBlockedForDisplay'] = false;
 
 function compileNameString($names){
-	$namesStr = '';
+	$namesStr = "";
 	$namesCount = count($names);
 	for($x=0; $x<$namesCount; $x++){
 		if($x < $namesCount-2){

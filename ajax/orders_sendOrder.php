@@ -95,13 +95,22 @@ foreach ($_POST as $id => $number) {
 			}
 	}
 }
-
-if(count($notProducedExport)){
-	$responseMessage->appendDisplayMessage("Die Bestellung von ".compileNameString($notProducedExport)." kann nicht aufgegeben werden. Der Artikel wurde schon exportiert. Bitte melden Sie sich diesbezüglich bei der Bestellannahme.\n");
+$exportCount = count($notProducedExport);
+if($exportCount){
+	$multipleStr = " wurde";
+	if($exportCount > 1){
+		$multipleStr = "en wurden";
+	}
+	$responseMessage->appendDisplayMessage("Die Bestellung von ".compileNameString($notProducedExport)." kann nicht geändert werden. Die Bestellung".$multipleStr." schon exportiert. Bitte melden Sie sich diesbezüglich bei der Bestellannahme.\n");
 	$responseMessage->success = false;
 }
-if(count($notProducedTime)){
-	$responseMessage->appendDisplayMessage("Die Bestellung von ".compileNameString($notProducedTime)." kann nicht aufgegeben werden. Der Artikel wird nicht in angemessener Zeit hergestellt.\n");
+$timeCount = count($notProducedTime);
+if($timeCount){
+	$multipleStr = "Das Produkt wird";
+	if($timeCount > 1){
+		$multipleStr = "Die Produkte werden";
+	}
+	$responseMessage->appendDisplayMessage("Die Bestellung von ".compileNameString($notProducedTime)." kann nicht aufgegeben werden. ".$multipleStr." nicht in angemessener Zeit hergestellt.\n");
 	$responseMessage->success = false;
 }
 

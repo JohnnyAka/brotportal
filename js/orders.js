@@ -386,7 +386,14 @@ var main = function(){
 			}).done(function(response) {
 				//update orderSentSign
 				showOrderSentIcon();
-				updateOrderDays();				
+				updateOrderDays();	
+				var responseObject = JSON.parse(response);
+				if(!responseObject.success){
+					if(responseObject.logMessage != ""){
+						logMessage('Fehler', responseObject.logMessage);
+					}
+					displayMessage('Nachricht', responseObject.displayMessage);
+				}
 			}).fail(function(data) {
 				displayMessage('Fehler', 'Bestellungen konnten nicht gelöscht werden.');
 				if (data.responseText !== '') {

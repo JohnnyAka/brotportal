@@ -148,7 +148,6 @@ if(!isset($_SESSION['userid'])) {
 					</form>
 				</div>
 				<div class="col-md-6 col-sm-12 col-md-pull-3 main-content">
-					<div id="messages"></div>
 					<hr class="productDivider">
 					<div class="productContent"></div>
 				</div>

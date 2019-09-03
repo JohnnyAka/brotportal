@@ -389,7 +389,7 @@ var main = function(){
 				updateOrderDays();	
 				var responseObject = JSON.parse(response);
 				if(!responseObject.success){
-					if(responseObject.logMessage != ""){
+					if(responseObject.logMessage != null){
 						logMessage('Fehler', responseObject.logMessage);
 					}
 					displayMessage('Nachricht', responseObject.displayMessage);

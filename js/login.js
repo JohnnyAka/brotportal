@@ -5,9 +5,6 @@
 $(function() {
     // Get the form.
     var form = $('#loginForm');
-
-    // Get the messages div.
-    var messages = $('#messages');
 		
 
 
@@ -25,7 +22,7 @@ $(function() {
 			data: formData
 		}).done(function(response) {
 			if(response == false){
-				alert("Der Benutzername und das Passwort stimmen nicht überein.");
+				displayMessage("Nachricht","Der Benutzername und das Passwort stimmen nicht überein.");
 			}
 			else{
 				window.location.href = 'orders.php';
@@ -33,9 +30,10 @@ $(function() {
 		}).fail(function(data) {
 			// Set the message text.
 			if (data.responseText !== '') {
-				$(messages).text(data.responseText);
+				logMessage('Fehler', data.responseText);
+				displayMessage('Fehler', 'Eingabe konnte nicht verarbeitet werden. Fehlermeldung: '+data.responseText);
 			} else {
-				$(messages).text('Fehler, Eingabe konnte nicht verarbeitet werden.');
+				displayMessage('Fehler', 'Eingabe konnte nicht verarbeitet werden.');
 			}
 		});
 	});

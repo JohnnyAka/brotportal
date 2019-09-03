@@ -37,9 +37,8 @@
 	<?php
 		session_destroy();
 	?>
-	<h3 style="text-align:center">Erfolgreich ausgeloggt.</h3>
 					<script>
-						setTimeout(function(){window.location.href = 'index.php';}, 750);
+						setTimeout(function(){window.location.href = 'index.php';}, 50);
 					</script>
 	</body>
 	

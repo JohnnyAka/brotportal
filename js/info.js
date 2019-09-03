@@ -21,13 +21,13 @@ function updateExportList(){
                 listnode.append("<a href='downloads/"+filename+"' download><li>" + filename + "</li></a>");
             }
         }
-        $(messages).text("Erfolgreiches Update!");
     }).fail(function(data){
         // Set the message text.
         if (data.responseText !== '') {
-            $(messages).text(data.responseText);
+					logMessage("Fehler",data.responseText);
+					displayMessage('Fehler', 'Update der Downloadfiles konnte nicht durchgeführt werden. Fehlermeldung: '.data.responseText);
         } else {
-            $(messages).text('Fehler, Update der Downloadfiles konnte nicht durchgeführt werden.');
+					displayMessage('Fehler', 'Update der Downloadfiles konnte nicht durchgeführt werden.');
         }
     });
 }

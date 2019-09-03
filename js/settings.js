@@ -4,9 +4,6 @@
 $(function() {
     // Get the form.
     var form = $('#updateUserPasswordForm');
-
-    // Get the messages div.
-    var messages = $('#messages');
 		
 			//clear formfields after modal close (event)
 		$('#updateUserPassword').on('hidden.bs.modal', function () {
@@ -27,21 +24,24 @@ $(function() {
 			url: $(form).attr('action'),
 			data: formData
 		}).done(function(response) {
-
-			// Set the message text.
-			$(messages).text(response);
-			
+			resData = JSON.parse(response);
+			if(!resData.success){
+				displayMessage("Nachricht", resData.displayMessage);
+				if(resData.logMessage != null){
+					logMessage("Fehler", resData.logMessage);
+				}
+			}
 			//close modal
 			$("#updateUserPassword").modal("hide");
 			//show changes
             showUserSettings();
 		}).fail(function(data) {
-
 			// Set the message text.
 			if (data.responseText !== '') {
-				$(messages).text(data.responseText);
+				logMessage('Fehler', data.responseText);
+				displayMessage('Fehler', 'Passwort konnte nicht geändert werden. Fehlermeldung: '+data.responseText);
 			} else {
-				$(messages).text('Fehler, Passwort konnte nicht geändert werden.');
+				displayMessage('Fehler', 'Passwort konnte nicht geändert werden.');
 			}
 		});
 	});
@@ -51,9 +51,6 @@ $(function() {
 $(function() {
     // Get the form.
     var form = $('#updateUserMailForm');
-
-    // Get the messages div.
-    var messages = $('#messages');
 
     //clear formfields after modal close (event)
     $('#updateUserMail').on('hidden.bs.modal', function () {
@@ -74,10 +71,13 @@ $(function() {
             url: $(form).attr('action'),
             data: formData
         }).done(function(response) {
-
-            // Set the message text.
-            $(messages).text(response);
-
+            resData = JSON.parse(response);
+						if(!resData.success){
+							displayMessage("Nachricht", resData.displayMessage);
+							if(resData.logMessage != null){
+								logMessage("Fehler", resData.logMessage);
+							}
+						}
             //close modal
             $("#updateUserMail").modal("hide");
             //show changes
@@ -86,9 +86,10 @@ $(function() {
 
             // Set the message text.
             if (data.responseText !== '') {
-                $(messages).text(data.responseText);
+              logMessage('Fehler', data.responseText);
+							displayMessage('Fehler', 'E-Mail Adressen konnten nicht geändert werden. Fehlermeldung: '+data.responseText);
             } else {
-                $(messages).text('Fehler, E-Mail Adressen konnten nicht geändert werden.');
+              displayMessage('Fehler', 'E-Mail Adressen konnten nicht geändert werden.');
             }
         });
     });
@@ -110,8 +111,6 @@ showUserSettings();
 var main = function(){
 
 	$('.updatePasswordButton').click(function(){
-		// Get the messages div.
-		var messages = $('#messages');
 
 		//show modal
 		$("#updateUserPassword").modal("show");
@@ -119,9 +118,6 @@ var main = function(){
 
 
     $('.updateEMailButton').click(function(){
-        // Get the messages div.
-        var messages = $('#messages');
-
         $.ajax({
             type: 'POST',
             url: 'ajax/settings_readUserSettings.php'
@@ -137,9 +133,9 @@ var main = function(){
         }).fail(function(data){
             // Set the message text.
             if (data.responseText !== '') {
-                $(messages).text(data.responseText);
+              displayMessage('Fehler', 'Mailadressen konnten nicht geändert werden. Fehlermeldung: '+data.responseText);
             } else {
-                $(messages).text('Fehler, Mailadressen konnten nicht geändert werden.');
+              displayMessage('Fehler', 'Mailadressen konnten nicht geändert werden.');
             }
         });
     });

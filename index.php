@@ -39,7 +39,6 @@ if(isset($_SESSION['userid'])) {
 	<body>
 	
 	
-	<div id="messages"></div>
 		<div id="login-controls">
 			<h1>Login</h1>
 			<form id="loginForm" method="post" action="ajax/login.php">
@@ -60,6 +59,23 @@ if(isset($_SESSION['userid'])) {
 		</div> 
 	</body>
 	
+		<!-- Modal -->
+  <div class="modal" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="alertModal">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title" id="alertMessageTitle">Nachricht</h4>
+              </div>
+              <div class="modal-body">
+								<span id="alertMessageText">Text</span>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+              </div>
+          </div>
+      </div>
+  </div>
 	
 		<!-- Bootstrap core JavaScript
     ================================================== -->

@@ -1,16 +1,21 @@
 <?php
 session_start();
 include('../admin/db_crud.php');
+include('../admin/classAjaxResponseMessage.php');
 
 $id = $_SESSION['userid'];
 
 $password = strip_tags(trim($_POST["passwordOld"]));
 
+$responseMessage = new AjaxResponseMessage;
+
 $db = new db_connection();
 $currentPassword = $db->getData("users",array('password'),'id='.$id)[0]['password'];
 
 if($currentPassword != $password){
-    echo "Passwort stimmt nicht.";
+		$responseMessage->displayMessage = "Altes Passwort stimmt nicht.";
+		$responseMessage->success = false;
+		echo json_encode($responseMessage);
     return;
 }
 
@@ -22,5 +27,11 @@ array('mailAdressTo','mailAdressReceive'),
 array($mailAdressTo,$mailAdressReceive),
 "id=".$id);
 
-echo $result;
+if(substr($result, 0, 1) != "R"){  
+	$responseMessage->appendLogMessage("Die Mailadresse konnte nicht geändert werden. Fehlermeldung: ".$result);
+	$responseMessage->appendDisplayMessage("Programmfehler: Die Mailadresse konnte nicht geändert werden. Bitte melden Sie sich in der Bäckerei\n");
+	$responseMessage->success = false;
+}
+
+echo json_encode($responseMessage);
 ?>

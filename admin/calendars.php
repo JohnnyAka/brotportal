@@ -61,6 +61,7 @@ if(!isset($_SESSION['trustedUser'])) {
               <ul class="dropdown-menu">
                 <li><a href="categories_users.php">Kundenkategorien</a></li>
                 <li><a href="categories_products.php">Produktkategorien</a></li>
+								<li><a href="categories_prizes.php">Preiskategorien</a></li>
 								<li role="separator" class="divider"></li>
                 <li><a href="categories_relations.php">Kunden - Produkte</a></li>
               </ul>

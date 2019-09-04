@@ -23,13 +23,12 @@ if(!isset($_SESSION['trustedUser'])) {
 		<link href="../../jquery-ui-1.11.4.custom/jquery-ui.css" rel="stylesheet">
 		<script src="../../jquery-ui-1.11.4.custom/external/jquery/jquery.js"></script>
 		<script src="../../jquery-ui-1.11.4.custom/jquery-ui.js"></script>
-		<!--Bootstrap Calendar-->
-		<script src="../external/calendar/bootstrap-year-calendar.js"></script>
-		<link href="../external/calendar/bootstrap-year-calendar.css" rel="stylesheet">
+		<!--datepicker language-->
+		<script src="../../jquery-ui-1.11.4.custom/datepicker-de.js"></script>
 
     <!-- Custom styles for this template -->
 	<link href="css/admin.css" rel="stylesheet">
-	<link href="css/calendars_days.css" rel="stylesheet">
+	<link href="css/categories_prizes.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -57,7 +56,7 @@ if(!isset($_SESSION['trustedUser'])) {
             <li><a href="products.php">Produkte</a></li>
             <li><a href="users.php">Benutzer</a></li>
             <li ><a href="orders.php">Bestellungen</a></li>
-            <li class="dropdown">
+            <li class="dropdown active">
               <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Kategorien <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="categories_users.php">Kundenkategorien</a></li>
@@ -67,7 +66,7 @@ if(!isset($_SESSION['trustedUser'])) {
                 <li><a href="categories_relations.php">Kunden - Produkte</a></li>
               </ul>
             </li>
-						<li class="dropdown active">
+						<li class="dropdown">
               <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Kalender <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="calendars.php">Kalender</a></li>
@@ -75,7 +74,7 @@ if(!isset($_SESSION['trustedUser'])) {
                 <li><a href="calendars_days.php">Kalender - Tage</a></li>
               </ul>
             </li>
-						<li><a href="export.php">Export</a></li>
+						<li><a href="export.php">Export</a></li>						
 						<li><a href="settings.php">Einstellungen</a></li>
 						<li><a href="logout.php">Logout</a></li>
           </ul>
@@ -86,21 +85,58 @@ if(!isset($_SESSION['trustedUser'])) {
     <div class="container">
 			<div class="row mainrow">
 				<div class="col-md-3">
-					<h3>Kalender</h3>
+					<h3>Preiskategorien</h3>
 					<ul class="sidebarList">
+						<li class='categoryListItem' data-idCategory='1'>Preis 1</li>
+						<li class='categoryListItem' data-idCategory='2'>Preis 2</li>
+						<li class='categoryListItem' data-idCategory='3'>Preis 3</li>
+						<li class='categoryListItem' data-idCategory='4'>Preis 4</li>
+						<li class='categoryListItem' data-idCategory='5'>Preis 5</li>
 					</ul>
 				</div>
 				<div class="col-md-9 main-content">
 					<div id="messages"></div>
-					<div class="calendar"></div>
-					
+					<div class="button_group handleData">
+						<button type="button" class="btn btn-primary updatePrizeCatButton" >
+						Preiskategorie &auml;ndern
+						</button>
+					</div> 
+					<h1>Preisdetails</h1>
 					<hr>
+					<ul class="prizeDetails"></ul>
 				</div>
 			</div>
     </div> <!-- /container -->
 
 
   </body>
+	
+  <!-- Modal -->
+	<div class="modal" id="updatePrizeCat" tabindex="-1" role="dialog" aria-labelledby="updatePrizeCatLabel">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="updatePrizeCatLabel">Preiskategorie &auml;ndern</h4>
+		  </div>
+		  <div class="modal-body">
+			<form id="updatePrizeCatForm" method="post" action="ajax/categories_prizes_update.php">
+				<div class="field">
+					<label for="prizeCatNameUp">Infotext:</label>
+					<input id="prizeCatInfoUp" name="prizeCatInfo">
+				</div>
+				<div class="field">
+					<input type="hidden" id="catIdUp" name="catId">
+				</div>
+			</form>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
+			<button type="submit" form="updatePrizeCatForm" class="btn btn-primary updatePrizeCat">&Auml;nderungen speichern</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
 	
 	<!-- Bootstrap core JavaScript
     ================================================== -->
@@ -109,7 +145,7 @@ if(!isset($_SESSION['trustedUser'])) {
 		
 	<!-- Own js files-->
 	<script src="js/brotportal.js"></script>
-	<script src="js/calendars_days.js"></script>
+	<script src="js/categories_prizes.js"></script>
 </html>
 
 

@@ -28,6 +28,8 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error)."<br>";
 } 
 
+$db = new db_connection();
+
 $sql = "DROP TABLE products;";
 $conn->query($sql);
 $sql = "DROP TABLE users;";
@@ -37,6 +39,8 @@ $conn->query($sql);
 $sql = "DROP TABLE productCategories;";
 $conn->query($sql);
 $sql = "DROP TABLE userCategories;";
+$conn->query($sql);
+$sql = "DROP TABLE prizeCategories;";
 $conn->query($sql);
 $sql = "DROP TABLE categoryRelations;";
 $conn->query($sql);
@@ -138,6 +142,23 @@ if ($conn->query($sql) === TRUE) {
     echo "Error creating database: " . $conn->error."<br>";
 }
 
+$sql = "CREATE TABLE prizeCategories(
+id INT(2) UNSIGNED PRIMARY KEY,
+name VARCHAR (60),
+infoText VARCHAR (100)
+)";
+if ($conn->query($sql) === TRUE) {
+    echo "Table prizeCategories created successfully<br>";
+		$result = $db->createData("prizeCategories",array('id','name','infoText'), array('1','Preis 1',' € (Empfohlener Verkaufspreis)'));
+		$result = $db->createData("prizeCategories",array('id','name','infoText'), array('2','Preis 2',' € (Netto-Einkaufspreis)'));
+		$result = $db->createData("prizeCategories",array('id','name','infoText'), array('3','Preis 3',' € (Sonderpreis)'));
+		$result = $db->createData("prizeCategories",array('id','name','infoText'), array('4','Preis 4',' € (Sonderpreis)'));
+		$result = $db->createData("prizeCategories",array('id','name','infoText'), array('5','Preis 5',' € (Sonderpreis)'));
+		echo 'Preiskategorien angelegt</br>';
+} else {
+    echo "Error creating database: " . $conn->error."<br>";
+}
+
 $sql = "CREATE TABLE categoryRelations(
 idUserCat INT(6) UNSIGNED,
 idProductCat INT(6) UNSIGNED,
@@ -181,7 +202,6 @@ saveDatabaseTo VARCHAR(400)
 )";
 if ($conn->query($sql) === TRUE) {
     echo "Table settings created successfully<br>";
-		$db = new db_connection();
 		$result = $db->createData("settings",array('adminName','adminPassword','deleteOrdersInDays','imagesPath','exportOrdersTo','saveDatabaseTo'), array('admin','password','30','/','/','/'));
 		echo 'Settings: '.$result;
 } else {

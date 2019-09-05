@@ -323,8 +323,8 @@ var main = function(){
 			$('.productContent').append('<p>Allergene <br />'+productData["allergens"]+'</p>');
 			$('.productContent').append('<p>Beschreibung <br />'+productData["description"]+'</p>');
 			if(typeof productData["price"] !== 'undefined'){
-                $('.productContent').append('<p>Preis <br />'+productData["price"]+' €</p>');
-            }
+				$('.productContent').append('<p>Preis <br />'+productData["price"]+productData["priceInfoText"]+'</p>');
+			}
 		});
 	});
 

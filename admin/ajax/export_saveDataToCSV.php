@@ -29,12 +29,19 @@ include($_SERVER['DOCUMENT_ROOT']."/brotportal/admin/db_crud.php");
 	
 	$filename = $_SERVER['DOCUMENT_ROOT'].'/brotportal/admin/exports/bestellungen_'.$date.'_'.$time;
 	$file = fopen($filename.'.csv', 'w');
-	fputcsv($file, array('Artikelnummer', 'Kundennummer', 'Datum', 'Anzahl', 'Lieferung','wichtig','BackzettelNotiz', 'LieferscheinNotiz'));
+	fputcsv_eol($file, array('Artikelnummer', 'Kundennummer', 'Datum', 'Anzahl', 'Lieferung','wichtig','BackzettelNotiz', 'LieferscheinNotiz'),"\r\n");
 	foreach ($orderList as $row)
-		{fputcsv($file, $row);}
+		{fputcsv_eol($file, $row,"\r\n");}
 	foreach ($preOrderList as $row)
-		{fputcsv($file, $row);}
+		{fputcsv_eol($file, $row,"\r\n");}
 	fclose($file);
+	
+	function fputcsv_eol($fp, $array, $eol) {
+  fputcsv($fp, $array);
+  if("\n" != $eol && 0 === fseek($fp, -1, SEEK_CUR)) {
+    fwrite($fp, $eol);
+  }
+}
 	
 	function makeDict($db, $table, $nameKey, $nameValue, $whereStatement=NULL){
 		$list = $db->getData($table, array($nameKey,$nameValue),$whereStatement);
@@ -77,36 +84,36 @@ include($_SERVER['DOCUMENT_ROOT']."/brotportal/admin/db_crud.php");
 	
 	function prepareOrdersForExport($db, $customerDict, $productDict, $preBakeDict, $preProductCalendarDict, $data, $normal=true){
 		if($data) {
-            $orderList = [];
-            for ($x = 0; $x < count($data); $x++) {
-                $currentData = $data[$x];
+			$orderList = [];
+			for ($x = 0; $x < count($data); $x++) {
+				$currentData = $data[$x];
 
-                unset($currentData->noteBaking);
-                unset($currentData->important);
-								
-				//set locked property to indicate that it has been exported
-                $db->updateData("orders", array('locked'), array('1'), "orderDate='".$currentData['orderDate']."' AND idCustomer=".$currentData['idCustomer']." AND idProduct=".$currentData['idProduct']." AND hook=".$currentData['hook']);
+				unset($currentData->noteBaking);
+				unset($currentData->important);
+				
+//set locked property to indicate that it has been exported
+				$db->updateData("orders", array('locked'), array('1'), "orderDate='".$currentData['orderDate']."' AND idCustomer=".$currentData['idCustomer']." AND idProduct=".$currentData['idProduct']." AND hook=".$currentData['hook']);
 
-                if ($normal) {
-                    $currentData['idCustomer'] = $customerDict[$currentData['idCustomer']];
-                    //stattdessen: wenn es heut nicht produziert wird oder wenn es einen prebake von >0 hat, bekommt es hook 5
-                    if ($preBakeDict[$currentData['idProduct']] != 0 OR !isBakedOnDate($db, $currentData['idProduct'], getExportDate(), $preProductCalendarDict)) {
-                        $currentData['hook'] = 5;
-                    }
-                    $currentData['idProduct'] = $productDict[$currentData['idProduct']];
-                    array_push($orderList, $currentData);
-                } else {
-                    $data = $db->getData("users", array('preOrderCustomerId'), "id=" . $currentData['idCustomer']);
-                    $currentData['idCustomer'] = $data[0]['preOrderCustomerId'];
-                    $currentData['idProduct'] = $productDict[$currentData['idProduct']];
-                    $currentData['orderDate'] = date_format(getExportDate(), 'Y-m-d');
+				if ($normal) {
+						$currentData['idCustomer'] = $customerDict[$currentData['idCustomer']];
+						//stattdessen: wenn es heut nicht produziert wird oder wenn es einen prebake von >0 hat, bekommt es hook 5
+						if ($preBakeDict[$currentData['idProduct']] != 0 OR !isBakedOnDate($db, $currentData['idProduct'], getExportDate(), $preProductCalendarDict)) {
+								$currentData['hook'] = 5;
+						}
+						$currentData['idProduct'] = $productDict[$currentData['idProduct']];
+						array_push($orderList, $currentData);
+				} else {
+						$data = $db->getData("users", array('preOrderCustomerId'), "id=" . $currentData['idCustomer']);
+						$currentData['idCustomer'] = $data[0]['preOrderCustomerId'];
+						$currentData['idProduct'] = $productDict[$currentData['idProduct']];
+						$currentData['orderDate'] = date_format(getExportDate(), 'Y-m-d');
 
-                    $orderList[] = $currentData;
-                }
-            }
-            return $orderList;
-        }
-        else false;
+						$orderList[] = $currentData;
+				}
+			}
+			return $orderList;
+		}
+	else false;
 	}
 	
 	function getOrdersNormal($db, $customerDict, $productDict, $preBakeDict, $preProductCalendarDict, $date){
@@ -176,32 +183,31 @@ include($_SERVER['DOCUMENT_ROOT']."/brotportal/admin/db_crud.php");
 					//echo json_encode($data);
 					$newOrders = prepareOrdersForExport($db, $customerDict, $productDict, $preBakeDict, $preProductCalendarDict, $data, false);
 					if($newOrders != false) {
-                        for ($z = 0; $z < count($newOrders); $z++) {
-                            $currentData = $newOrders[$z];
-                            $currentData['noteDelivery'] = 'Lieferung: '. $currentData['number'] .' am ' . date_format($deliveryDate, 'd.m.Y');
+							for ($z = 0; $z < count($newOrders); $z++) {
+								$currentData = $newOrders[$z];
+								$currentData['noteDelivery'] = 'Lieferung: '. $currentData['number'] .' am ' . date_format($deliveryDate, 'd.m.Y');
 
-                            //check existing orders for multiple entries with same customer and product IDs
-                            //echo json_encode($orderList);
-                            $found = false;
-                            foreach ($orderList as &$entry) {
-                                //echo "Kunde aus Liste: ".$entry['idCustomer']." |Kunde akut: ".$currentData['idCustomer'];
-                                if ($entry['idCustomer'] == $currentData['idCustomer'] and $entry['idProduct'] == $currentData['idProduct']) {
-                                    //echo " Number list: ".($entry['number']." Number current: ". $currentData['number'])." end\n";
-                                    //echo " Number: ".($entry['number'] + $currentData['number'])." end\n";
-                                    $entry['number'] = ($entry['number'] + $currentData['number']);
-                                    $entry['noteDelivery'] .= ', Lieferung: '. $currentData['number'] .' am ' . date_format($deliveryDate, 'd.m.Y');
-                                    //echo "in routine mit Anzahl: ".$entry['number'];
-                                    $found = true;
-                                }
-                            }
-                            unset($entry);
-                            if ($found == true) {
-                                continue;
-                            }
-
-                            array_push($orderList, $currentData);
-                        }
-                    }
+								//check existing orders for multiple entries with same customer and product IDs
+								//echo json_encode($orderList);
+								$found = false;
+								foreach ($orderList as &$entry) {
+										//echo "Kunde aus Liste: ".$entry['idCustomer']." |Kunde akut: ".$currentData['idCustomer'];
+										if ($entry['idCustomer'] == $currentData['idCustomer'] and $entry['idProduct'] == $currentData['idProduct']) {
+												//echo " Number list: ".($entry['number']." Number current: ". $currentData['number'])." end\n";
+												//echo " Number: ".($entry['number'] + $currentData['number'])." end\n";
+												$entry['number'] = ($entry['number'] + $currentData['number']);
+												$entry['noteDelivery'] .= ', Lieferung: '. $currentData['number'] .' am ' . date_format($deliveryDate, 'd.m.Y');
+												//echo "in routine mit Anzahl: ".$entry['number'];
+												$found = true;
+										}
+								}
+								unset($entry);
+								if ($found == true) {
+										continue;
+								}
+								array_push($orderList, $currentData);
+							}
+					}
 				}
 			}
 		}

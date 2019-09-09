@@ -51,9 +51,13 @@ foreach ($data as $entry) {
 				}
     }
 }
-
-if(count($productNamesLocked)){
-	$responseString = "Die Bestellung von ".compileNameString($productNamesLocked)." kann nicht abgeschickt werden. Der Artikel wurde schon exportiert. Bitte melden Sie sich diesbezüglich bei der Bestellannahme. \n";
+$lockedCount = count($productNamesLocked);
+if($lockedCount){
+	$multipleStr = "Der Artikel wurde";
+	if($lockedCount > 1){
+		$multipleStr = "Die Artikel wurden";
+	}
+	$responseString = "Die Bestellung von ".compileNameString($productNamesLocked)." kann nicht geändert werden. ".$multipleStr." bereits exportiert. Bitte melden Sie sich diesbezüglich bei der Bestellannahme. \n";
 	$responseMessage->displayMessage = $responseString;
 	$responseMessage->success = false;
 	echo json_encode($responseMessage);

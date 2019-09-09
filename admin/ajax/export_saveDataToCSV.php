@@ -29,19 +29,27 @@ include($_SERVER['DOCUMENT_ROOT']."/brotportal/admin/db_crud.php");
 	
 	$filename = $_SERVER['DOCUMENT_ROOT'].'/brotportal/admin/exports/bestellungen_'.$date.'_'.$time;
 	$file = fopen($filename.'.csv', 'w');
-	fputcsv_eol($file, array('Artikelnummer', 'Kundennummer', 'Datum', 'Anzahl', 'Lieferung','wichtig','BackzettelNotiz', 'LieferscheinNotiz'),"\r\n");
+	fputcsv_eol($file, array('Datum', 'Kundennummer', 'Artikelnummer', 'Anzahl', 'Lieferung1', 'Lieferung2', 'Lieferung3','Extra','Nachlieferung','Retour', 'LieferscheinNotiz'),"\r\n");
 	foreach ($orderList as $row)
-		{fputcsv_eol($file, $row,"\r\n");}
+		{
+			if($row['hook'] == 5){
+				$writeOrder = array($row['orderDate'],$row['idCustomer'],$row['idProduct'],0,0,0,0,0,$row['number'],0,$row['noteDelivery']);
+			}
+			else{
+				$writeOrder = array($row['orderDate'],$row['idCustomer'],$row['idProduct'],$row['number'],0,0,0,0,0,$row['noteDelivery']);
+			}
+			fputcsv_eol($file, $writeOrder,"\r\n");
+		}
 	foreach ($preOrderList as $row)
 		{fputcsv_eol($file, $row,"\r\n");}
 	fclose($file);
 	
 	function fputcsv_eol($fp, $array, $eol) {
-  fputcsv($fp, $array);
-  if("\n" != $eol && 0 === fseek($fp, -1, SEEK_CUR)) {
-    fwrite($fp, $eol);
-  }
-}
+		fputcsv($fp, $array);
+		if("\n" != $eol && 0 === fseek($fp, -1, SEEK_CUR)) {
+			fwrite($fp, $eol);
+		}
+	}
 	
 	function makeDict($db, $table, $nameKey, $nameValue, $whereStatement=NULL){
 		$list = $db->getData($table, array($nameKey,$nameValue),$whereStatement);
@@ -183,30 +191,30 @@ include($_SERVER['DOCUMENT_ROOT']."/brotportal/admin/db_crud.php");
 					//echo json_encode($data);
 					$newOrders = prepareOrdersForExport($db, $customerDict, $productDict, $preBakeDict, $preProductCalendarDict, $data, false);
 					if($newOrders != false) {
-							for ($z = 0; $z < count($newOrders); $z++) {
-								$currentData = $newOrders[$z];
-								$currentData['noteDelivery'] = 'Lieferung: '. $currentData['number'] .' am ' . date_format($deliveryDate, 'd.m.Y');
+						for ($z = 0; $z < count($newOrders); $z++) {
+							$currentData = $newOrders[$z];
+							$currentData['noteDelivery'] = 'Lieferung: '. $currentData['number'] .' am ' . date_format($deliveryDate, 'd.m.Y');
 
-								//check existing orders for multiple entries with same customer and product IDs
-								//echo json_encode($orderList);
-								$found = false;
-								foreach ($orderList as &$entry) {
-										//echo "Kunde aus Liste: ".$entry['idCustomer']." |Kunde akut: ".$currentData['idCustomer'];
-										if ($entry['idCustomer'] == $currentData['idCustomer'] and $entry['idProduct'] == $currentData['idProduct']) {
-												//echo " Number list: ".($entry['number']." Number current: ". $currentData['number'])." end\n";
-												//echo " Number: ".($entry['number'] + $currentData['number'])." end\n";
-												$entry['number'] = ($entry['number'] + $currentData['number']);
-												$entry['noteDelivery'] .= ', Lieferung: '. $currentData['number'] .' am ' . date_format($deliveryDate, 'd.m.Y');
-												//echo "in routine mit Anzahl: ".$entry['number'];
-												$found = true;
-										}
+							//check existing orders for multiple entries with same customer and product IDs
+							//echo json_encode($orderList);
+							$found = false;
+							foreach ($orderList as &$entry) {
+								//echo "Kunde aus Liste: ".$entry['idCustomer']." |Kunde akut: ".$currentData['idCustomer'];
+								if ($entry['idCustomer'] == $currentData['idCustomer'] and $entry['idProduct'] == $currentData['idProduct']) {
+									//echo " Number list: ".($entry['number']." Number current: ". $currentData['number'])." end\n";
+									//echo " Number: ".($entry['number'] + $currentData['number'])." end\n";
+									$entry['number'] = ($entry['number'] + $currentData['number']);
+									$entry['noteDelivery'] .= ', Lieferung: '. $currentData['number'] .' am ' . date_format($deliveryDate, 'd.m.Y');
+									//echo "in routine mit Anzahl: ".$entry['number'];
+									$found = true;
 								}
-								unset($entry);
-								if ($found == true) {
-										continue;
-								}
-								array_push($orderList, $currentData);
 							}
+							unset($entry);
+							if ($found == true) {
+								continue;
+							}
+							array_push($orderList, $currentData);
+						}
 					}
 				}
 			}

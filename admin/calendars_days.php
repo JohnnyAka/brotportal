@@ -18,11 +18,11 @@ if(!isset($_SESSION['trustedUser'])) {
     <title>Joldelunder Brotportal</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="../../bootstrap-3.3.5-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../external/bootstrap-3.3.5-dist/css/bootstrap.min.css" rel="stylesheet">
 		<!--jquery files -->
-		<link href="../../jquery-ui-1.11.4.custom/jquery-ui.css" rel="stylesheet">
-		<script src="../../jquery-ui-1.11.4.custom/external/jquery/jquery.js"></script>
-		<script src="../../jquery-ui-1.11.4.custom/jquery-ui.js"></script>
+		<link href="../external/jquery-ui-1.11.4.custom/jquery-ui.css" rel="stylesheet">
+		<script src="../external/jquery-ui-1.11.4.custom/external/jquery/jquery.js"></script>
+		<script src="../external/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
 		<!--Bootstrap Calendar-->
 		<script src="../external/calendar/bootstrap-year-calendar.js"></script>
 		<link href="../external/calendar/bootstrap-year-calendar.css" rel="stylesheet">
@@ -105,7 +105,7 @@ if(!isset($_SESSION['trustedUser'])) {
 	<!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="../../bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
+    <script src="../external/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
 		
 	<!-- Own js files-->
 	<script src="js/brotportal.js"></script>

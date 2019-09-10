@@ -12,8 +12,7 @@ if (is_dir($dir)){
         closedir($dh);
     }
 }
-
-
+sort($files);
 $jsonData = json_encode($files);
 echo $jsonData;
 ?>

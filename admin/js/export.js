@@ -77,6 +77,7 @@ var main = function(){
 				}
 			}).done(function(response){
 				//alert(response);
+				updateExportList();
 				$(messages).text("Bestellungen erfolgreich exportiert!");
 			}).fail(function(data){
 				// Set the message text.
@@ -90,15 +91,20 @@ var main = function(){
 		else{
 			alert("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
 		}
-		updateExportList();
 		//delete old orders in database, according to the number of days in settings
 		deleteOldOrders();
 	});
 	
-	$('.deleteOldOrdersButton').click(function(){
-		alert("not working at the moment...")
+	$('.deleteExportsButton').click(function(){
+		$.ajax({
+				type: 'POST',
+				url: 'ajax/export_deleteExportFiles.php'
+			}).done(function(response){
+				updateExportList();
+			}).fail(function(data){
+				alert("Löschen der Export-Dateien fehlgeschlagen");
+			});
 	});
-	
 	
 }
 

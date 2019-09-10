@@ -30,8 +30,7 @@ include($_SERVER['DOCUMENT_ROOT']."/brotportal/admin/db_crud.php");
 	$filename = $_SERVER['DOCUMENT_ROOT'].'/brotportal/admin/exports/bestellungen_'.$date.'_'.$time;
 	$file = fopen($filename.'.csv', 'w');
 	fputcsv_eol($file, array('Datum', 'Kundennummer', 'Artikelnummer', 'Anzahl', 'Lieferung1', 'Lieferung2', 'Lieferung3','Extra','Nachlieferung','Retour', 'LieferscheinNotiz'),"\r\n");
-	foreach ($orderList as $row)
-		{
+	foreach ($orderList as $row){
 			if($row['hook'] == 5){
 				$writeOrder = array($row['orderDate'],$row['idCustomer'],$row['idProduct'],0,0,0,0,0,$row['number'],0,$row['noteDelivery']);
 			}

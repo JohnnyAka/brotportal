@@ -1,4 +1,9 @@
 <?php
+session_start();
+if(!isset($_SESSION['trustedUser'])) {
+   die("Bitte erst einloggen");  
+}
+
 function checkForPastAndAfterhour($db, $orderDate){
     //check if the order is in the past or afterhours
     $endOfOrderTime = $db->getData("settings", 'endOfOrderTime')[0]['endOfOrderTime'];

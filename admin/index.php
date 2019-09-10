@@ -1,9 +1,4 @@
-<?php
-	session_start();
-if(!isset($_SESSION['trustedUser'])) {
-   die("Bitte erst einloggen");  
-}
-?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -28,6 +23,7 @@ if(!isset($_SESSION['trustedUser'])) {
 
     <!-- Custom styles for this template -->
 	<link href="css/admin.css" rel="stylesheet">
+	<link href="css/login.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -37,10 +33,27 @@ if(!isset($_SESSION['trustedUser'])) {
   </head>,
 	
 	<body>
-	<?php
-		session_destroy();
-	?>
-	<h3 style="text-align:center">Erfolgreich ausgeloggt.</h3>
+	
+	
+	<div id="messages"></div>
+	<div id="login-controls">
+		<h1>Admin Login</h1>
+		<form id="adminLoginForm" method="post" action="ajax/login_admin.php">
+			<div class="field">
+				<label for="adminName">Name:</label>
+				<input id="adminName" name="adminName">
+			</div>
+			<div class="field">
+				<label for="adminPassword">Passwort:</label>
+				<input type="password" id="adminPassword" name="adminPassword">
+			</div>
+		</form>
+		<div class="button_group handleData">
+			<button type="submit" form="adminLoginForm" class="btn btn-primary adminLoginButton">
+				Login
+			</button>
+		</div>
+	</div> 
 					
 	</body>
 	
@@ -52,4 +65,5 @@ if(!isset($_SESSION['trustedUser'])) {
 		
 	<!-- Own js files-->
 	<script src="js/brotportal.js"></script>
+	<script src="js/login.js"></script>
 </html>

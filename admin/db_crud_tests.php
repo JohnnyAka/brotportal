@@ -1,4 +1,8 @@
 <?php
+session_start();
+if(!isset($_SESSION['trustedUser'])) {
+   die("Bitte erst einloggen");  
+}
 			include('db_crud.php');
 			$db = new db_connection();
 			

@@ -1,5 +1,6 @@
 <?php
 
+
 class db_connection{
 	public $db_username = 'root';
 	public $db_password = '';

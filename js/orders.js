@@ -20,7 +20,7 @@ $(function() {
 			}
 			return [true, 'ui-state-noOrderDays', 'Keine Bestellung vorhanden.'];
 		}
-});
+}).attr('readonly','readonly');
 $( "#ordersDatepicker" ).datepicker( "setDate", "+1" );
 
 	/*$( "#ordersDatepicker" ).datepicker($.datepicker.regional[ "de" ]);
@@ -45,7 +45,7 @@ $( "#ordersDatepicker" ).datepicker( "setDate", "+1" );
 			}
 			return [false, 'ui-state-noOrderDays', 'Keine Bestellung vorhanden.'];
 		}
-	});
+	}).attr('readonly','readonly');
 });
 
 var orderDates = [];

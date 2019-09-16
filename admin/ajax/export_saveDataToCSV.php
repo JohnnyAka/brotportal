@@ -1,7 +1,7 @@
 <?php
 //Note: Produkte mit mindest Vorbestell-Zeit werden mindestens X(prebake) vor der Auslieferung produziert, nicht X(prebake) Produktionstage
 
-include($_SERVER['DOCUMENT_ROOT']."/brotportal/admin/db_crud.php");
+include("../db_crud.php");
 	
 	$db = new db_connection();
 	
@@ -27,7 +27,7 @@ include($_SERVER['DOCUMENT_ROOT']."/brotportal/admin/db_crud.php");
 	$preOrderList = getPreOrders($db, $customerDict, $productDict, $preBakeDict, $preBakeMaxDict, $preProductCalendarDict, $date);
 	//return json_encode($preOrderList);
 	
-	$filename = $_SERVER['DOCUMENT_ROOT'].'/brotportal/admin/exports/bestellungen_'.$date.'_'.$time;
+	$filename = '../exports/bestellungen_'.$date.'_'.$time;
 	$file = fopen($filename.'.csv', 'w');
 	fputcsv_eol($file, array('Datum', 'Kundennummer', 'Artikelnummer', 'Anzahl', 'Lieferung1', 'Lieferung2', 'Lieferung3','Extra','Nachlieferung','Retour', 'LieferscheinNotiz'),"\r\n");
 	foreach ($orderList as $row){

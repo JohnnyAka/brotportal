@@ -60,8 +60,8 @@ if($lockedCount){
 	$responseString = "Die Bestellung von ".compileNameString($productNamesLocked)." kann nicht geändert werden. ".$multipleStr." bereits exportiert. Bitte melden Sie sich diesbezüglich bei der Bestellannahme. \n";
 	$responseMessage->displayMessage = $responseString;
 	$responseMessage->success = false;
-	echo json_encode($responseMessage);
 }
+echo json_encode($responseMessage);
 //old solution
 //$result = $db->deleteData("orders","idCustomer=".$idCustomer." AND orderDate='".$orderDate."' AND hook='1'");
 

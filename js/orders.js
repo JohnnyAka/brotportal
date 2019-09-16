@@ -390,7 +390,6 @@ var main = function(){
 					userID:customerID
 				}
 			}).done(function(response) {
-				//update orderSentSign
 				showOrderSentIcon();
 				updateOrderDays();	
 				var responseObject = JSON.parse(response);

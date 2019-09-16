@@ -293,11 +293,15 @@ var showOrderNotYetSentIcon = function(){
 	var orderSent = $('#orderSentSign');
 	orderSent.removeClass('glyphicon-check');
 	orderSent.addClass('glyphicon-share');
+	window.onbeforeunload = function() {
+    return 'Die aktuelle Bestellung ist noch nicht abgeschickt.';
+	}
 }
 var showOrderSentIcon = function(){
 	var orderSent = $('#orderSentSign');
 	orderSent.removeClass('glyphicon-share');
 	orderSent.addClass('glyphicon-check');
+	window.onbeforeunload = null;
 }
 
 

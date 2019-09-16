@@ -70,6 +70,8 @@ if(!isset($_SESSION['userid'])) {
 				<div class="col-md-3 col-sm-6 col-md-push-6">
 				</div>
 				<div class="col-md-6 col-sm-12 col-md-pull-3 main-content">
+				<p>Bei Fragen melden Sie sich gerne bei uns</p>
+				<p>E-Mail: bestellung@joldelunder.de<br />Telefon: 04673/325<br />Fax: 04673/1090</p>
 					<hr>
                     <ul id="listDownloadFiles" style="list-style-type: none;"></ul>
 				</div>

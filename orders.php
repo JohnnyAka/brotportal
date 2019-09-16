@@ -130,7 +130,7 @@ if(!isset($_SESSION['userid'])) {
 					?>
 					<h3>Bestellung</h3>
 					<input type="text" id="ordersDatepicker">
-					<button type="button" class="btn btn-primary sendOrderButton">
+					<button type="submit" form="sendOrderForm" class="btn btn-primary sendOrderButton">
 						abschicken
 					</button>
 					<button type="button" class="btn btn-primary deleteOrderButton">

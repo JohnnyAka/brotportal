@@ -122,19 +122,25 @@ $(function() {
 });
 
 
-$(function() {
-	var form = $('#sendOrderForm');
-	$(form).submit(function(event) {
-		// Stop the browser from submitting the form.
-		event.preventDefault();
+$('#sendOrderForm').submit(function(event) {
+	// Stop the browser from submitting the form.
+	event.preventDefault();
+	
+	var selectedDate = $( "#ordersDatepicker" ).datepicker().val();
+	var regExp = /\d\d.\d\d.\d\d\d\d/;
+	if(regExp.test(selectedDate)){
+		var form = $('#sendOrderForm');
+		var customerID = $('#userID').data("value");
+		form.append('<input type="hidden" value="'+selectedDate+'" name="orderDate">');
+		form.append('<input type="hidden" value="'+customerID+'" name="userID">');
 
 		// Serialize the form data.
-		var formData = $(form).serialize();
+		var formData = form.serialize();
 		
 		// Submit the form using AJAX.
 		$.ajax({
 			type: 'POST',
-			url: $(form).attr('action'),
+			url: form.attr('action'),
 			data: formData
 		}).done(function(response) {
 			//alert(response);
@@ -147,7 +153,6 @@ $(function() {
 				displayMessage("Nachricht", resData.displayMessage);
 				logMessage("Fehler", resData.logMessage);
 			}
-			
 		}).fail(function(data) {
 			displayMessage('Fehler', 'Artikel konnte nicht erstellt werden.');
 			if (data.responseText !== '') {
@@ -156,9 +161,26 @@ $(function() {
 				logMessage('Fehler', 'Artikel konnte nicht erstellt werden.');
 			}
 		});
-	});
+	}
+	else{
+		displayMessage("Nachricht","Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
+	}
 });
 
+/*$('.sendOrderButton').click(function() {
+	//check dateinput and send ajax request
+	var selectedDate = $( "#ordersDatepicker" ).datepicker().val();
+	var regExp = /\d\d.\d\d.\d\d\d\d/;
+	if(regExp.test(selectedDate)){
+		var customerID = $('#userID').data("value");
+		$('#sendOrderForm').append('<input type="hidden" value="'+selectedDate+'" name="orderDate">');
+		$('#sendOrderForm').append('<input type="hidden" value="'+customerID+'" name="userID">');
+		$('#sendOrderForm').submit();
+	}
+	else{
+		displayMessage("Nachricht","Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
+	}
+});*/
 
 //displays orders of selected date and customer
 var showOrders = function(){
@@ -352,21 +374,6 @@ var main = function(){
 			appendToProductList($('#sendOrderForm'),idProduct, 1, false);
 		}
 		$('input#'+idProduct).focus().select();
-	});
-	
-	$('.sendOrderButton').click(function() {
-		//check dateinput and send ajax request
-		var selectedDate = $( "#ordersDatepicker" ).datepicker().val();
-		var regExp = /\d\d.\d\d.\d\d\d\d/;
-		if(regExp.test(selectedDate)){
-			var customerID = $('#userID').data("value");
-			$('#sendOrderForm').append('<input type="hidden" value="'+selectedDate+'" name="orderDate">');
-			$('#sendOrderForm').append('<input type="hidden" value="'+customerID+'" name="userID">');
-			$('#sendOrderForm').submit();
-		}
-		else{
-			displayMessage("Nachricht","Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
-		}
 	});
 	
 	$('.deleteOrderButton').click(function() {

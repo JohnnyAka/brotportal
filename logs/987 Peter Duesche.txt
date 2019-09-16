@@ -6,3 +6,6 @@ Fehler 10. September 2019, 10:28:33
 Fehler 10. September 2019, 12:08:10 
 Fehler 10. September 2019, 12:14:42 
 Fehler 10. September 2019, 15:50:42 
+Fehler 16. September 2019, 13:13:06 Verbindung zum Server ist unterbrochen. (Stichwort: dataBlockedForDisplay)
+Fehler 16. September 2019, 13:13:38 Verbindung zum Server ist unterbrochen. (Stichwort: dataBlockedForDisplay)
+Fehler 16. September 2019, 13:15:34 Verbindung zum Server ist unterbrochen. (Stichwort: dataBlockedForDisplay)

@@ -46,7 +46,7 @@ foreach ($data as $entry) {
         if(substr($result, 0, 1) != "R"){ //wenn die Datenbankaktion einen Fehler auslöst
 					$responseMessage->logMessage .= $result;
 					$productName = $db->getData("products", array('name'), "id='".$entry['idProduct']."'")[0]['name'];
-					$responseMessage->displayMessage .= "Ein Fehler ist beim Löschen des Artikels".$productName." aufgetreten.";
+					$responseMessage->displayMessage .= "Ein Fehler ist beim Löschen des Artikels ".$productName." aufgetreten.";
 					$responseMessage->false;
 				}
     }

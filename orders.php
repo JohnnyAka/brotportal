@@ -168,7 +168,7 @@ if(!isset($_SESSION['userid'])) {
 					<h4 class="modal-title">Bestellung übernehmen</h4>
 				</div>
 				<div class="modal-body">
-					<p>Bitte wähle die Bestellung aus, die übernommen werden soll:</p>
+					<p>Bitte wählen Sie den Tag aus, von dem die Bestellung übernommen werden soll:</p>
 					<input type="text" id="takeDatepicker">
 				</div>
 				<div class="modal-footer">

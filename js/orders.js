@@ -432,10 +432,20 @@ var main = function(){
 						userID:customerID
 					}
 				}).done(function(response) {
-					//update orderSentSign
+					$('#pickDateModal').modal('hide');
+					var responseObject = JSON.parse(response);
+					if(!responseObject.success){
+						if(responseObject.logMessage != null){
+							logMessage('Fehler', responseObject.logMessage);
+						}
+						if(responseObject.displayMessage != null){
+							displayMessage('Nachricht', responseObject.displayMessage);
+						}
+					}
 					showOrderSentIcon();
 					updateOrderDays();
 				}).fail(function(data) {
+					$('#pickDateModal').modal('hide');
 					if (data.responseText !== '') {
 						logMessage("Fehler",data.responseText);
 					} else {

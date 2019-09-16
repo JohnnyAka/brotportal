@@ -328,10 +328,9 @@ var main = function(){
 		});
 	});
 
-	//toggle product-list icon
-    $('.icon-list-collapse').click(function() {
-        $(this).parent().next("ul").toggle();
-        $(this).toggleClass("glyphicon-collapse-down glyphicon-collapse-up");
+		$('.product-list-toggle').click(function() {
+				$(this).next("ul").toggle();
+				$(this).children(".icon-list-collapse").toggleClass("glyphicon-collapse-down glyphicon-collapse-up");
     });
 
 	//show and hide addProduct button

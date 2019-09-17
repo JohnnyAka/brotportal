@@ -94,9 +94,13 @@ if(!isset($_SESSION['userid'])) {
 								$categoryNameDict[$category['idProductCat']] = $categoryEntry['name'];
 								$categoryOrderDict[$category['idProductCat']] = $categoryEntry['orderPriority'];
 							}
-							uasort($categoryOrderDict, function($a, $b){
-								if(intval($a)<intval($b)){return -1;}
-								return 1;
+							uksort($categoryOrderDict, function($a, $b) use ($categoryOrderDict, $categoryNameDict){
+								$x = intval($categoryOrderDict[$a]);
+								$y = intval($categoryOrderDict[$b]);
+								if($x == $y){
+									return strcasecmp($categoryNameDict[$a],$categoryNameDict[$b]);
+								}
+								return ($x<$y)?-1:1;
 							});
 							foreach($categoryOrderDict as $catId => $orderPriority){
 								$catName = $categoryNameDict[$catId];

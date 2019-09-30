@@ -29,6 +29,18 @@ class db_connection{
 		}
 		$strArgsNames = chop($strArgsNames, ", ");
 		foreach ($array_args as $value){
+			if(is_string($value)){
+				$value = $mysqli->real_escape_string($value);
+			}elseif(is_float($value)){
+				$value = (float) $value;
+			}elseif(is_int($value)){
+				$value = (int) $value;
+			}elseif(is_bool($value)){
+				$value = (bool) $value;
+			}elseif(is_null($value)){
+			}else{
+				return "Error: Der Typ einer Variable ist nicht bekannt.";
+			}
 			$strArgs .= "'" . $value . "'" . ", ";
 		}
 		$strArgs = chop($strArgs, ", ");
@@ -85,7 +97,7 @@ EOT;
 		}
 	}
 	
-				
+	
 	function updateData($table_name, $args_names, $args_values, $where_condition = NULL){
 		$mysqli = $this->mysqli;
 		//prepare name-value pairs for query

@@ -17,8 +17,8 @@ function checkForPastAndAfterhour($db, $orderDate){
     }
 }
 
-function makeDict($db, $table, $nameKey, $nameValue, $whereStatement=NULL){
-    $list = $db->getData($table, array($nameKey,$nameValue),$whereStatement);
+function makeDict($db, $table, $nameKey, $nameValue, $whereStatement=NULL, $whereValue=NULL){
+    $list = $db->getData($table, array($nameKey,$nameValue),$whereStatement,$whereValue);
     $dict = NULL;
 
     foreach($list as $obj){
@@ -30,13 +30,13 @@ function makeDict($db, $table, $nameKey, $nameValue, $whereStatement=NULL){
 function checkForPermission($db, $productId, $specifiedDate, $preProductCalendarDict){
     //get calendar for product
     $calendarDatesRaw = $db->getData("calendarsDaysRelations",
-        array('date'), "idCalendar='".$preProductCalendarDict[$productId]."'");
+        array('date'), "idCalendar=?1",$preProductCalendarDict[$productId]);
 
     $dateNow = new DateTime("now");
 
     //hole min und max; rechne die Daten aus und packe sie in array
     $orderDate = new DateTime($specifiedDate);
-    $productDetails = $db->getData("products", array('preBakeExp','preBakeMax'), "id='".$productId."'")[0];
+    $productDetails = $db->getData("products", array('preBakeExp','preBakeMax'), "id=?1",$productId)[0];
     $minDate = clone $orderDate;
     $minDate->modify('-'.$productDetails['preBakeExp'].' day');
     $maxDate = clone $orderDate;

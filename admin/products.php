@@ -99,12 +99,12 @@ if(!isset($_SESSION['trustedUser'])) {
                 //example: $productDict['8']['name'] ; $categoryDict['5']
                 $productDict = array(); $categoryNameDict = array(); $categoryOrderDict = array();
                 foreach($Cats as $category){
-                    $queryResult = $db->getData("products",array("id","productID","name","productCategory", "orderPriority"), "productCategory=".$category['id']);
+                    $queryResult = $db->getData("products",array("id","productID","name","productCategory", "orderPriority"), "productCategory=?1",$category['id']);
                     $arrayLength = count($queryResult);
                     for($x=0; $x < $arrayLength; $x++){
                         $productDict[$queryResult[$x]['id']] = $queryResult[$x];
                     }
-                    $categoryEntry = $db->getData("productCategories",array("id","name","orderPriority"), "id=".$category['id'])[0];
+                    $categoryEntry = $db->getData("productCategories",array("id","name","orderPriority"), "id=?1",$category['id'])[0];
                     $categoryNameDict[$category['id']] = $categoryEntry['name'];
                     $categoryOrderDict[$category['id']] = $categoryEntry['orderPriority'];
                 }

@@ -100,12 +100,12 @@ if(!isset($_SESSION['trustedUser'])) {
                 //example: $productDict['8']['name'] ; $categoryDict['5']
                 $userDict = array(); $categoryNameDict = array(); $categoryOrderDict = array();
                 foreach($Cats as $category){
-                    $queryResult = $db->getData("users",array("id","customerID","name","customerCategory"), "customerCategory=".$category['id']);
+                    $queryResult = $db->getData("users",array("id","customerID","name","customerCategory"), "customerCategory=?1",$category['id']);
                     $arrayLength = count($queryResult);
                     for($x=0; $x < $arrayLength; $x++){
                         $userDict[$queryResult[$x]['id']] = $queryResult[$x];
                     }
-                    $categoryEntry = $db->getData("userCategories",array("id","name"), "id=".$category['id'])[0];
+                    $categoryEntry = $db->getData("userCategories",array("id","name"), "id=?1",$category['id'])[0];
                     $categoryNameDict[$category['id']] = $categoryEntry['name'];
                 }
                 uasort($categoryNameDict, function($a, $b){

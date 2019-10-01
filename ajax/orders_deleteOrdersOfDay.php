@@ -31,21 +31,20 @@ if(!checkForPastAndAfterhour($db, $orderDate)){
     return;
 }
 
-$data = $db->getData("orders", array('idProduct','locked','hook'),
-    "idCustomer=".$idCustomer." AND orderDate='".$orderDate."'");
+$data = $db->getData("orders", array('idProduct','locked','hook'), "idCustomer=?1 AND orderDate=?2", array($idCustomer,$orderDate));
 
 foreach ($data as $entry) {
     if($entry['locked']){
-        $productName = $db->getData("products", array('name'), "id='".$entry['idProduct']."'")[0]['name'];
+        $productName = $db->getData("products", array('name'), "id=?1", $entry['idProduct'])[0]['name'];
 				array_push($productNamesLocked, $productName);
         //echo "Die Bestellung von ".$productName." kann nicht abgeschickt werden. Der Artikel wurde schon exportiert. Bitte melden Sie sich diesbezüglich bei der Bestellannahme. \n";
         continue;
     }
     else{
-        $result = $db->deleteData("orders","idCustomer=".$idCustomer." AND orderDate='".$orderDate."' AND idProduct=".$entry['idProduct']." AND hook=".$entry['hook']);
+        $result = $db->deleteData("orders","idCustomer=?1 AND orderDate=?2 AND idProduct=?3 AND hook=?4",array($idCustomer,$orderDate,$entry['idProduct'],$entry['hook']));
         if(substr($result, 0, 1) != "R"){ //wenn die Datenbankaktion einen Fehler auslöst
 					$responseMessage->logMessage .= $result;
-					$productName = $db->getData("products", array('name'), "id='".$entry['idProduct']."'")[0]['name'];
+					$productName = $db->getData("products", array('name'), "id=?1",$entry['idProduct'])[0]['name'];
 					$responseMessage->displayMessage .= "Ein Fehler ist beim Löschen des Artikels ".$productName." aufgetreten.";
 					$responseMessage->false;
 				}
@@ -62,8 +61,6 @@ if($lockedCount){
 	$responseMessage->success = false;
 }
 echo json_encode($responseMessage);
-//old solution
-//$result = $db->deleteData("orders","idCustomer=".$idCustomer." AND orderDate='".$orderDate."' AND hook='1'");
 
 $_SESSION['dataBlockedForDisplay'] = false;
 

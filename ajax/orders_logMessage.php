@@ -3,7 +3,7 @@ session_start();
 include('../admin/db_crud.php');
 
 $db = new db_connection();
-$data = $db->getData("users", array('customerID','name'), "id=".$_SESSION["userid"]);
+$data = $db->getData("users", array('customerID','name'), "id=?1",$_SESSION["userid"]);
 
 
 $logDate = $_POST['logDateTime'];

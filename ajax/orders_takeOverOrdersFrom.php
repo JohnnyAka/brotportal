@@ -43,11 +43,11 @@ if(!checkForPastAndAfterhour($db, $orderDate)){
 
 $data = $db->getData("orders", 
 	array('idProduct','idCustomer','orderDate','number','hook','important','noteBaking','noteDelivery'), 
-	"idCustomer=".$idCustomer." AND orderDate='".$takeFromDate."'");
+	"idCustomer=?1 AND orderDate=?2", array($idCustomer,$takeFromDate));
 
 foreach ($data as $order) {
 	$order['orderDate'] = $orderDate;
-	$productName = $db->getData("products", array('name'), "id='".$order['idProduct']."'")[0]['name'];
+	$productName = $db->getData("products", array('name'), "id=?1",$order['idProduct'])[0]['name'];
 	if(!checkForPermission($db, $order['idProduct'], $orderDate, $preProductCalendarDict)){
 		array_push($productNamesNotProduced, $productName);
 		//echo "Die Bestellung von ".$productName." kann nicht abgeschickt werden. Der Artikel wird nicht in angemessener Zeit hergestellt. ";
@@ -98,36 +98,6 @@ function compileNameString($names){
 	return $namesStr;
 }
 
-
-/*
-foreach ($_POST as $id => $number) {
-	if($number<0){
-		echo "Values smaller than 0 are not processed";
-		continue;
-	}
-	
-	$orderExists = $db->getData("orders", array('hook'), 
-	"idProduct=".$id." AND idCustomer=".$idCustomer." AND orderDate='".$orderDate."' AND hook=".$hook);
-	
-	if($number!=0){
-		if($orderExists){
-			$result = $db->updateData("orders", 
-			array('number','important','noteDelivery','noteBaking'), 
-			array($number,$important,$noteDelivery,$noteBaking),
-			"idProduct=".$id." AND idCustomer=".$idCustomer." AND orderDate='".$orderDate."' AND hook=".$hook);
-		}
-		else{
-			$result = $db->createData("orders",
-			array('idProduct','idCustomer','orderDate','number','hook','important','noteDelivery','noteBaking'),
-			array($id,$idCustomer,$orderDate,$number,$hook,$important,$noteDelivery,$noteBaking));
-		}
-	}
-	else{
-		$result = $db->deleteData("orders",
-		"idProduct=".$id." AND idCustomer=".$idCustomer." AND orderDate='".$orderDate."' AND hook=".$hook);
-	}
-echo $result;
-}*/
 
 
 

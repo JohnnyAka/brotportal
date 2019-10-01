@@ -75,22 +75,22 @@ if(!isset($_SESSION['userid'])) {
 							include('admin/db_crud.php');
 							$db = new db_connection();
 							//get customerdata
-							$customer = $db->getData("users",array("id","customerID","name","customerCategory"), "id=".$_SESSION['userid'])[0];
+							$customer = $db->getData("users",array("id","customerID","name","customerCategory"), "id=?1",$_SESSION['userid'])[0];
 							//echo '<script>console.log('. json_encode(      ).')</script>';
 							//get visible cats
-							$visibleCats = $db->getData("categoryRelations",array("idProductCat"), "idUserCat=".$customer['customerCategory']);
+							$visibleCats = $db->getData("categoryRelations",array("idProductCat"), "idUserCat=?1",$customer['customerCategory']);
 							//get products and make products dictionary and category dictionary
 							//produces a an associative array with key = product ID and objects with keys: "id","productID","name","productCategory","visibleForUser"
 							//for category dict: associative array with key = category ID and value = name
 							//example: $productDict['8']['name'] ; $categoryDict['5']
 							$productDict = array(); $categoryNameDict = array(); $categoryOrderDict = array();
 							foreach($visibleCats as $category){
-								$queryResult = $db->getData("products",array("id","productID","name","productCategory", "orderPriority","visibleForUser"), "productCategory=".$category['idProductCat']." AND visibleForUser=1");
+								$queryResult = $db->getData("products",array("id","productID","name","productCategory", "orderPriority","visibleForUser"), "productCategory=?1 AND visibleForUser=?2",array($category['idProductCat'],1));
 								$arrayLength = count($queryResult);
 								for($x=0; $x < $arrayLength; $x++){
 									$productDict[$queryResult[$x]['id']] = $queryResult[$x];
 								}
-								$categoryEntry = $db->getData("productCategories",array("id","name","orderPriority"), "id=".$category['idProductCat'])[0];
+								$categoryEntry = $db->getData("productCategories",array("id","name","orderPriority"), "id=?1",$category['idProductCat'])[0];
 								$categoryNameDict[$category['idProductCat']] = $categoryEntry['name'];
 								$categoryOrderDict[$category['idProductCat']] = $categoryEntry['orderPriority'];
 							}

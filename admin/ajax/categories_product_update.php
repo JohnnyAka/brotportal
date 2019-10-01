@@ -6,6 +6,6 @@ $name = strip_tags(trim($_POST["productCatName"]));
 $orderPriority = strip_tags(trim($_POST["orderPriority"]));
 
 $db = new db_connection();
-$result = $db->updateData("productCategories", array('name', 'orderPriority'), array($name, $orderPriority), "id=".$catId);
+$result = $db->updateData("productCategories", array('name', 'orderPriority'), array($name, $orderPriority), "id=?1",$catId);
 echo $result;
 ?>

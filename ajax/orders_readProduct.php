@@ -4,7 +4,7 @@ include('../admin/db_crud.php');
 
 $db = new db_connection();
 
-$priceCatNumber = $db->getData("users", array('priceCategory'), "id=".$_SESSION['userid'])[0]['priceCategory'];
+$priceCatNumber = $db->getData("users", array('priceCategory'), "id=?1",$_SESSION['userid'])[0]['priceCategory'];
  
 $userPriceCategory = 'price'.$priceCatNumber;
 
@@ -14,13 +14,13 @@ if($userPriceCategory !== "price0"){
     array_push($parameter, $userPriceCategory);
 }
 
-$data = $db->getData("products", $parameter, "id=".$_POST["id"]);
+$data = $db->getData("products", $parameter, "id=?1",$_POST["id"]);
 
 if($userPriceCategory !== "price0") {
     $data[0]['price'] = $data[0][$userPriceCategory];
 }
 
-$priceCatInfoText = $db->getData("prizeCategories", array('infoText'), "id=".$priceCatNumber)[0]['infoText'];
+$priceCatInfoText = $db->getData("prizeCategories", array('infoText'), "id=?1",$priceCatNumber)[0]['infoText'];
 $data[0]['priceInfoText'] = $priceCatInfoText;
 unset($data[0][$userPriceCategory]);
 

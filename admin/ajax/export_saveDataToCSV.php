@@ -8,8 +8,8 @@ include("../db_crud.php");
 	$customerDict = makeDict($db,'users', 'id', 'customerID');
 	$preOrderCustomerDict = makeDict($db,'users', 'id', 'preOrderCustomerId');
 	$productDict = makeDict($db,'products', 'id', 'productID');
-	$preBakeDict = makeDict($db,'products', 'id', 'preBakeExp','preBakeMax!=0');	
-	$preBakeMaxDict = makeDict($db,'products', 'id', 'preBakeMax','preBakeMax!=0');
+	$preBakeDict = makeDict($db,'products', 'id', 'preBakeExp','preBakeMax!=?1',0);	
+	$preBakeMaxDict = makeDict($db,'products', 'id', 'preBakeMax','preBakeMax!=?1',0);
 	$preProductCalendarDict = makeDict($db,'products', 'id', 'idCalendar');
 
 	$time = date('H-i-s');
@@ -50,8 +50,8 @@ include("../db_crud.php");
 		}
 	}
 	
-	function makeDict($db, $table, $nameKey, $nameValue, $whereStatement=NULL){
-		$list = $db->getData($table, array($nameKey,$nameValue),$whereStatement);
+	function makeDict($db, $table, $nameKey, $nameValue, $whereStatement=NULL, $whereValues=NULL){
+		$list = $db->getData($table, array($nameKey,$nameValue),$whereStatement, $whereValues);
 		$dict = NULL;
 		
 		foreach($list as $obj){
@@ -73,7 +73,7 @@ include("../db_crud.php");
 	function isBakedOnDate($db, $productId, $specifiedDate, $preProductCalendarDict){
 		//get calendar for product
 		$calendarDatesRaw = $db->getData("calendarsDaysRelations", 
-		array('date'), "idCalendar='".$preProductCalendarDict[$productId]."'");
+		array('date'), "idCalendar=?1",$preProductCalendarDict[$productId]);
 
 		$calendarDates = [];
 		foreach($calendarDatesRaw as $cDate){
@@ -99,7 +99,7 @@ include("../db_crud.php");
 				unset($currentData->important);
 				
 //set locked property to indicate that it has been exported
-				$db->updateData("orders", array('locked'), array('1'), "orderDate='".$currentData['orderDate']."' AND idCustomer=".$currentData['idCustomer']." AND idProduct=".$currentData['idProduct']." AND hook=".$currentData['hook']);
+				$db->updateData("orders", array('locked'), array('1'), "orderDate=?1 AND idCustomer=?2 AND idProduct=?3 AND hook=?4", array($currentData['orderDate'],$currentData['idCustomer'],$currentData['idProduct'],$currentData['hook']));
 
 				if ($normal) {
 						$currentData['idCustomer'] = $customerDict[$currentData['idCustomer']];
@@ -110,7 +110,7 @@ include("../db_crud.php");
 						$currentData['idProduct'] = $productDict[$currentData['idProduct']];
 						array_push($orderList, $currentData);
 				} else {
-						$data = $db->getData("users", array('preOrderCustomerId'), "id=" . $currentData['idCustomer']);
+						$data = $db->getData("users", array('preOrderCustomerId'), "id=?1", $currentData['idCustomer']);
 						$currentData['idCustomer'] = $data[0]['preOrderCustomerId'];
 						$currentData['idProduct'] = $productDict[$currentData['idProduct']];
 						$currentData['orderDate'] = date_format(getExportDate(), 'Y-m-d');
@@ -127,7 +127,7 @@ include("../db_crud.php");
 	
 		$data = $db->getData("orders", 
 		array('idProduct','idCustomer','orderDate','number','hook','important','noteBaking','noteDelivery'), 
-		"orderDate='".$date."'");
+		"orderDate=?1",$date);
 		
 		return prepareOrdersForExport($db, $customerDict, $productDict, $preBakeDict, $preProductCalendarDict, $data);
 	}
@@ -149,7 +149,7 @@ include("../db_crud.php");
 
 
 			$calendarDatesRaw = $db->getData("calendarsDaysRelations",
-			array('date'), "idCalendar='".$preProductCalendarDict[$productId]."'");
+			array('date'), "idCalendar=?1",$preProductCalendarDict[$productId]);
 
 			$calendarDates = [];
 			foreach($calendarDatesRaw as $cDate){
@@ -186,7 +186,7 @@ include("../db_crud.php");
 					//echo $productId.' ?'.$exportToday.'? '.$deliveryDateFormated.'| ';
 					$data = $db->getData("orders", 
 					array('idProduct','idCustomer','orderDate','number','hook','important','noteBaking','noteDelivery'), 
-					"idProduct=".$productId." AND orderDate='".$deliveryDateFormated."'");
+					"idProduct=?1 AND orderDate=?2", array($productId,$deliveryDateFormated));
 					//echo json_encode($data);
 					$newOrders = prepareOrdersForExport($db, $customerDict, $productDict, $preBakeDict, $preProductCalendarDict, $data, false);
 					if($newOrders != false) {

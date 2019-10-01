@@ -21,7 +21,7 @@ $db = new db_connection();
 $result = $db->updateData("users", 
 array('customerID','name','password','customerCategory','mailAdressTo','mailAdressReceive','telephone1','telephone2','fax','storeAdress','whereToPutOrder','priceCategory','preOrderCustomerId'), 
 array($customerID,$name,$password,$customerCategory,$mailAdressTo,$mailAdressReceive,$telephone1,$telephone2,$fax,$storeAdress,$whereToPutOrder,$priceCategory,$preOrderCustomerId),
-"id=".$id);
+"id=?1",$id);
 
 echo $result;
 ?>

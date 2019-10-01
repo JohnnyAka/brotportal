@@ -10,11 +10,12 @@ $orderDate = $year."-".$month."-".$day;
 $db = new db_connection();
 
 $locked = $db->getData("orders",array('locked'),
-    "idProduct=".$_POST["productId"]." AND hook=".$_POST["orderHook"]." AND idCustomer=".$_POST["customer"]." AND orderDate='".$orderDate."'")[0]['locked'];
+    "idProduct=?1 AND hook=?2 AND idCustomer=?3 AND orderDate=?4", array($_POST["productId"],$_POST["orderHook"],$_POST["customer"],$orderDate))[0]['locked'];
 
 if(!$locked) {
     $result = $db->deleteData("orders",
-        "idProduct=" . $_POST["productId"] . " AND hook=" . $_POST["orderHook"] . " AND idCustomer=" . $_POST["customer"] . " AND orderDate='" . $orderDate . "'");
+        "idProduct=?1 AND hook=?2 AND idCustomer=?3 AND orderDate=?4", 
+				array($_POST["productId"],$_POST["orderHook"],$_POST["customer"],$orderDate));
 }
 else {
     $result = "Der Artikel kann nicht gelöscht werden, er wurde schon exportiert.";

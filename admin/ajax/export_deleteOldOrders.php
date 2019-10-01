@@ -9,7 +9,7 @@ $deleteInDays = $data[0]['deleteOrdersInDays'];
 $today->modify('-'.$deleteInDays.' day');
 $today = $today->format('Y-m-d');
 
-$dbreturn = $db->deleteData("orders","orderDate < '".$today."'");
+$dbreturn = $db->deleteData("orders","orderDate < ?1", $today);
 
 $jsonData = json_encode($dbreturn);
 echo $jsonData;

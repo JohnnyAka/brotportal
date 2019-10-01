@@ -67,7 +67,7 @@ foreach ($_POST as $id => $number) {
 	if($orderData){//same as orderExists
 			if($number==0) {
 					$result = $db->deleteData("orders",
-							"idProduct=" . $id . " AND idCustomer=" . $idCustomer . " AND orderDate='" . $orderDate . "' AND hook=" . $hook);
+							"idProduct=?1 AND idCustomer=?2 AND orderDate=?3 AND hook=?4", array($id,$idCustomer,$orderDate,$hook));
 					//Fehler abfangen und ausgeben
 					if(substr($result, 0, 1) != "R"){   //Der Anfang des Antwortstrings von createData in db_crud.php in admin/. Zugegeben, das ist Pfusch, aber derzeit scheint es sinnvoller, als ALLE query Antworten neu zu schreiben.
 						$responseMessage->appendLogMessage("Die Bestellung von ".$productName." konnte nicht gelöscht werden. Fehlermeldung: ".$result);
@@ -78,7 +78,7 @@ foreach ($_POST as $id => $number) {
 					$result = $db->updateData("orders",
 							array('number', 'important', 'noteDelivery', 'noteBaking'),
 							array($number, $important, $noteDelivery, $noteBaking),
-							"idProduct=" . $id . " AND idCustomer=" . $idCustomer . " AND orderDate='" . $orderDate . "' AND hook=" . $hook);
+							"idProduct=?1 AND idCustomer=?2 AND orderDate=?3 AND hook=?4", array($id,$idCustomer,$orderDate,$hook));
 					if(substr($result, 0, 1) != "R"){   //Der Anfang des Antwortstrings von createData in db_crud.php in admin/. Zugegeben, das ist Pfusch, aber derzeit scheint es sinnvoller, als ALLE query Antworten neu zu schreiben.
 						$responseMessage->appendLogMessage("Die Bestellung von ".$productName." konnte nicht geändert werden. Fehlermeldung: ".$result);
 						$responseMessage->appendDisplayMessage("Programmfehler: Die Bestellung von ".$productName." konnte nicht geändert werden. Bitte melden Sie sich in der Bäckerei\n");

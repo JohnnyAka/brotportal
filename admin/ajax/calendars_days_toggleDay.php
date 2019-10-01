@@ -12,12 +12,12 @@
 	$exists = $db->getData(
 		"calendarsDaysRelations", 
 		array('idCalendar','date'),
-		'idCalendar='.$idCalendar.' AND date="'.$date.'"'
+		'idCalendar=?1 AND date=?2',array($idCalendar,$date)
 	);
 	
 	if($exists){
 		$result = $db->deleteData("calendarsDaysRelations", 
-		"idCalendar=".$idCalendar." AND date='".$date."'");
+		"idCalendar=?1 AND date=?2", array($idCalendar,$date));
 		echo json_encode(-1);
 	}
 	else{

@@ -6,17 +6,21 @@ $db = new db_connection();
 
 $userId = $_SESSION['userid'];
 
-$userCategoryId = $db->getData("users", "customerCategory", "id = '".$userId."'")[0]['customerCategory'];
+$userCategoryId = $db->getData("users", "customerCategory", "id = ?1",$userId)[0]['customerCategory'];
 
-$visibleCategories = $db->getData("categoryRelations", "idProductCat", "idUserCat = '".$userCategoryId."'");
+$visibleCategories = $db->getData("categoryRelations", "idProductCat", "idUserCat = ?1",$userCategoryId);
 
 $whereCondition = "";
+$whereValues = array();
+$x = 1;
 foreach($visibleCategories as $category){
-    $whereCondition .= $category['idProductCat'].' or ';
+    $whereCondition .= '?'.$x.' or ';
+		array_push($whereValues,$category['idProductCat']);
+		$x++;
 }
 $whereCondition = rtrim($whereCondition, " or ");
 
-$data = $db->getData("products", array('id','productID','name','productCategory'), "productCategory = ".$whereCondition);
+$data = $db->getData("products", array('id','productID','name','productCategory'), "productCategory = ".$whereCondition,$whereValues);
 
 $jsonData = json_encode($data);
 echo $jsonData;

@@ -12,13 +12,14 @@ $orderDate = strip_tags(trim($_POST["orderDate"]));
 
 $db = new db_connection();
 
-$locked = $db->getData("orders",array('locked'),"idProduct=".$idProduct." AND idCustomer=".$idCustomer." AND orderDate='".$orderDate."' AND hook=".$hook)[0]['locked'];
+$locked = $db->getData("orders",array('locked'),"idProduct=?1 AND idCustomer=?2 AND orderDate=?3 AND hook=?4"
+array($idProduct,$idCustomer,$orderDate,$hook))[0]['locked'];
 
 if(!$locked){
 	$result = $db->updateData("orders", 
 		array('number','important','noteDelivery','noteBaking'), 
 		array($number,$important,$noteDelivery,$noteBaking),
-		"idProduct=".$idProduct." AND idCustomer=".$idCustomer." AND orderDate='".$orderDate."' AND hook=".$hook);
+		"idProduct=?1 AND idCustomer=?2 AND orderDate=?3 AND hook=?4", array($idProduct,$idCustomer,$orderDate,$hook));
 	//echo $number.' '.$important.' '.$noteDelivery.' '.$noteBaking.' '.$;
 	//echo "idProduct=".$idProduct." AND idCustomer=".$idCustomer." AND orderDate='".$orderDate."' AND hook=".$hook;
 }

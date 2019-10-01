@@ -10,7 +10,7 @@ $password = strip_tags(trim($_POST["passwordOld"]));
 $responseMessage = new AjaxResponseMessage;
 
 $db = new db_connection();
-$currentPassword = $db->getData("users",array('password'),'id='.$id)[0]['password'];
+$currentPassword = $db->getData("users",array('password'),'id=?1',$id)[0]['password'];
 
 if($currentPassword != $password){
 		$responseMessage->displayMessage = "Altes Passwort stimmt nicht.";
@@ -25,7 +25,7 @@ $mailAdressReceive = strip_tags(trim($_POST["mailAdressReceive"]));
 $result = $db->updateData("users", 
 array('mailAdressTo','mailAdressReceive'),
 array($mailAdressTo,$mailAdressReceive),
-"id=".$id);
+"id=?1",$id);
 
 if(substr($result, 0, 1) != "R"){  
 	$responseMessage->appendLogMessage("Die Mailadresse konnte nicht geändert werden. Fehlermeldung: ".$result);

@@ -27,7 +27,7 @@ $db = new db_connection();
 $result = $db->updateData("products", 
 array('productID','name','productCategory', 'orderPriority', 'visibleForUser','description','imagePath','ingredients','allergens','weight','preBakeExp','preBakeMax','featureExp','price1','price2','price3','price4','price5','idCalendar'), 
 array($productid,$name,$productCategory, $orderPriority, $visibleForUser,$description,$imagePath,$ingredients,$allergens,$weight,$preBakeExp,$preBakeMax,$featureExp,$price1,$price2,$price3,$price4,$price5,$idCalendar),
-"id=".$id);
+"id=?1",$id);
 
 echo $result;
 ?>

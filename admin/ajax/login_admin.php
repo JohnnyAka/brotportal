@@ -3,7 +3,7 @@ session_start();
 include('../db_crud.php');
 
 $db = new db_connection();
-$result = $db->getData("settings", array('adminName'), "adminName='".$_POST["adminName"]."' AND adminPassword='".$_POST["adminPassword"]."'");
+$result = $db->getData("settings", array('adminName'), "adminName=?1 AND adminPassword=?2", array($_POST["adminName"],$_POST["adminPassword"]));
 
 if ($result != false){
 	$_SESSION['trustedUser'] = "true";

@@ -70,6 +70,7 @@ class db_connectionServer{
 		}
 	}
 	//returns array of items (array of array)
+	/*//ist noch nicht auf sichere Queries angepasst (where_values) fehlt in getData
 	function getData($table_name, $args_names, $where_condition = NULL){
 		$mysqli = $this->mysqli;
 		
@@ -101,7 +102,7 @@ EOT;
 		else{
 			return $result;
 		}
-	}
+	}*/
 } 
 
 ?>

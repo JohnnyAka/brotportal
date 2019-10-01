@@ -3,7 +3,7 @@ session_start();
 include('../admin/db_crud.php');
 
 $db = new db_connection();
-$result = $db->getData("users", array('id','name','password'), "customerID='".$_POST["name"]."'");
+$result = $db->getData("users", array('id','name','password'), "customerID=?1",$_POST["name"]);
 if($result != false){
 	$result = $result[0];
 }

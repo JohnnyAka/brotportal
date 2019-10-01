@@ -31,13 +31,8 @@ class db_connection{
 		foreach ($array_args as $value){
 			if(is_string($value)){
 				$value = $mysqli->real_escape_string($value);
-			}elseif(is_float($value)){
-				$value = (float) $value;
-			}elseif(is_int($value)){
-				$value = (int) $value;
-			}elseif(is_bool($value)){
-				$value = (bool) $value;
-			}elseif(is_null($value)){
+			}elseif(is_float($value) or is_int($value) or is_bool($value) or is_null($value)){
+				//go on
 			}else{
 				return "Error: Der Typ einer Variable ist nicht bekannt.";
 			}
@@ -59,7 +54,7 @@ EOT;
 	}
 
 	//returns array of items (array of array)
-	function getData($table_name, $args_names, $where_condition = NULL, $noDuplicateEntries = NULL){
+	function getData($table_name, $args_names, $where_condition = NULL, $where_values = NULL, $noDuplicateEntries = NULL){
 		$mysqli = $this->mysqli;
 		
 		//prepare names of arguments
@@ -83,8 +78,29 @@ EOT;
 			$sql = <<<EOT
 			SELECT {$distinct} {$strArgsNames} FROM {$table_name}
 EOT;
+		
+		//prepare where condition - ?1 (?<number>) in the condition are placeholders for values
 		if (!is_null($where_condition)){
-			$sql .= " WHERE " . $where_condition;
+			if(!is_array($where_values)){
+        $where_condition_final = str_replace('?1',"'".$where_values."'",$where_condition);
+			}else{
+				$countValues = count($where_values);
+				$placeholderArray =array();
+				for($x=1;$x<=$countValues;$x++){
+					array_push($placeholderArray,"?".$x);
+					$value = $where_values[$x-1];
+					if(is_string($value)){
+						$value = $mysqli->real_escape_string($value);
+					}elseif(is_float($value) or is_int($value) or is_bool($value) or is_null($value)){
+						//go on
+					}else{
+						return "Error: Der Typ einer Variable ist nicht bekannt.";
+					}
+					$where_values[$x-1] = "'".$value."'";
+				}
+        $where_condition_final = str_replace($placeholderArray,$where_values,$where_condition);
+			}
+			$sql .= " WHERE " . $where_condition_final;
 		}
 		//execute query
 		
@@ -98,7 +114,7 @@ EOT;
 	}
 	
 	
-	function updateData($table_name, $args_names, $args_values, $where_condition = NULL){
+	function updateData($table_name, $args_names, $args_values, $where_condition = NULL, $where_values = NULL){
 		$mysqli = $this->mysqli;
 		//prepare name-value pairs for query
 		if (is_array($args_names)){
@@ -119,9 +135,29 @@ EOT;
 		}
 		//put query
 		$sql = "UPDATE ".$table_name." SET ".$strArgs;
-		//put where condition if given
+		
+		//prepare where condition - ?1 (?<number>) in the condition are placeholders for values
 		if (!is_null($where_condition)){
-			$sql .= " WHERE " . $where_condition.";";
+			if(!is_array($where_values)){
+        $where_condition_final = str_replace('?1',"'".$where_values."'",$where_condition);
+			}else{
+				$countValues = count($where_values);
+				$placeholderArray =array();
+				for($x=1;$x<=$countValues;$x++){
+					array_push($placeholderArray,"?".$x);
+					$value = $where_values[$x-1];
+					if(is_string($value)){
+						$value = $mysqli->real_escape_string($value);
+					}elseif(is_float($value) or is_int($value) or is_bool($value) or is_null($value)){
+						//go on
+					}else{
+						return "Error: Der Typ einer Variable ist nicht bekannt.";
+					}
+					$where_values[$x-1] = "'".$value."'";
+				}
+        $where_condition_final = str_replace($placeholderArray,$where_values,$where_condition);
+			}
+			$sql .= " WHERE " . $where_condition_final;
 		}
 		
 		//execute query
@@ -132,9 +168,31 @@ EOT;
 		}
 	}
 	
-	function deleteData($table_name, $where_condition){
+	function deleteData($table_name, $where_condition, $where_values){
+		$mysqli = $this->mysqli;
+		//prepare where condition - ?1 (?<number>) in the condition are placeholders for values
+		if(!is_array($where_values)){
+			$where_condition_final = str_replace('?1',"'".$where_values."'",$where_condition);
+		}else{
+			$countValues = count($where_values);
+			$placeholderArray =array();
+			for($x=1;$x<=$countValues;$x++){
+				array_push($placeholderArray,"?".$x);
+				$value = $where_values[$x-1];
+				if(is_string($value)){
+					$value = $mysqli->real_escape_string($value);
+				}elseif(is_float($value) or is_int($value) or is_bool($value) or is_null($value)){
+					//go on
+				}else{
+					return "Error: Der Typ einer Variable ist nicht bekannt.";
+				}
+				$where_values[$x-1] = "'".$value."'";
+			}
+			$where_condition_final = str_replace($placeholderArray,$where_values,$where_condition);
+		}
+	
 		//put query
-		$sql = "DELETE FROM ".$table_name." WHERE ".$where_condition;
+		$sql = "DELETE FROM ".$table_name." WHERE ".$where_condition_final;
 		//execute query
 		if ($this->mysqli->query($sql)=== TRUE) {
 			return "Record/s deleted successfully";
@@ -143,6 +201,8 @@ EOT;
 		}
 	}
 }
+
+
 ?>
 
 

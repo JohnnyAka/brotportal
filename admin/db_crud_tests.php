@@ -10,14 +10,16 @@ if(!isset($_SESSION['trustedUser'])) {
 			echo "Here we go: " . $db->createData("products", array('productID','name','description'), array('90','Bombenstimmung','Schwabell Wabbel'));
 			*/
 			/*//getData Prüfung
-			foreach($db->getData("products",array("productID","name"), "name='Gaumenball'") as $value){
+			//$result = $db->getData("products",array("productID","name"), "name=?1","Gaumenball");
+			$result = $db->getData("products",array("productID","name"), "name=?1 and productID=?2",array("Gaumenball","321654987"));
+			foreach($result as $value){
 				foreach($value as $subvalue){
 					echo "Get get get: " . $subvalue . '<br />';
 				}	
 			}*/
-			/*//updateData Prüfung
-			echo $db->updateData("products", "productID", "345","id = 1");
-			*/
+			//updateData Prüfung
+			//echo $db->updateData("products", "name", "ChemiebrotNr3","name=?1 and productID=?2",array("ChemiebrotNr2",321654987));
+			
 			//deleteData Prüfung
-			//echo $db->deleteData("products", "id=1");
+			//echo $db->deleteData("products", "productID=?1 and name=?2", array("1232323124","Biobrot 2000"));
 		?>

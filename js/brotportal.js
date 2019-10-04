@@ -8,12 +8,12 @@
 	
 	function logMessage(type, message){
 		var customerID = $('#userID').data("value");
-		var nowDateTime = new Date().toLocaleDateString('de-DE', {day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' });
+		//var nowDateTime = new Date().toLocaleDateString('de-DE', {day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' });
 		$.ajax({
 				type: 'POST',
 				url: 'ajax/orders_logMessage.php',
 				data: {
-					logDateTime:nowDateTime,
+					//logDateTime:nowDateTime,
 					logType:type,
 					logMessage:message
 				}

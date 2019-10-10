@@ -323,7 +323,6 @@ var main = function(){
 	});
 	//show single article in product content on click on left sidebar
 	$('.showSingleArticle').click(function() {
-		logMessage("Warnung", "I'm Serious!");
 		$('ul.sidebarList').find('*').removeClass("active");
 		$(this).addClass("active");
 		

@@ -2,8 +2,11 @@
 
 
 class db_connection{
+	//für die Ausführung von db_config.php muss root als user eingestellt sein, danach wie $adminUser in db_config.php
 	public $db_username = 'root';
 	public $db_password = '';
+	/*public $db_username = 'bestellannahme';
+	public $db_password = 'password';*/
 	public $db_name = 'brotportal';
 	public $db_host = 'localhost';
 

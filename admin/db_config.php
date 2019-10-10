@@ -6,6 +6,14 @@ $username = "root";
 $password = "";
 $dbname = "brotportal";
 
+$adminUser = "bestellannahme";
+$adminUserPw = "password";
+
+$customer = "kunde";
+$customerPw = "password";
+
+//Erinnerung: Wenn neuer table hinzugefügt wird müssen drop und permissions gesetzt werden
+
 // Create connection
 $conn = new mysqli($servername, $username, $password);
 // Check connection
@@ -203,10 +211,76 @@ saveDatabaseTo VARCHAR(400)
 if ($conn->query($sql) === TRUE) {
     echo "Table settings created successfully<br>";
 		$result = $db->createData("settings",array('adminName','adminPassword','deleteOrdersInDays','imagesPath','exportOrdersTo','saveDatabaseTo'), array('admin','password','30','/','/','/'));
-		echo 'Settings: '.$result;
+		echo 'Settings: '.$result.'<br>';
 } else {
     echo "Error creating database: " . $conn->error."<br>";
 }
+//create users and grant permissions
+echo "<br />Setting permissons:<br />";
+$tablesAdminUser = array('products','users','orders','productCategories','userCategories','prizeCategories','categoryRelations','calendars','calendarsDaysRelations');
+foreach($tablesAdminUser as $table){
+	$sql = "grant all on brotportal.".$table." to ".$adminUser."@localhost identified by '".$adminUserPw."'";
+	if ($conn->query($sql) === TRUE) {
+			echo $adminUser." permissions for ".$table." set successfully<br>";
+	} else {
+			echo "Error granting permissions: " . $conn->error."<br>";
+	}
+}
+$sql = "grant select (deleteOrdersInDays,imagesPath,endOfOrderTime,exportOrdersTo,saveDatabaseTo,adminName,adminPassword),
+							update (deleteOrdersInDays,imagesPath,endOfOrderTime,exportOrdersTo,saveDatabaseTo)
+	on brotportal.settings to ".$adminUser."@localhost identified by '".$adminUserPw."'";
+if ($conn->query($sql) === TRUE) {
+	echo $adminUser." permissions for settings set successfully<br>";
+} else {
+	echo "Error granting permissions: " . $conn->error."<br>";
+}
+
+$tablesSelectCustomer = array('products','users','orders','productCategories','userCategories','prizeCategories','categoryRelations','calendars','calendarsDaysRelations');
+foreach($tablesSelectCustomer as $table){
+	$sql = "grant select on brotportal.".$table." to ".$customer."@localhost identified by '".$customerPw."'";
+	if ($conn->query($sql) === TRUE) {
+			echo $customer." select permissions for ".$table." set successfully<br>";
+	} else {
+			echo "Error granting permissions: " . $conn->error."<br>";
+	}
+}
+
+$sql = "grant select (imagesPath,endOfOrderTime) on brotportal.settings to ".$customer."@localhost identified by '".$customerPw."'";
+if ($conn->query($sql) === TRUE) {
+	echo $customer." permissions for settings set successfully<br>";
+} else {
+	echo "Error granting permissions: " . $conn->error."<br>";
+}
+
+$sql = "grant all on brotportal.orders to ".$customer."@localhost identified by '".$customerPw."'";
+if ($conn->query($sql) === TRUE) {
+	echo $customer." permissions for orders set successfully<br>";
+} else {
+	echo "Error granting permissions: " . $conn->error."<br>";
+}
+
+$sql = "grant update on brotportal.users to ".$customer."@localhost identified by '".$customerPw."'";
+if ($conn->query($sql) === TRUE) {
+	echo $customer." permissions for users set successfully<br>";
+} else {
+	echo "Error granting permissions: " . $conn->error."<br>";
+}
+
+
+
 
 $conn->close();
 ?> 
+
+
+
+
+
+
+
+
+
+
+
+
+

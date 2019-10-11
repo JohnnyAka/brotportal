@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('../admin/db_crud.php');
+include('../db_crud.php');
 include('../admin/permission_check_helpers.php');
 include('../admin/classAjaxResponseMessage.php');
 

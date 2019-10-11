@@ -72,7 +72,7 @@ if(!isset($_SESSION['userid'])) {
 					<h3>Produktliste</h3>
 					<ul class="sidebarList listsHeight">
 						<?php
-							include('admin/db_crud.php');
+							include('db_crud.php');
 							$db = new db_connection();
 							//get customerdata
 							$customer = $db->getData("users",array("id","customerID","name","customerCategory"), "id=?1",$_SESSION['userid'])[0];

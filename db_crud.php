@@ -1,8 +1,8 @@
 <?php
 
-//bei einer Änderung in dieser Datei nicht db_crud.php für die user und die config vergessen
+//bei einer Änderung in dieser Datei nicht db_crud.php für den admin und die config vergessen
 class db_connection{
-	public $db_username = 'bestellannahme';
+	public $db_username = 'kunde';
 	public $db_password = 'password';
 	public $db_name = 'brotportal';
 	public $db_host = 'localhost';

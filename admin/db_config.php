@@ -1,16 +1,21 @@
 <?php
-include('db_crud.php');
+include('db_config_crud.php');
+
 
 $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "brotportal";
-
+//Datenbank Zugangsdaten
 $adminUser = "bestellannahme";
 $adminUserPw = "password";
 
 $customer = "kunde";
 $customerPw = "password";
+
+//admin Zugangsdaten
+$adminName = "bestellannahme";
+$adminPassword = "halleluja";
 
 //Erinnerung: Wenn neuer table hinzugefügt wird müssen drop und permissions gesetzt werden
 
@@ -210,7 +215,7 @@ saveDatabaseTo VARCHAR(400)
 )";
 if ($conn->query($sql) === TRUE) {
     echo "Table settings created successfully<br>";
-		$result = $db->createData("settings",array('adminName','adminPassword','deleteOrdersInDays','imagesPath','exportOrdersTo','saveDatabaseTo'), array('admin','password','30','/','/','/'));
+		$result = $db->createData("settings",array('adminName','adminPassword','deleteOrdersInDays','imagesPath','exportOrdersTo','saveDatabaseTo'), array($adminName,$adminPassword,'30','/','/','/'));
 		echo 'Settings: '.$result.'<br>';
 } else {
     echo "Error creating database: " . $conn->error."<br>";

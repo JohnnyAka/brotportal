@@ -14,7 +14,9 @@ $responseMessage = new AjaxResponseMessage;
 $db = new db_connection();
 $currentPassword = $db->getData("users",array('password'),'id=?1',$id)[0]['password'];
 
-if($currentPassword != $password){
+$passwordCorrect = password_verify($password, $currentPassword);
+
+if(!$passwordCorrect){
 		$responseMessage->displayMessage = "Altes Passwort stimmt nicht.";
 		$responseMessage->success = false;
 		echo json_encode($responseMessage);
@@ -27,7 +29,8 @@ if($passwordNew1 != $passwordNew2){
     return;
 }
 
-$result = $db->updateData("users",array('password'),array($passwordNew1),"id=?1",$id);
+$passwordHash = password_hash($passwordNew1, PASSWORD_DEFAULT);
+$result = $db->updateData("users",array('password'),array($passwordHash),"id=?1",$id);
 		
 if(substr($result, 0, 1) != "R"){  
 	$responseMessage->appendLogMessage("Das Passwort konnte nicht geändert werden. Fehlermeldung: ".$result);

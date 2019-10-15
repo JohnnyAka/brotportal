@@ -4,13 +4,18 @@ include('../db_crud.php');
 
 $db = new db_connection();
 $result = $db->getData("users", array('id','name','password'), "customerID=?1",$_POST["name"]);
+
+
+$passwordCorrect = false;
 if($result != false){
-	$result = $result[0];
+	$passwordCorrect = password_verify($_POST['password'],$result[0]['password']);
 }
 
-if ($result != false AND $result['password'] == $_POST['password']){
-	$_SESSION['username'] = $result['name'];
-	$_SESSION['userid'] = $result['id'];
+
+
+if ($passwordCorrect){
+	$_SESSION['username'] = $result[0]['name'];
+	$_SESSION['userid'] = $result[0]['id'];
 	$_SESSION['dataBlockedForDisplay'] = false;
 	echo true;
 }

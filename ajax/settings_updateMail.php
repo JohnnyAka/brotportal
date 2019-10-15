@@ -7,12 +7,15 @@ $id = $_SESSION['userid'];
 
 $password = strip_tags(trim($_POST["passwordOld"]));
 
+
 $responseMessage = new AjaxResponseMessage;
 
 $db = new db_connection();
 $currentPassword = $db->getData("users",array('password'),'id=?1',$id)[0]['password'];
 
-if($currentPassword != $password){
+$passwordCorrect = password_verify($password, $currentPassword);
+
+if(!$passwordCorrect){
 		$responseMessage->displayMessage = "Altes Passwort stimmt nicht.";
 		$responseMessage->success = false;
 		echo json_encode($responseMessage);

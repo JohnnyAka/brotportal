@@ -6,6 +6,7 @@ $id = strip_tags(trim($_POST["id"]));
 $customerID = strip_tags(trim($_POST["customerid"]));
 $name = strip_tags(trim($_POST["name"]));
 $password = strip_tags(trim($_POST["password"]));
+$passwordHash = password_hash($password, PASSWORD_DEFAULT);
 $customerCategory = strip_tags(trim($_POST["customerCategory"]));
 $mailAdressTo = strip_tags(trim($_POST["mailAdressTo"]));
 $mailAdressReceive = strip_tags(trim($_POST["mailAdressReceive"]));
@@ -20,7 +21,7 @@ $preOrderCustomerId = strip_tags(trim($_POST["preOrderCustomerId"]));
 $db = new db_connection();
 $result = $db->updateData("users", 
 array('customerID','name','password','customerCategory','mailAdressTo','mailAdressReceive','telephone1','telephone2','fax','storeAdress','whereToPutOrder','priceCategory','preOrderCustomerId'), 
-array($customerID,$name,$password,$customerCategory,$mailAdressTo,$mailAdressReceive,$telephone1,$telephone2,$fax,$storeAdress,$whereToPutOrder,$priceCategory,$preOrderCustomerId),
+array($customerID,$name,$passwordHash,$customerCategory,$mailAdressTo,$mailAdressReceive,$telephone1,$telephone2,$fax,$storeAdress,$whereToPutOrder,$priceCategory,$preOrderCustomerId),
 "id=?1",$id);
 
 echo $result;

@@ -97,7 +97,7 @@ id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 customerID VARCHAR(10) NOT NULL,
 preOrderCustomerId VARCHAR(10) NOT NULL,
 name VARCHAR (80),
-password VARCHAR(80),
+password VARCHAR(255),
 customerCategory INT(6),
 priceCategory INT(1),
 mailAdressTo VARCHAR (80),
@@ -206,7 +206,7 @@ if ($conn->query($sql) === TRUE) {
 
 $sql = "CREATE TABLE settings (
 adminName VARCHAR(40),
-adminPassword VARCHAR(40),
+adminPassword VARCHAR(255),
 deleteOrdersInDays INT(6),
 imagesPath VARCHAR(400),
 endOfOrderTime TIME,
@@ -215,7 +215,8 @@ saveDatabaseTo VARCHAR(400)
 )";
 if ($conn->query($sql) === TRUE) {
     echo "Table settings created successfully<br>";
-		$result = $db->createData("settings",array('adminName','adminPassword','deleteOrdersInDays','imagesPath','exportOrdersTo','saveDatabaseTo'), array($adminName,$adminPassword,'30','/','/','/'));
+		$passwordHash = password_hash($adminPassword, PASSWORD_DEFAULT);
+		$result = $db->createData("settings",array('adminName','adminPassword','deleteOrdersInDays','imagesPath','exportOrdersTo','saveDatabaseTo'), array($adminName,$passwordHash,'30','/','/','/'));
 		echo 'Settings: '.$result.'<br>';
 } else {
     echo "Error creating database: " . $conn->error."<br>";

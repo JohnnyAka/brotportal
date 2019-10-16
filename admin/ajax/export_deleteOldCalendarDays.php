@@ -3,13 +3,15 @@ include('../db_crud.php');
 //is used in admin/export.js
 $db = new db_connection();
 $data = $db->getData("settings", 'deleteOrdersInDays');
+$deleteInDays = $data[0]['deleteOrdersInDays'];
+
+$calendars = $db->getData("calendars", array('id'));
 
 $today = new DateTime();
-$deleteInDays = $data[0]['deleteOrdersInDays'];
 $today->modify('-'.$deleteInDays.' day');
-$today = $today->format('Y-m-d');
+$deleteBoundaryDate = $today->format('Y-m-d');
 
-$dbreturn = $db->deleteData("orders","orderDate < ?1", $today);
+$dbreturn = $db->deleteData("calendarsDaysRelations","date < ?1", $deleteBoundaryDate);
 
 $jsonData = json_encode($dbreturn);
 echo $jsonData;

@@ -56,6 +56,22 @@ function deleteOldOrders(){
 			}
 		});
 }
+//is triggered on button-click of export orders button
+function deleteOldCalendarDays(){
+		$.ajax({
+			type: 'POST',
+			url: 'ajax/export_deleteOldCalendarDays.php'
+		}).done(function(response){
+			$(messages).text("Kalender erfolgreich bereinigt!");
+		}).fail(function(data){
+			// Set the message text.
+			if (data.responseText !== '') {
+				$(messages).text(data.responseText);
+			} else {
+				$(messages).text('Fehler, Kalender konnten nicht bereinigt werden.');
+			}
+		});
+}
 
 //main function for click event handlers
 var main = function(){
@@ -93,6 +109,7 @@ var main = function(){
 		}
 		//delete old orders in database, according to the number of days in settings
 		deleteOldOrders();
+		deleteOldCalendarDays();
 	});
 	
 	$('.deleteExportsButton').click(function(){

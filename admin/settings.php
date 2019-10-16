@@ -90,6 +90,7 @@ if(!isset($_SESSION['trustedUser'])) {
 					<div id="messages"></div>
 					
 						<form id="updateSettingsForm" method="post" action="ajax/settings_update.php">
+							<!-- //The User doesnt have privileges to change these admin settings
 							<div class="field">
 								<label for="adminName">Administrator Name:</label>
 								<input id="adminName" name="adminName">
@@ -97,7 +98,7 @@ if(!isset($_SESSION['trustedUser'])) {
 							<div class="field">
 								<label for="adminPassword">Administrator Passwort:</label>
 								<input id="adminPassword" name="adminPassword">
-							</div>
+							</div>-->
 							<div class="field">
 								<label for="deleteOrdersInDays">Speicherdauer der Bestellungen in Tagen:</label>
 								<input id="deleteOrdersInDays" name="deleteOrdersInDays">

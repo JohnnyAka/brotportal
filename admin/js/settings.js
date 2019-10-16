@@ -49,8 +49,6 @@ var displaySettings = function(){
 	}).done(function(response){
 		var settingsData = JSON.parse(response);
 		//set values of form
-		$('#adminName').val(settingsData[0]["adminName"]);
-		$('#adminPassword').val(settingsData[0]["adminPassword"]);
 		$('#deleteOrdersInDays').val(settingsData[0]["deleteOrdersInDays"]);
 		$('#imagesPath').val(settingsData[0]["imagesPath"]);
 		$('#endOfOrderTime').val(settingsData[0]["endOfOrderTime"]);

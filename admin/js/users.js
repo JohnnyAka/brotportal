@@ -174,7 +174,6 @@ var main = function(){
 			var userData = JSON.parse(response);
 			$(".customerIDDisp").text(userData[0]["customerID"]);
 			$(".nameDisp").text(userData[0]["name"]);
-			$(".passwordDisp").text(userData[0]["password"]);
 			$(".customerCategoryDisp").text(categoriesNameDict[userData[0]["customerCategory"]]);
 			$(".mailAdressToDisp").text(userData[0]["mailAdressTo"]);
 			$(".mailAdressReceiveDisp").text(userData[0]["mailAdressReceive"]);
@@ -243,7 +242,7 @@ var main = function(){
 				//set values of form
 				$('#customeridUp').val(userData[0]["customerID"]);
 				$('#nameUp').val(userData[0]["name"]);
-				$('#passwordUp').val(userData[0]["password"]);
+				//$('#passwordUp').val(userData[0]["password"]);
 				$('#customerCategoryUp').val(userData[0]["customerCategory"]);
 				$('#mailAdressToUp').val(userData[0]["mailAdressTo"]);
 				$('#mailAdressReceiveUp').val(userData[0]["mailAdressReceive"]);

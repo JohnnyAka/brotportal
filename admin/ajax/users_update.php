@@ -6,6 +6,8 @@ $id = strip_tags(trim($_POST["id"]));
 $customerID = strip_tags(trim($_POST["customerid"]));
 $name = strip_tags(trim($_POST["name"]));
 $password = strip_tags(trim($_POST["password"]));
+if($password == ''){ $resetPassword = false;}
+else{$resetPassword = true;}
 $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 $customerCategory = strip_tags(trim($_POST["customerCategory"]));
 $mailAdressTo = strip_tags(trim($_POST["mailAdressTo"]));
@@ -19,10 +21,18 @@ $priceCategory = strip_tags(trim($_POST["priceCategory"]));
 $preOrderCustomerId = strip_tags(trim($_POST["preOrderCustomerId"]));
 
 $db = new db_connection();
+
+if($resetPassword){
 $result = $db->updateData("users", 
-array('customerID','name','password','customerCategory','mailAdressTo','mailAdressReceive','telephone1','telephone2','fax','storeAdress','whereToPutOrder','priceCategory','preOrderCustomerId'), 
-array($customerID,$name,$passwordHash,$customerCategory,$mailAdressTo,$mailAdressReceive,$telephone1,$telephone2,$fax,$storeAdress,$whereToPutOrder,$priceCategory,$preOrderCustomerId),
-"id=?1",$id);
+	array('customerID','name','password','customerCategory','mailAdressTo','mailAdressReceive','telephone1','telephone2','fax','storeAdress','whereToPutOrder','priceCategory','preOrderCustomerId'), 
+	array($customerID,$name,$passwordHash,$customerCategory,$mailAdressTo,$mailAdressReceive,$telephone1,$telephone2,$fax,$storeAdress,$whereToPutOrder,$priceCategory,$preOrderCustomerId),
+	"id=?1",$id);
+}else{
+	$result = $db->updateData("users", 
+	array('customerID','name','customerCategory','mailAdressTo','mailAdressReceive','telephone1','telephone2','fax','storeAdress','whereToPutOrder','priceCategory','preOrderCustomerId'), 
+	array($customerID,$name,$customerCategory,$mailAdressTo,$mailAdressReceive,$telephone1,$telephone2,$fax,$storeAdress,$whereToPutOrder,$priceCategory,$preOrderCustomerId),
+	"id=?1",$id);
+}
 
 echo $result;
 ?>

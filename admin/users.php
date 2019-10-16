@@ -144,7 +144,6 @@ if(!isset($_SESSION['trustedUser'])) {
 			Kunden Nr.: <span class="customerIDDisp"></span><br />
 			Vorbestell-Kundennummer: <span class="preOrderCustomerIdDisp"></span><br />
 		  Name: <span class="nameDisp"></span><br />
-			Passwort: <span class="passwordDisp"></span><br />
 			Kategorie: <span class="customerCategoryDisp"></span><br />
 			Preiskategorie: <span class="priceCategoryDisp"></span><br />
 			E-Mail: <span class="mailAdressToDisp"></span><br />

@@ -33,6 +33,14 @@ function checkForPermission($db, $productId, $specifiedDate, $preProductCalendar
         array('date'), "idCalendar=?1",$preProductCalendarDict[$productId]);
 
     $dateNow = new DateTime("now");
+    //if now is later than Bestellschluss(endOfOrderTime), add one day to now
+    $endOfOrderTimeStr = $db->getData("settings",array('endOfOrderTime'))[0]['endOfOrderTime'];
+    $endOfOrderTime = explode(':',$endOfOrderTimeStr);
+    $endOfOrderDate = clone $dateNow;
+    $endOfOrderDate->setTime($endOfOrderTime[0],$endOfOrderTime[1],$endOfOrderTime[2]);
+    if($endOfOrderDate < $dateNow){
+        $dateNow->modify('+1 day');
+    }
 
     //hole min und max; rechne die Daten aus und packe sie in array
     $orderDate = new DateTime($specifiedDate);
@@ -54,3 +62,21 @@ function checkForPermission($db, $productId, $specifiedDate, $preProductCalendar
 }
 
 ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

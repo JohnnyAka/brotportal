@@ -20,7 +20,14 @@ if($userPriceCategory !== "price0") {
     $data[0]['price'] = $data[0][$userPriceCategory];
 }
 
-$priceCatInfoText = $db->getData("prizeCategories", array('infoText'), "id=?1",$priceCatNumber)[0]['infoText'];
+$result = $db->getData("prizeCategories", array('infoText'), "id=?1",$priceCatNumber);
+if ($result != null){
+    $priceCatInfoText = $result[0]['infoText'];
+}
+else{
+    $priceCatInfoText = '';
+}
+
 $data[0]['priceInfoText'] = $priceCatInfoText;
 unset($data[0][$userPriceCategory]);
 

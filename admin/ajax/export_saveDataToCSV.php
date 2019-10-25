@@ -20,28 +20,30 @@ include("../db_crud.php");
 	$date = $year.'-'.$month.'-'.$day;
 	
 	
-	//return "Hier gehts";
-	$orderList = getOrdersNormal($db, $customerDict, $productDict, $preBakeDict, $preProductCalendarDict, $date);
+	//get all orders from db where date is on export date
+	$orderListPre = getOrdersNormal($db, $customerDict, $productDict, $preBakeDict, $preProductCalendarDict, $date);
+	$orderList = addHooksToEntry($orderListPre);
 	//return json_encode($orderList);
 	
+	//get all orders, that are produced on export date for later dates
 	$preOrderList = getPreOrders($db, $customerDict, $productDict, $preBakeDict, $preBakeMaxDict, $preProductCalendarDict, $date);
 	//return json_encode($preOrderList);
 	
 	$filename = '../exports/bestellungen_'.$date.'_'.$time;
 	$file = fopen($filename.'.csv', 'w');
-	fputcsv_eol($file, array('Datum', 'Kundennummer', 'Artikelnummer', 'Anzahl', 'Lieferung1', 'Lieferung2', 'Lieferung3','Extra','Nachlieferung','Retour', 'LieferscheinNotiz'),"\r\n");
+	fputcsv_eol($file, array('Datum', 'Kundennummer', 'Artikelnummer', 'Lieferung1', 'Lieferung2', 'Lieferung3','Extra','Nachlieferung','Retour', 'LieferscheinNotiz'),"\r\n");
 	foreach ($orderList as $row){
-			if($row['hook'] == 5){
-				$writeOrder = array($row['orderDate'],$row['idCustomer'],$row['idProduct'],0,0,0,0,0,$row['number'],0,$row['noteDelivery']);
-			}
-			else{
-				$writeOrder = array($row['orderDate'],$row['idCustomer'],$row['idProduct'],$row['number'],0,0,0,0,0,$row['noteDelivery']);
-			}
-			fputcsv_eol($file, $writeOrder,"\r\n");
-		}
-	foreach ($preOrderList as $row)
-		{fputcsv_eol($file, $row,"\r\n");}
+		$writeOrder = array($row['orderDate'],$row['idCustomer'],$row['idProduct'],$row['Lieferung1'],$row['Lieferung2'],$row['Lieferung3'],$row['Extra'],$row['Nachlieferung'],$row['Retour'],$row['noteDelivery']);
+		fputcsv_eol($file, $writeOrder,"\r\n");
+	}
+	foreach ($preOrderList as $row){
+		$writeOrder = array($row['orderDate'],$row['idCustomer'],$row['idProduct'],$row['number'],0,0,0,0,0,$row['noteDelivery']);
+		fputcsv_eol($file, $writeOrder,"\r\n");
+	}
 	fclose($file);
+	//the end
+	
+
 	
 	function fputcsv_eol($fp, $array, $eol) {
 		fputcsv($fp, $array);
@@ -61,7 +63,7 @@ include("../db_crud.php");
 	}
 	
 	function getExportDate(){
-	global $date;
+		global $date;
 		return new DateTime($date);
 	}
 	
@@ -89,7 +91,95 @@ include("../db_crud.php");
 		}
 	}
 	
-	function prepareOrdersForExport($db, $customerDict, $productDict, $preBakeDict, $preProductCalendarDict, $data, $normal=true){
+	//combines every two list entries with the same customerid and productid, but different hooks
+	function addHooksToEntry($orderList){
+		$orderListNew = array();
+		foreach($orderList as $entry){
+			$hook = $entry['hook'];
+			if($hook == 1){
+				$entry['Lieferung1']=intval($entry['number']);
+				$entry['Lieferung2']=0;
+				$entry['Lieferung3']=0;
+				$entry['Extra']=0;
+				$entry['Nachlieferung']=0;
+				$entry['Retour']=0;
+			}
+			elseif($hook == 2){
+				$entry['Lieferung1']=0;
+				$entry['Lieferung2']=$entry['number'];
+				$entry['Lieferung3']=0;
+				$entry['Extra']=0;
+				$entry['Nachlieferung']=0;
+				$entry['Retour']=0;
+			}
+			elseif($hook == 3){
+				$entry['Lieferung1']=0;
+				$entry['Lieferung2']=0;
+				$entry['Lieferung3']=$entry['number'];
+				$entry['Extra']=0;
+				$entry['Nachlieferung']=0;
+				$entry['Retour']=0;
+			}
+			elseif($hook == 4){
+				$entry['Lieferung1']=0;
+				$entry['Lieferung2']=0;
+				$entry['Lieferung3']=0;
+				$entry['Extra']=$entry['number'];
+				$entry['Nachlieferung']=0;
+				$entry['Retour']=0;
+			}
+			elseif($hook == 5){
+				$entry['Lieferung1']=0;
+				$entry['Lieferung2']=0;
+				$entry['Lieferung3']=0;
+				$entry['Extra']=0;
+				$entry['Nachlieferung']=$entry['number'];
+				$entry['Retour']=0;
+			}
+			elseif($hook == 6){
+				$entry['Lieferung1']=0;
+				$entry['Lieferung2']=0;
+				$entry['Lieferung3']=0;
+				$entry['Extra']=0;
+				$entry['Nachlieferung']=0;
+				$entry['Retour']=$entry['number'];
+			}
+			unset($entry['number']);
+			$found = false;
+			for($x=0;$x<count($orderListNew);$x++){
+				$listEntry = $orderListNew[$x];
+				if($entry['idCustomer']==$listEntry['idCustomer'] and $entry['idProduct']==$listEntry['idProduct'] and $entry['hook']!=$listEntry['hook']){
+					$found = true;
+					$arrayPositionX = $x;
+					break;
+				}
+			}
+			if($found){
+				$orderListNew[$arrayPositionX]['Lieferung1'] += $entry['Lieferung1'];
+				$orderListNew[$arrayPositionX]['Lieferung2'] += $entry['Lieferung2'];
+				$orderListNew[$arrayPositionX]['Lieferung3'] += $entry['Lieferung3'];
+				$orderListNew[$arrayPositionX]['Extra'] += $entry['Extra'];
+				$orderListNew[$arrayPositionX]['Nachlieferung'] += $entry['Nachlieferung'];
+				$orderListNew[$arrayPositionX]['Retour'] += $entry['Retour'];
+			}else{
+				array_push($orderListNew, $entry);
+			}
+		}
+		return $orderListNew;
+	}
+	
+	
+	
+	
+		
+	
+	
+	function getOrdersNormal($db, $customerDict, $productDict, $preBakeDict, $preProductCalendarDict, $date){
+		
+		$data = $db->getData("orders", 
+		array('idProduct','idCustomer','orderDate','number','hook','important','noteBaking','noteDelivery'), 
+		"orderDate=?1",$date);
+			
 		if($data) {
 			$orderList = [];
 			for ($x = 0; $x < count($data); $x++) {
@@ -98,38 +188,20 @@ include("../db_crud.php");
 				unset($currentData->noteBaking);
 				unset($currentData->important);
 				
-//set locked property to indicate that it has been exported
+				//set locked property to indicate that it has been exported
 				$db->updateData("orders", array('locked'), array('1'), "orderDate=?1 AND idCustomer=?2 AND idProduct=?3 AND hook=?4", array($currentData['orderDate'],$currentData['idCustomer'],$currentData['idProduct'],$currentData['hook']));
-
-				if ($normal) {
-						$currentData['idCustomer'] = $customerDict[$currentData['idCustomer']];
-						//stattdessen: wenn es heut nicht produziert wird oder wenn es einen prebake von >0 hat, bekommt es hook 5
-						if ($preBakeDict[$currentData['idProduct']] != 0 OR !isBakedOnDate($db, $currentData['idProduct'], getExportDate(), $preProductCalendarDict)) {
-								$currentData['hook'] = 5;
-						}
-						$currentData['idProduct'] = $productDict[$currentData['idProduct']];
-						array_push($orderList, $currentData);
-				} else {
-						$data = $db->getData("users", array('preOrderCustomerId'), "id=?1", $currentData['idCustomer']);
-						$currentData['idCustomer'] = $data[0]['preOrderCustomerId'];
-						$currentData['idProduct'] = $productDict[$currentData['idProduct']];
-						$currentData['orderDate'] = date_format(getExportDate(), 'Y-m-d');
-
-						$orderList[] = $currentData;
+			
+				$currentData['idCustomer'] = $customerDict[$currentData['idCustomer']];
+				//stattdessen: wenn es heut nicht produziert wird oder wenn es einen prebake von >0 hat, bekommt es hook 5
+				if ($preBakeDict[$currentData['idProduct']] != 0 OR !isBakedOnDate($db, $currentData['idProduct'], getExportDate(), $preProductCalendarDict)) {
+						$currentData['hook'] = 5;
 				}
+				$currentData['idProduct'] = $productDict[$currentData['idProduct']];
+				array_push($orderList, $currentData);
 			}
 			return $orderList;
 		}
-	else false;
-	}
-	
-	function getOrdersNormal($db, $customerDict, $productDict, $preBakeDict, $preProductCalendarDict, $date){
-	
-		$data = $db->getData("orders", 
-		array('idProduct','idCustomer','orderDate','number','hook','important','noteBaking','noteDelivery'), 
-		"orderDate=?1",$date);
-		
-		return prepareOrdersForExport($db, $customerDict, $productDict, $preBakeDict, $preProductCalendarDict, $data);
+		else {return false;}
 	}
 
 	
@@ -167,7 +239,7 @@ include("../db_crud.php");
 			if($minDate == 0) $minDate += 1; //do not check delivery date (already covered in "normal" case)
 			// x Schleife stellt den möglichen Tag der Lieferung ein
 			for($x=getInteger($minDate); $x<=$maxDate; $x++){
-				$exportToday = 'set';
+				$exportToday = true;
 				$deliveryDate = getExportDate();
 				$deliveryDate->modify('+'.$x.' day');
 				$deliveryDateFormated = date_format($deliveryDate,'Y-m-d');
@@ -178,17 +250,40 @@ include("../db_crud.php");
 					$productionDate = date_format($productionDate,'Y-m-d');
 					if(in_array($productionDate, $calendarDates))
 					{
-						$exportToday = 'unset';
+						$exportToday = false;
 						break;
 					}
 				}
-				if($exportToday=='set'){
+				if($exportToday==true){
 					//echo $productId.' ?'.$exportToday.'? '.$deliveryDateFormated.'| ';
 					$data = $db->getData("orders", 
 					array('idProduct','idCustomer','orderDate','number','hook','important','noteBaking','noteDelivery'), 
 					"idProduct=?1 AND orderDate=?2", array($productId,$deliveryDateFormated));
 					//echo json_encode($data);
-					$newOrders = prepareOrdersForExport($db, $customerDict, $productDict, $preBakeDict, $preProductCalendarDict, $data, false);
+					$newOrders = array();
+					
+					if($data) {
+						$newOrderList = [];
+						for ($x = 0; $x < count($data); $x++) {
+							$currentData = $data[$x];
+
+							unset($currentData->noteBaking);
+							unset($currentData->important);
+							
+							//set locked property to indicate that it has been exported
+							$db->updateData("orders", array('locked'), array('1'), "orderDate=?1 AND idCustomer=?2 AND idProduct=?3 AND hook=?4", array($currentData['orderDate'],$currentData['idCustomer'],$currentData['idProduct'],$currentData['hook']));
+
+							$data = $db->getData("users", array('preOrderCustomerId'), "id=?1", $currentData['idCustomer']);
+							$currentData['idCustomer'] = $data[0]['preOrderCustomerId'];
+							$currentData['idProduct'] = $productDict[$currentData['idProduct']];
+							$currentData['orderDate'] = date_format(getExportDate(), 'Y-m-d');
+
+							$newOrderList[] = $currentData;
+						}
+						$newOrders = $newOrderList;
+					}
+					else {$newOrders = false;}
+	
 					if($newOrders != false) {
 						for ($z = 0; $z < count($newOrders); $z++) {
 							$currentData = $newOrders[$z];
@@ -220,6 +315,9 @@ include("../db_crud.php");
 		}
 		return $orderList;
 	}
+	
+
+	
 ?>
 
 

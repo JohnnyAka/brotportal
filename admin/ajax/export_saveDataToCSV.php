@@ -26,7 +26,8 @@ include("../db_crud.php");
 	//return json_encode($orderList);
 	
 	//get all orders, that are produced on export date for later dates
-	$preOrderList = getPreOrders($db, $customerDict, $productDict, $preBakeDict, $preBakeMaxDict, $preProductCalendarDict, $date);
+	$preOrderListPre = getPreOrders($db, $customerDict, $productDict, $preBakeDict, $preBakeMaxDict, $preProductCalendarDict, $date);
+	$preOrderList = addHooksToEntry($preOrderListPre);
 	//return json_encode($preOrderList);
 	
 	$filename = '../exports/bestellungen_'.$date.'_'.$time;
@@ -37,7 +38,7 @@ include("../db_crud.php");
 		fputcsv_eol($file, $writeOrder,"\r\n");
 	}
 	foreach ($preOrderList as $row){
-		$writeOrder = array($row['orderDate'],$row['idCustomer'],$row['idProduct'],$row['number'],0,0,0,0,0,$row['noteDelivery']);
+         $writeOrder = array($row['orderDate'],$row['idCustomer'],$row['idProduct'],$row['Lieferung1'],$row['Lieferung2'],$row['Lieferung3'],$row['Extra'],$row['Nachlieferung'],$row['Retour'],$row['noteDelivery']);
 		fputcsv_eol($file, $writeOrder,"\r\n");
 	}
 	fclose($file);
@@ -106,7 +107,7 @@ include("../db_crud.php");
 			}
 			elseif($hook == 2){
 				$entry['Lieferung1']=0;
-				$entry['Lieferung2']=$entry['number'];
+				$entry['Lieferung2']=intval($entry['number']);
 				$entry['Lieferung3']=0;
 				$entry['Extra']=0;
 				$entry['Nachlieferung']=0;
@@ -115,7 +116,7 @@ include("../db_crud.php");
 			elseif($hook == 3){
 				$entry['Lieferung1']=0;
 				$entry['Lieferung2']=0;
-				$entry['Lieferung3']=$entry['number'];
+				$entry['Lieferung3']=intval($entry['number']);
 				$entry['Extra']=0;
 				$entry['Nachlieferung']=0;
 				$entry['Retour']=0;
@@ -124,7 +125,7 @@ include("../db_crud.php");
 				$entry['Lieferung1']=0;
 				$entry['Lieferung2']=0;
 				$entry['Lieferung3']=0;
-				$entry['Extra']=$entry['number'];
+				$entry['Extra']=intval($entry['number']);
 				$entry['Nachlieferung']=0;
 				$entry['Retour']=0;
 			}
@@ -133,7 +134,7 @@ include("../db_crud.php");
 				$entry['Lieferung2']=0;
 				$entry['Lieferung3']=0;
 				$entry['Extra']=0;
-				$entry['Nachlieferung']=$entry['number'];
+				$entry['Nachlieferung']=intval($entry['number']);
 				$entry['Retour']=0;
 			}
 			elseif($hook == 6){
@@ -142,7 +143,7 @@ include("../db_crud.php");
 				$entry['Lieferung3']=0;
 				$entry['Extra']=0;
 				$entry['Nachlieferung']=0;
-				$entry['Retour']=$entry['number'];
+				$entry['Retour']=intval($entry['number']);
 			}
 			unset($entry['number']);
 			$found = false;
@@ -303,7 +304,6 @@ include("../db_crud.php");
 									$found = true;
 								}
 							}
-							unset($entry);
 							if ($found == true) {
 								continue;
 							}

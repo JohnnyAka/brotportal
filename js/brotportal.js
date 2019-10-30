@@ -23,6 +23,7 @@
 			//displayMessage("Fehler", data.responseText);
 		});
 	}
+	
 
 			
 //main function for click event handlers

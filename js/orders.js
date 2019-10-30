@@ -305,7 +305,6 @@ var showOrderSentIcon = function(){
 }
 
 
-
 //main function for click event handlers
 var main = function(){
 

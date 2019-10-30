@@ -6,11 +6,14 @@ $db = new db_connection();
 
 $_SESSION['trustedUser'] = "false";
 
-$result = $db->getData("settings", array('adminName','adminPassword'), "adminName=?1", array($_POST["adminName"]))[0];
+$result = $db->getData("settings", array('adminName','adminPassword'), "adminName=?1", array($_POST["adminName"]));
 
-$passwordCorrect = password_verify($_POST["adminPassword"],$result['adminPassword']);
+$passwordCorrect = false;
+if(!empty($result)) {
+    $passwordCorrect = password_verify($_POST["adminPassword"], $result[0]['adminPassword']);
+}
 
-if ($passwordCorrect != false){
+if ($passwordCorrect === true){
 	$_SESSION['trustedUser'] = "true";
 	echo true;
 }

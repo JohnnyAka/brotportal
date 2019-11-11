@@ -1,4 +1,27 @@
 /*This file contains event handlers for click events and form-submit events*/
+//create category dictionary (id to name)
+function buildCategoryDict(){
+		$.ajax({
+			type: 'POST',
+			url: 'ajax/categories_product_read.php'
+		}).done(function(response){
+			categoriesNameDict = new Object();
+			var categoriesData = JSON.parse(response);
+			//set product options of select
+			for (var x=0;x<categoriesData.length;x++) {
+				categoriesNameDict[categoriesData[x].id] = categoriesData[x].name;
+			}
+		}).fail(function(data){
+			// Set the message text.
+			if (data.responseText !== '') {
+				$(messages).text(data.responseText);
+			} else {
+				$(messages).text('Fehler, Kategorien konnten nicht aus Datenbank gelesen werden.');
+				return;
+			}
+		});
+};
+buildCategoryDict();
 
 //create category form submit
 $(function() {
@@ -11,6 +34,8 @@ $(function() {
 	//clear formfields after modal close (event)
 	$('#createProductCat').on('hidden.bs.modal', function () {
 		$(this).find(form)[0].reset();
+		//clear selects separately
+		$('#upperCategory').empty();
 	})
 
 	// Set up an event listener for the createProduct form.
@@ -30,7 +55,7 @@ $(function() {
 
 			// Set the message text.
 			$(messages).text(response);
-
+			buildCategoryDict();
 			//close modal
 			$("#createProductCat").modal("hide");
 			//show changes
@@ -57,6 +82,7 @@ $(function() {
 	//clear formfields after modal close (event)
 	$('#updateProductCat').on('hidden.bs.modal', function () {
 		$('#productCatNameUp').val('');
+		$('#upperCategoryUp').empty();
 	})
 
 	// Set up an event listener for the updateProduct form.
@@ -75,6 +101,7 @@ $(function() {
 		}).done(function(response) {
 			// Set the message text.
 			$(messages).text(response);
+			buildCategoryDict()
 			//close modal
 			$("#updateProductCat").modal("hide");
 			//display changes
@@ -151,6 +178,20 @@ var main = function(){
 	displayCategories();
 	
 	$('.createProductCatButton').click(function(){
+		//set product options of select
+		$('#upperCategory').append($('<option>', {
+					value: 0,
+					text: 'Keine'
+				}));
+		for (var key in categoriesNameDict) {
+				if (key === 'length' || !categoriesNameDict.hasOwnProperty(key)){ 
+					continue;
+				}
+				$('#upperCategory').append($('<option>', {
+					value: key,
+					text: categoriesNameDict[key]
+				}));
+		}
 		$("#createProductCat").modal("show");
 	});
 	
@@ -170,9 +211,28 @@ var main = function(){
 				}
 			}).done(function(response){
 				var productData = JSON.parse(response);
+				
+				//set product options of select
+				$('#upperCategoryUp').append($('<option>', {
+					value: 0,
+					text: 'Keine'
+				}));
+				for (var key in categoriesNameDict) {
+					if (key === 'length' || !categoriesNameDict.hasOwnProperty(key)){ 
+						continue;
+					}
+					$('#upperCategoryUp').append($('<option>', {
+						value: key,
+						text: categoriesNameDict[key]
+					}));
+				}
+				
 				//set values of form
 				$('#productCatNameUp').val(productData[0]['name']);
 				$('#orderPriorityUp').val(productData[0]['orderPriority']);
+				if(productData[0]["upperCategoryID"] != null){
+					$('#upperCategoryUp').val(productData[0]["upperCategoryID"]);
+				}
 				
 				//set hidden formfields
 				$('#catIdUp').val(selectedCategory);

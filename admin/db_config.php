@@ -137,7 +137,8 @@ if ($conn->query($sql) === TRUE) {
 $sql = "CREATE TABLE productCategories(
 id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 name VARCHAR (60),
-orderPriority INT(2) DEFAULT '50'
+orderPriority INT(2) DEFAULT '50',
+upperCategoryID INT(6)
 )";
 if ($conn->query($sql) === TRUE) {
     echo "Table productCategories created successfully<br>";

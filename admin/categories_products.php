@@ -124,11 +124,16 @@ if(!isset($_SESSION['trustedUser'])) {
 			<form id="createProductCatForm" method="post" action="ajax/categories_product_create.php">
 				<div class="field">
 					<label for="productCatName">Produktkategorie:</label>
-					<input id="productCatName" name="productCatName">
+					<input id="productCatName" name="productCatName" required>
 				</div>
 				<div class="field">
 					<label for="orderPriority">Listen Priorität:</label>
 					<input type="number" min="1" max="99" value="50" id="orderPriority" name="orderPriority">
+				</div>
+				<div class="field">
+					<label for="upperCategory">Übergeordnete-Kategorie:</label>
+					<select id="upperCategory" name="upperCategory">
+					</select>
 				</div>
 			</form>
 		  </div>
@@ -152,11 +157,16 @@ if(!isset($_SESSION['trustedUser'])) {
 			<form id="updateProductCatForm" method="post" action="ajax/categories_product_update.php">
 				<div class="field">
 					<label for="productCatNameUp">Produktkategorie:</label>
-					<input id="productCatNameUp" name="productCatName">
+					<input id="productCatNameUp" name="productCatName" required>
 				</div>
 				<div class="field">
 					<label for="orderPriorityUp">Listen Priorität:</label>
 					<input type="number" min="1" max="99" id="orderPriorityUp" name="orderPriority">
+				</div>
+				<div class="field">
+					<label for="upperCategoryUp">Übergeordnete-Kategorie:</label>
+					<select id="upperCategoryUp" name="upperCategory">
+					</select>
 				</div>
 				<div class="field">
 					<input type="hidden" id="catIdUp" name="catId">

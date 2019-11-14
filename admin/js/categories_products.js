@@ -277,13 +277,35 @@ var main = function(){
 				else{
 					$.ajax({
 						type: 'POST',
-						url: 'ajax/categories_product_delete.php',
+						url: 'ajax/categories_product_category_read.php',
 						data: {
 							catId:categoryID
 						}
 					}).done(function(response){
-						$(".messages").text("Kategorie erfolgreich gel&ouml;scht!");
-						displayCategories();
+						categories = JSON.parse(response);
+						if(categories !== 'undefined' && categories.length > 0){
+							alert("Es gibt noch Kategorien, die dieser Kategorie untergeordnet sind. Bevor die Kategorie gelöscht werden kann, bitte die übergeordnete Kategorie dieser Kategorien ändern.");
+						}
+						else{
+							$.ajax({
+								type: 'POST',
+								url: 'ajax/categories_product_delete.php',
+								data: {
+									catId:categoryID
+								}
+							}).done(function(response){
+								$(".messages").text("Kategorie erfolgreich gel&ouml;scht!");
+								buildCategoryDict();
+								displayCategories();
+							}).fail(function(data){
+								// Set the message text.
+								if (data.responseText !== '') {
+									$(messages).text(data.responseText);
+								} else {
+									$(messages).text('Fehler, Kategorie konnte nicht gelöscht werden.');
+								}
+							});
+						}
 					}).fail(function(data){
 						// Set the message text.
 						if (data.responseText !== '') {

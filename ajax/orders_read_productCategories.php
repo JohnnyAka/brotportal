@@ -11,16 +11,17 @@ $userCategoryId = $db->getData("users", "customerCategory", "id=?1", $userId)[0]
 $visibleCategories = $db->getData("categoryRelations", "idProductCat", "idUserCat=?1",$userCategoryId);
 
 $whereValues = array();
-$whereQuery = "id=";
+//$whereQuery = "id=";
+$whereQuery = "";
 $x = 1;
 foreach($visibleCategories as $category){
     array_push($whereValues, $category['idProductCat']);
-    $whereQuery .= "?".$x." or ";
+    $whereQuery .= "id=?".$x." or ";
     $x++;
 }
 $whereQuery = rtrim($whereQuery, " or ");
 
-$data = $db->getData("productCategories", array('id','name'), $whereQuery, $whereValues);
+$data = $db->getData("productCategories", array('id','name','orderPriority','upperCategoryID'), $whereQuery, $whereValues);
 
 
 $jsonData = json_encode($data);

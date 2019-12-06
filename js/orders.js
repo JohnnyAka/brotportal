@@ -1,7 +1,6 @@
 /*This file contains event handlers for click events and form-submit events*/
 
 
-
 //datepicker setup including onclose ajax orderlist load function
 $(function() {
 	$( "#ordersDatepicker" ).datepicker({
@@ -103,6 +102,7 @@ $(function() {
 				categoriesNameDict[categoriesData[x].id] = categoriesData[x].name;
 			}
 			showOrders();
+			createCategoryTree(3);
 		}).fail(function(data) {
 			displayMessage('Fehler', 'Kategorienamensliste konnte nicht erstellt werden.');
 			if (data.responseText !== '') {
@@ -120,6 +120,94 @@ $(function() {
 		}
 	});
 });
+
+//create productlist
+function createCategoryTree(treeDepth){
+	$.ajax({
+		type: 'POST',
+		url: 'ajax/orders_read_productCategories.php'
+	}).done(function(response) {
+		categoriesData = JSON.parse(response);
+		var listlvl = [];
+		for(var x=0; x<treeDepth; x++){
+			if(x==0){upperlvl = false}//first level
+			else{upperlvl = listlvl[x-1]};
+			listlvl.push(createListLevel(x, upperlvl, categoriesData));
+		}
+		var tree = compileTree(listlvl, treeDepth);
+	}).fail(function(data) {
+		displayMessage('Fehler', 'Produktliste konnte nicht erstellt werden.');
+		if (data.responseText !== '') {
+			logMessage(data.responseText);
+		} else {
+			logMessage('Fehler', 'Produktliste konnte nicht erstellt werden.');
+		}
+	});
+};
+
+function createListLevel(x, upperlvl, categoriesData){
+	var levelList = [];
+	
+	if(x != 0){	
+		for(currentUpperCat of upperlvl){
+			//check if any category has this upperlvl
+			for(var y=0; y<categoriesData.length; y++){
+				if(categoriesData[y].upperCategoryID == currentUpperCat.id){
+					levelList.push(categoriesData[y]);
+				}
+			}
+		}
+	}
+	else{
+		//check if any category has this upperlvl
+		for(var y=0; y<categoriesData.length; y++){
+			if(categoriesData[y].upperCategoryID == 0){
+				levelList.push(categoriesData[y]);
+			}
+		}
+	}
+	return levelList;
+}
+
+function findProducts(catID) {
+  return function(product) {
+    if(product.productCategory == catID){
+			return product.id;
+		};
+  }
+}
+
+function findSubcategories(catID) {
+  return function(categoryNow) {
+    if(categoryNow.upperCategoryID == catID){
+			return categoryNow.id;
+		}
+  }
+}
+
+function compileTree(listlvl, treeDepth){
+let growingTree = [];
+	growingTree = listlvl[0];
+	var lvlCounter = 0;
+	for(category of growingTree){
+		linkSubcategories(category, lvlCounter, treeDepth, listlvl);
+	}
+}
+
+function linkSubcategories(category, lvlCounter, treeDepth, listlvl){
+	lvlCounter += 1;
+	if(lvlCounter < treeDepth){
+		let resultsSubcategories = listlvl[lvlCounter].filter(findSubcategories(category.id));
+		category["subcategories"] = resultsSubcategories;
+		for(cat of category["subcategories"]){
+			linkSubcategories(cat, lvlCounter, treeDepth, listlvl);
+		}
+	}
+	let resultsProducts = productsData.filter(findProducts(category.id));
+	category["products"] = resultsProducts;
+	lvlCounter -= 1;
+}
+
 
 
 $('#sendOrderForm').submit(function(event) {

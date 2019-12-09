@@ -6,8 +6,20 @@
 .sidebarList{
 	list-style-type: none;
 }
-.sidebarList li{
+.sidebarList div{
 cursor: pointer;
+}
+
+.innerListItems{
+	padding-left: 16px
+}
+
+.visible{
+	visibility: visible;
+}
+
+.hidden{
+	visibility: hidden;
 }
 
 .subSidebarList{
@@ -22,7 +34,7 @@ cursor: pointer;
 cursor: pointer;
 }
 
-li.active{
+div.active{
 	background-color: #e7e7e7;
 }
 

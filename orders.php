@@ -70,61 +70,8 @@ if(!isset($_SESSION['userid'])) {
 			<div class="row mainrow">
 				<div class="col-md-3 col-sm-6">
 					<h3>Produktliste</h3>
-					<ul class="sidebarList listsHeight">
-						<?php
-							include('db_crud.php');
-							$db = new db_connection();
-							//get customerdata
-							$customer = $db->getData("users",array("id","customerID","name","customerCategory"), "id=?1",$_SESSION['userid'])[0];
-							//echo '<script>console.log('. json_encode(      ).')</script>';
-							//get visible cats
-							$visibleCats = $db->getData("categoryRelations",array("idProductCat"), "idUserCat=?1",$customer['customerCategory']);
-							//get products and make products dictionary and category dictionary
-							//produces a an associative array with key = product ID and objects with keys: "id","productID","name","productCategory","visibleForUser"
-							//for category dict: associative array with key = category ID and value = name
-							//example: $productDict['8']['name'] ; $categoryDict['5']
-							$productDict = array(); $categoryNameDict = array(); $categoryOrderDict = array();
-							foreach($visibleCats as $category){
-								$queryResult = $db->getData("products",array("id","productID","name","productCategory", "orderPriority","visibleForUser"), "productCategory=?1 AND visibleForUser=?2",array($category['idProductCat'],1));
-								$arrayLength = count($queryResult);
-								for($x=0; $x < $arrayLength; $x++){
-									$productDict[$queryResult[$x]['id']] = $queryResult[$x];
-								}
-								$categoryEntry = $db->getData("productCategories",array("id","name","orderPriority"), "id=?1",$category['idProductCat'])[0];
-								$categoryNameDict[$category['idProductCat']] = $categoryEntry['name'];
-								$categoryOrderDict[$category['idProductCat']] = $categoryEntry['orderPriority'];
-							}
-							uksort($categoryOrderDict, function($a, $b) use ($categoryOrderDict, $categoryNameDict){
-								$x = intval($categoryOrderDict[$a]);
-								$y = intval($categoryOrderDict[$b]);
-								if($x == $y){
-									return strcasecmp($categoryNameDict[$a],$categoryNameDict[$b]);
-								}
-								return ($x<$y)?-1:1;
-							});
-							foreach($categoryOrderDict as $catId => $orderPriority){
-								$catName = $categoryNameDict[$catId];
-								echo "<li class='sidebarElement showMultipleArticles product-list-toggle' data-id=".$catId.">".$catName."<span class='icon-list-collapse glyphicon glyphicon-collapse-down' aria-hidden=\"true\"></span></li>";
-								echo '<ul class="subSidebarList" style="display:none;">';
-								$productsOfCategory = search($productDict, 'productCategory', $catId);
-								usort($productsOfCategory, function($a, $b) {
-									if($a['orderPriority'] == $b['orderPriority']){
-										return strcasecmp($a['name'], $b['name']);
-									}
-									elseif($a['orderPriority'] < $b['orderPriority']){
-										return -1;
-									}
-									else{
-										return 1;
-									}
-								});
-								foreach($productsOfCategory as $product){
-									echo "<li class='subSidebarElement showSingleArticle' data-id=".$product['id'].">".$product['name']."<button class='btn btn-default btn-xs buttonAddProduct' type='button'><span class='glyphicon glyphicon-triangle-right iconAddProduct' aria-hidden='true'></span></button></li>";
-								}
-								echo '</ul>';
-							}
-						?>
-					</ul>
+					<div class="productList">
+					</div>
 				</div>
 				<div class="col-md-3 col-sm-6 col-md-push-6">
 					<hr class="controlsDivider">

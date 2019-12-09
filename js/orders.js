@@ -102,7 +102,7 @@ $(function() {
 				categoriesNameDict[categoriesData[x].id] = categoriesData[x].name;
 			}
 			showOrders();
-			createCategoryTree(3);
+			createCategoryTree(3, ".productList");
 		}).fail(function(data) {
 			displayMessage('Fehler', 'Kategorienamensliste konnte nicht erstellt werden.');
 			if (data.responseText !== '') {
@@ -122,7 +122,7 @@ $(function() {
 });
 
 //create productlist
-function createCategoryTree(treeDepth){
+function createCategoryTree(treeDepth, startNode){
 	$.ajax({
 		type: 'POST',
 		url: 'ajax/orders_read_productCategories.php'
@@ -135,6 +135,7 @@ function createCategoryTree(treeDepth){
 			listlvl.push(createListLevel(x, upperlvl, categoriesData));
 		}
 		var tree = compileTree(listlvl, treeDepth);
+		buildVisualProductList(tree, startNode);
 	}).fail(function(data) {
 		displayMessage('Fehler', 'Produktliste konnte nicht erstellt werden.');
 		if (data.responseText !== '') {
@@ -168,7 +169,7 @@ function createListLevel(x, upperlvl, categoriesData){
 	}
 	return levelList;
 }
-
+//filter functions
 function findProducts(catID) {
   return function(product) {
     if(product.productCategory == catID){
@@ -185,13 +186,16 @@ function findSubcategories(catID) {
   }
 }
 
+//tree building
 function compileTree(listlvl, treeDepth){
-let growingTree = [];
-	growingTree = listlvl[0];
+	let growingTree = [];
+	growingTree = listlvl[0].sort(compareListItems);
+	
 	var lvlCounter = 0;
 	for(category of growingTree){
 		linkSubcategories(category, lvlCounter, treeDepth, listlvl);
 	}
+	return growingTree;
 }
 
 function linkSubcategories(category, lvlCounter, treeDepth, listlvl){
@@ -204,10 +208,90 @@ function linkSubcategories(category, lvlCounter, treeDepth, listlvl){
 		}
 	}
 	let resultsProducts = productsData.filter(findProducts(category.id));
+	resultsProducts.sort(compareListItems);
 	category["products"] = resultsProducts;
 	lvlCounter -= 1;
 }
 
+function compareListItems(a, b){
+	let comparison = 0;
+	if (a.orderPriority < b.orderPriority){
+		comparison = -1;
+	}
+	else if (a.orderPriority > b.orderPriority){
+		comparison = 1;
+	}
+	else{
+		let nameA = a.name.toUpperCase();
+		let nameB = b.name.toUpperCase();
+		if (nameA < nameB){
+			comparison = -1;
+		}
+		else if (nameA > nameB){
+			comparison = 1;
+		}
+	}
+	return comparison;
+}
+
+function buildVisualProductList(tree, startnode){
+	//walk the tree and build the dom
+	let listBox = $(startnode).addClass('sidebarList listsHeight');
+	walkItemTree(tree, listBox, true);
+	/*listBox.append($('<div>')
+		.addClass("listItem category")
+		.attr('test',"12345")
+		.text("This is the first Item in a long long line of upcoming items")
+	);*/
+}
+
+function walkItemTree(currentTwig, currentDomElement, firstCall){
+	let category;
+	for( category of currentTwig ){
+	let currentElement = $('<div>');
+		currentDomElement.append(currentElement
+			.addClass('listItem category showMultipleArticles sidebarElement product-list-toggle')
+			.attr('data-id',category.id)
+			.text(category.name)
+			.append($('<span>')
+				.addClass('icon-list-collapse glyphicon glyphicon-collapse-down')
+				.attr('aria-hidden','true')
+			)
+		);
+		if(!firstCall){
+			currentElement.addClass('hidden');
+			currentElement.addClass('innerListItems');//padding: 0px evtl noch eigene divs geplant
+		}
+		else{
+			
+		}
+		if(category.hasOwnProperty('subcategories')){
+			walkItemTree(category.subcategories, currentElement, false);
+		}
+		if(category.products.length > 0){
+			for( product of category.products){
+				let currentListItem = $('<div>');
+				currentElement.append(currentListItem
+					.addClass('listItem product hidden showSingleArticle subSidebarElement')
+					.addClass('innerListItems')//padding: 0px evtl noch eigene divs geplant
+					.attr({'data-id':product.id, 'name':product.name,'productCategory':product.productCategory})
+					.text(product.name)
+				);
+				let addButton = $('<button>');
+				currentListItem.append(addButton
+					.addClass('btn btn-default btn-xs buttonAddProduct')
+					.attr('type','button')
+				);
+				addButton.append($('<span>')
+					.addClass('glyphicon glyphicon-triangle-right iconAddProduct')
+					.attr('aria-hidden','true')
+				);
+				//<button class='btn btn-default btn-xs buttonAddProduct' type='button'><span class='glyphicon glyphicon-triangle-right iconAddProduct' aria-hidden='true'></span></button>
+			}
+		}
+	}
+}
+//product list done
 
 
 $('#sendOrderForm').submit(function(event) {
@@ -396,11 +480,13 @@ var showOrderSentIcon = function(){
 //main function for click event handlers
 var main = function(){
 
-	$('.showMultipleArticles').click(function() {
-		$('ul.sidebarList').find('*').removeClass("active");
-		$(this).addClass("active");
+	$(document).on('click','.showMultipleArticles', function(event) {
+		event.stopPropagation();
+		$('div.sidebarList').find('*').removeClass("active");
+		//$(this).addClass("active");
+		
 		//remove addToOrder Button
-        $(".subSidebarElement").find(".buttonAddProduct").css('visibility','hidden');
+     $(".subSidebarElement").find(".buttonAddProduct").css('visibility','hidden');
 		
 		//ajax call for product data
 		//$.post("ajax/products_read.php", {id:$(this).data('id')}, function(response, status){
@@ -409,8 +495,9 @@ var main = function(){
 		//});
 	});
 	//show single article in product content on click on left sidebar
-	$('.showSingleArticle').click(function() {
-		$('ul.sidebarList').find('*').removeClass("active");
+	$(document).on('click', '.showSingleArticle', function(event) {
+		event.stopPropagation();
+		$('div.sidebarList').find('*').removeClass("active");
 		$(this).addClass("active");
 		
 		//ajax call for product data
@@ -441,24 +528,25 @@ var main = function(){
 		});
 	});
 
-		$('.product-list-toggle').click(function() {
-				$(this).next("ul").toggle();
-				$(this).children(".icon-list-collapse").toggleClass("glyphicon-collapse-down glyphicon-collapse-up");
-    });
+	$(document).on('click','.product-list-toggle' , function() {
+		$(this).children("div").toggleClass("visible hidden");
+		$(this).children(".icon-list-collapse").toggleClass("glyphicon-collapse-down glyphicon-collapse-up");
+	});
 
 	//show and hide addProduct button
-	$(".subSidebarElement").mouseenter(function() { 
+	$(document).on('mouseenter', ".subSidebarElement", function(event) { 
 		$(this).find(".buttonAddProduct").css('visibility','visible'); 
-	}).mouseleave(function() {
+	});
+	$(document).on('mouseleave', ".subSidebarElement", function(event) {
 		if(!$(this).hasClass("active")){
             $(this).find(".buttonAddProduct").css('visibility','hidden');
 		}
-  	}).click(function(){
+  	}).on('click', ".subSidebarElement", function(event){
         $(".subSidebarElement").find(".buttonAddProduct").css('visibility','hidden');
         $(this).find(".buttonAddProduct").css('visibility','visible');
     });
 	
-	$('.buttonAddProduct').click(function(event) {
+	$(document).on('click', '.buttonAddProduct', function(event) {
 		event.stopPropagation();
 		var idProduct = $(this).parent().data('id');
 		if( $('#sendOrderForm').find('#'+idProduct).length < 1){

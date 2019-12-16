@@ -84,10 +84,12 @@ $(function() {
 	}).done(function(response) {
 		productsData = JSON.parse(response);
 		//set Item List
-		productsNameDict = new Object();
-		productsCategoryDict = new Object();
+		productsNameDict = {};
+		productsCategoryDict = {};
+		productsOrderPriorityDict = {};
 		for(var x=0; x < productsData.length; x++){
 			productsCategoryDict[productsData[x].id] = productsData[x].productCategory;
+			productsOrderPriorityDict[productsData[x].id] = productsData[x].orderPriority;
 			productsNameDict[productsData[x].id] = productsData[x].name;
 		}
 		//create product category list(dictionary) for name retrieval
@@ -97,9 +99,11 @@ $(function() {
 		}).done(function(response) {
 			categoriesData = JSON.parse(response);
 			//set Item List
-			categoriesNameDict = new Object();
+			categoriesNameDict = {};
+			categoriesPriorityDict = {};
 			for(var x=0; x < categoriesData.length; x++){
 				categoriesNameDict[categoriesData[x].id] = categoriesData[x].name;
+				categoriesPriorityDict[categoriesData[x].id] = categoriesData[x].orderPriority;
 			}
 			showOrders();
 			createCategoryTree(3, ".productList");
@@ -398,7 +402,16 @@ var showOrders = function(){
 						}
 					}
 					keys.sort(function(a,b){
-						return categoriesNameDict[a].localeCompare(categoriesNameDict[b]);
+						let result = 0;
+						if (categoriesPriorityDict[a] < categoriesPriorityDict[b]){
+							result = -1;
+						}else if (categoriesPriorityDict[a] > categoriesPriorityDict[b]){
+							result = 1;
+						}
+						else {
+							result = categoriesNameDict[a].localeCompare(categoriesNameDict[b]);
+						}
+						return result;
 					});
 					//sort products and build form
 					for (var y=0; y < keys.length; y++){
@@ -406,11 +419,19 @@ var showOrders = function(){
 						if (productList.hasOwnProperty(category)) {
 							var currentList = productList[category];
 							currentList.sort(function(a,b){
-								var one = productsNameDict[a[0]].toUpperCase(); 
-								var two = productsNameDict[b[0]].toUpperCase();
-								if(one < two) return -1;
-								if(one > two) return 1;
-								return 0;
+								let result = 0;
+								let aId = a[0], bId = b[0];
+								let aPrio = productsOrderPriorityDict[aId];
+								let bPrio = productsOrderPriorityDict[bId];
+								if (aPrio < bPrio){
+									result = -1;
+								}else if (aPrio > bPrio){
+									result = 1;
+								}
+								else {
+									result = productsNameDict[aId].localeCompare(productsNameDict[bId]);
+								}
+								return result;
 							});
 							$('#sendOrderForm').append('<p>'+categoriesNameDict[category]+'</p>');
 							for(var x = 0; x < currentList.length; x++){

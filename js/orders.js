@@ -433,7 +433,7 @@ var showOrders = function(){
 								}
 								return result;
 							});
-							$('#sendOrderForm').append('<p>'+categoriesNameDict[category]+'</p>');
+							$('#sendOrderForm').append('<p class="orderListHeading">'+categoriesNameDict[category]+'</p>');
 							for(var x = 0; x < currentList.length; x++){
 								appendToProductList($('#sendOrderForm'), currentList[x][0], currentList[x][1], true);
 							}
@@ -471,10 +471,10 @@ var appendToProductList = function(formObj,idProduct, number, init){
 	var orderLabel, maxSize = 30;
 	//add class to make textsize smaller if name longer than maxSize
 	if(productName.length > maxSize){
-		orderLabel = " class='orderNameSize' ";
+		orderLabel = " class='orderListItem orderNameSize' ";
 	}
 	else{
-		orderLabel = " ";
+		orderLabel = " class='orderListItem' ";
 	} 
 	formObj.append('<div class="field clearfix"><label'+orderLabel+'for='+idProduct+'>'+productName+'&nbsp;</label><input type="number" id="'+idProduct+'" value="'+number+'" min="0" name="'+idProduct+'"></div>');
 	if(!init){

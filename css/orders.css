@@ -30,6 +30,15 @@ input[type="number"] {
 	font-size:xx-small;
 }
 
+.orderListItem{
+	font-weight: 400;
+}
+
+.orderListHeading{
+	font-weight: 700;
+	text-align: center;
+}
+
 .clearfix{
 	overflow: auto; 
 }

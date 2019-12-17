@@ -242,18 +242,32 @@ function buildVisualProductList(tree, startnode){
 	//walk the tree and build the dom
 	let listBox = $(startnode).addClass('sidebarList listsHeight');
 	walkItemTree(tree, listBox, true);
-	/*listBox.append($('<div>')
-		.addClass("listItem category")
-		.attr('test',"12345")
-		.text("This is the first Item in a long long line of upcoming items")
-	);*/
 }
 
 function walkItemTree(currentTwig, currentDomElement, firstCall){
 	let category;
 	for( category of currentTwig ){
 	let currentElement = $('<div>');
+	let categoryHeader = $('<div>');
+	
 		currentDomElement.append(currentElement
+			.addClass('product-list-toggle')
+			.attr('data-id',category.id)
+		);
+		currentElement.append(categoryHeader
+			.addClass('category sidebarElement')
+			.attr('data-id',category.id)
+			.text(category.name)
+			.append($('<span>')
+				.addClass('icon-list-collapse glyphicon glyphicon-collapse-down')
+				.attr('aria-hidden','true')
+			)
+			.append($('<span>')
+				.addClass('searchCategoryIcon glyphicon glyphicon-search')
+				.attr('aria-hidden','true')
+			)
+		);
+		/*currentDomElement.append(currentElement
 			.addClass('listItem category showMultipleArticles sidebarElement product-list-toggle')
 			.attr('data-id',category.id)
 			.text(category.name)
@@ -261,7 +275,11 @@ function walkItemTree(currentTwig, currentDomElement, firstCall){
 				.addClass('icon-list-collapse glyphicon glyphicon-collapse-down')
 				.attr('aria-hidden','true')
 			)
-		);
+			.append($('<span>')
+				.addClass('searchCategoryIcon glyphicon glyphicon-search')
+				.attr('aria-hidden','true')
+			)
+		);*/
 		if(!firstCall){
 			currentElement.addClass('hidden');
 			currentElement.addClass('innerListItems');//padding: 0px evtl noch eigene divs geplant
@@ -276,7 +294,7 @@ function walkItemTree(currentTwig, currentDomElement, firstCall){
 			for( product of category.products){
 				let currentListItem = $('<div>');
 				currentElement.append(currentListItem
-					.addClass('listItem product hidden showSingleArticle subSidebarElement')
+					.addClass('product hidden showSingleArticle subSidebarElement')
 					.addClass('innerListItems')//padding: 0px evtl noch eigene divs geplant
 					.attr({'data-id':product.id, 'name':product.name,'productCategory':product.productCategory})
 					.text(product.name)
@@ -501,7 +519,7 @@ var showOrderSentIcon = function(){
 //main function for click event handlers
 var main = function(){
 
-	$(document).on('click','.showMultipleArticles', function(event) {
+	$(document).on('click','.searchCategoryIcon', function(event) {
 		event.stopPropagation();
 		$('div.sidebarList').find('*').removeClass("active");
 		//$(this).addClass("active");
@@ -549,9 +567,11 @@ var main = function(){
 		});
 	});
 
-	$(document).on('click','.product-list-toggle' , function() {
-		$(this).children("div").toggleClass("visible hidden");
-		$(this).children(".icon-list-collapse").toggleClass("glyphicon-collapse-down glyphicon-collapse-up");
+	$(document).on('click','.product-list-toggle' , function(event) {
+		event.stopPropagation();
+		let childElements = $(this).children("div");
+		childElements.not(':first-child').toggleClass("visible hidden");
+		childElements.children(".icon-list-collapse").toggleClass("glyphicon-collapse-down glyphicon-collapse-up");
 	});
 
 	//show and hide addProduct button
@@ -562,10 +582,10 @@ var main = function(){
 		if(!$(this).hasClass("active")){
             $(this).find(".buttonAddProduct").css('visibility','hidden');
 		}
-  	}).on('click', ".subSidebarElement", function(event){
-        $(".subSidebarElement").find(".buttonAddProduct").css('visibility','hidden');
-        $(this).find(".buttonAddProduct").css('visibility','visible');
-    });
+	}).on('click', ".subSidebarElement", function(event){
+			$(".subSidebarElement").find(".buttonAddProduct").css('visibility','hidden');
+			$(this).find(".buttonAddProduct").css('visibility','visible');
+	});
 	
 	$(document).on('click', '.buttonAddProduct', function(event) {
 		event.stopPropagation();
@@ -575,6 +595,20 @@ var main = function(){
 		}
 		$('input#'+idProduct).focus().select();
 	});
+	//show and hide category search icon
+	$(document).on('mouseenter', ".sidebarElement", function(event) { 
+		//event.stopPropagation();
+		$(this).find(".searchCategoryIcon").css('visibility','visible'); 
+	});
+	
+	$(document).on('mouseleave', ".sidebarElement", function(event) {
+		if(!$(this).hasClass("active")){
+      $(this).find(".searchCategoryIcon").css('visibility','hidden');
+		}
+	}).on('click', ".sidebarElement", function(event){
+		$(".sidebarElement").find(".searchCategoryIcon").css('visibility','hidden');
+		$(this).find(".searchCategoryIcon").css('visibility','visible');
+	});	
 	
 	$('.deleteOrderButton').click(function() {
 		//check dateinput and send ajax request

@@ -515,6 +515,10 @@ var showOrderSentIcon = function(){
 	window.onbeforeunload = null;
 }
 
+function showMultipleArticles(productList){
+	
+}
+
 
 //main function for click event handlers
 var main = function(){
@@ -533,6 +537,7 @@ var main = function(){
 			
 		//});
 	});
+	
 	//show single article in product content on click on left sidebar
 	$(document).on('click', '.showSingleArticle', function(event) {
 		event.stopPropagation();

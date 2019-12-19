@@ -63,6 +63,14 @@ $sql = "DROP TABLE calendars;";
 $conn->query($sql);
 $sql = "DROP TABLE calendarsDaysRelations;";
 $conn->query($sql);
+$sql = "DROP TABLE productTags;";
+$conn->query($sql);
+$sql = "DROP TABLE productTagRelations;";
+$conn->query($sql);
+$sql = "DROP TABLE productLabels;";
+$conn->query($sql);
+$sql = "DROP TABLE productLabelRelations;";
+$conn->query($sql);
 
 $sql = "CREATE TABLE products (
 id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -106,7 +114,8 @@ telephone1 VARCHAR (25),
 telephone2 VARCHAR (25),
 fax VARCHAR (25),
 storeAdress VARCHAR (120),
-whereToPutOrder VARCHAR(200)
+whereToPutOrder VARCHAR(200),
+agreedAGBs INT(1) DEFAULT '0'
 )";
 
 if ($conn->query($sql) === TRUE) {
@@ -205,6 +214,52 @@ if ($conn->query($sql) === TRUE) {
     echo "Error creating database: " . $conn->error."<br>";
 }
 
+$sql = "CREATE TABLE productTags (
+id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(80) NOT NULL
+)";
+if ($conn->query($sql) === TRUE) {
+    echo "Table productTags created successfully<br>";
+} else {
+    echo "Error creating database: " . $conn->error."<br>";
+}
+
+$sql = "CREATE TABLE productTagRelations(
+idProduct INT(6) UNSIGNED,
+idProductTag INT(6) UNSIGNED,
+searchWeight DECIMAL(6,5) DEFAULT '1',
+primary key (idProduct, idProductTag)
+)";
+if ($conn->query($sql) === TRUE) {
+    echo "Table productTagRelations created successfully<br>";
+} else {
+    echo "Error creating database: " . $conn->error."<br>";
+}
+
+$sql = "CREATE TABLE productLabels (
+id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(80) NOT NULL,
+imagePath VARCHAR(200)
+)";
+if ($conn->query($sql) === TRUE) {
+    echo "Table productLabels created successfully<br>";
+} else {
+    echo "Error creating database: " . $conn->error."<br>";
+}
+
+$sql = "CREATE TABLE productLabelRelations(
+idProduct INT(6) UNSIGNED,
+idProductLabel INT(6) UNSIGNED,
+showOnProductList INT(1),
+showOnProductPass INT(1),
+primary key (idProduct, idProductLabel)
+)";
+if ($conn->query($sql) === TRUE) {
+    echo "Table productLabelRelations created successfully<br>";
+} else {
+    echo "Error creating database: " . $conn->error."<br>";
+}
+
 $sql = "CREATE TABLE settings (
 adminName VARCHAR(40),
 adminPassword VARCHAR(255),
@@ -224,7 +279,7 @@ if ($conn->query($sql) === TRUE) {
 }
 //create users and grant permissions
 echo "<br />Setting permissons:<br />";
-$tablesAdminUser = array('products','users','orders','productCategories','userCategories','prizeCategories','categoryRelations','calendars','calendarsDaysRelations');
+$tablesAdminUser = array('products','users','orders','productCategories','userCategories','prizeCategories','categoryRelations','calendars','calendarsDaysRelations','productTags','productTagRelations','productLabels','productLabelRelations');
 foreach($tablesAdminUser as $table){
 	$sql = "grant all on brotportal.".$table." to ".$adminUser."@localhost identified by '".$adminUserPw."'";
 	if ($conn->query($sql) === TRUE) {
@@ -242,7 +297,7 @@ if ($conn->query($sql) === TRUE) {
 	echo "Error granting permissions: " . $conn->error."<br>";
 }
 
-$tablesSelectCustomer = array('products','users','orders','productCategories','userCategories','prizeCategories','categoryRelations','calendars','calendarsDaysRelations');
+$tablesSelectCustomer = array('products','users','orders','productCategories','userCategories','prizeCategories','categoryRelations','calendars','calendarsDaysRelations','productTags','productTagRelations','productLabels','productLabelRelations');
 foreach($tablesSelectCustomer as $table){
 	$sql = "grant select on brotportal.".$table." to ".$customer."@localhost identified by '".$customerPw."'";
 	if ($conn->query($sql) === TRUE) {

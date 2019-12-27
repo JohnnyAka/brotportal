@@ -21,11 +21,26 @@ $(function() {
 			url: $(form).attr('action'),
 			data: formData
 		}).done(function(response) {
-			if(response == false){
+			let responseObject = JSON.parse(response);
+			if(responseObject['pwCorrect'] == false){
 				displayMessage("Nachricht","Der Benutzername und das Passwort stimmen nicht überein.");
 			}
 			else{
-				window.location.href = 'orders.php';
+				if (responseObject['agbsRead'] != 0){
+					window.location.href = 'orders.php';
+				}
+				else{
+					$.ajax({
+						async:false,
+						url: '../external/AGBs.txt',
+						dataType: 'text',
+						success: function(data) 
+						{
+							$('#agbMessageText').append(data);
+						}
+					});
+					$("#agbModal").modal("show");
+				}
 			}
 		}).fail(function(data) {
 			// Set the message text.
@@ -42,7 +57,33 @@ $(function() {
 			
 //main function for click event handlers
 var main = function(){
-
+	$('.agbModalCheck').change(function(){
+		let btn = $('.agbModalButton');
+		if($('.checkAGB')[0].checked == true && $('.checkCookies')[0].checked == true){
+			btn.removeClass('disabled');
+			btn[0].disabled = false;
+		}
+		else{
+			btn.addClass('disabled');
+			btn[0].disabled = true;
+		}
+	});
+	
+	$('.agbModalButton').click(function(){
+		$.ajax({
+				type: 'POST',
+				url: 'ajax/login_agreeAGBandCookies.php'
+			}).done(function(response) {
+				window.location.href = 'orders.php';
+			}).fail(function(data) {
+				displayMessage('Fehler', 'Es ist ein Fehler beim Speichern der Zustimmung aufgetreten.');
+				if (data.responseText !== '') {
+					logMessage(data.responseText);
+				} else {
+					logMessage('Fehler', 'AGB und Cookies Fehler.');
+				}
+			});
+	});
 	
 }
 

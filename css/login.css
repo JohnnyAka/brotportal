@@ -12,14 +12,16 @@ div#login-controls h1{
 }
 
 div#login-controls button{
+	width : 130px;
 	display: block;
 	margin-top: 5px;
 	margin-left: auto;
 	margin-right: auto;
 }
 
-input, textarea, select, button {
-  width : 130px;
+
+
+input.controls, button {
   margin: 0;
 
   -webkit-box-sizing: border-box; 
@@ -32,3 +34,21 @@ label {
   width: 140px;
   text-align: center;
 }​
+
+.agbModalCheck{
+	margin-left: 0px;
+}
+.agbModal-footer{
+	text-align: left;
+}
+.agbModalButton{
+	margin-right: 2px;
+	margin-left: auto;
+	float: right;
+	width : 130px;
+}
+
+
+
+
+

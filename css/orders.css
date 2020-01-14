@@ -88,6 +88,7 @@ position: relative;
 	position: absolute;
 	right:0px;
 }
+
 .iconAddProduct{
 	float: right;
 	top:0px;
@@ -95,6 +96,40 @@ position: relative;
 
 .searchCategoryIcon{
 	visibility:hidden;
+}
+
+/*product View in center*/
+.multiProductContainer {
+  display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.multiProductImage{
+	height: 100px;
+	align-self: center;
+	
+}
+
+.productTextContainer{
+	flex: 1 0 200px;
+	padding-left: 10px;
+}
+
+.multiProductAddButtonContainer{
+	flex: 0 0 50px;
+	display: flex;
+	align-items: flex-end;
+	justify-content: center;
+}
+
+hr{
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+h4{
+	margin-top: 0px;
 }
 
 /*datepicker colors*/

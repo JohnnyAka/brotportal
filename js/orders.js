@@ -288,7 +288,7 @@ function walkItemTree(currentTwig, currentDomElement, firstCall){
 				);
 				let addButton = $('<button>');
 				currentListItem.append(addButton
-					.addClass('btn btn-default btn-xs buttonAddProduct')
+					.addClass('btn btn-default buttonAddProduct btn-xs')
 					.attr('type','button')
 				);
 				addButton.append($('<span>')
@@ -298,6 +298,25 @@ function walkItemTree(currentTwig, currentDomElement, firstCall){
 			}
 		}
 	}
+}
+
+function addAddProductButton(parentObject, htmlClasses = ''){
+	let htmlClassString = '';
+	if(Array.isArray(htmlClasses)){
+		htmlClassString = htmlClasses.join(' ');
+	}
+	else{
+		htmlClassString = htmlClasses;
+	}
+	let addButton = $('<button>');
+	parentObject.append(addButton
+		.addClass(htmlClassString)
+		.attr('type','button')
+	);
+	addButton.append($('<span>')
+		.addClass('glyphicon glyphicon-triangle-right iconAddProduct')
+		.attr('aria-hidden','true')
+	);
 }
 //product list done
 
@@ -517,24 +536,25 @@ function showMultipleArticles(productList, categoryId = null){
 	}
 	
 	for ( let product of productList ){		
-		
+	
+		//set grid classes of product
+		let imgPathExists = product['imagePath'] != '';
 		$('.productContent').append($('<div>')
 			.addClass('multiProductContainer')
 			.attr("id",'frame'+product['id'])
 			.attr("data-id",product['id'])
 		);
 		let productFrame = $('#frame'+product['id']);
-		if(product['imagePath'] != ''){
-			productFrame.append($('<div>')
-				.addClass('col-xxs-12 col-xs-4 col-sm-2 col-md-3')
-				.append($('<img>')
-					.addClass('multiProductImage image'+product['id'])
-					.attr('src',product['imagePath'])
-				)
-			);
+		if(imgPathExists){
+			productFrame.append($('<img>')
+				.addClass('multiProductImage image'+product['id'])
+				.attr('src',product['imagePath'])
+			)
 		}
+		
 		productFrame.append($('<div>')
-			.attr("id",'body'+product['id'])
+			.addClass('productTextContainer')
+			.attr('id','body'+product['id'])
 		);
 		let productBody = $('#body'+product['id']);
 		productBody.append($('<h4>').text(product['name']));
@@ -552,32 +572,19 @@ function showMultipleArticles(productList, categoryId = null){
 			}
 			productBody.append($('<div>').text('Bitte mindestens '+product['preBakeExp']+' '+plural+' im Voraus bestellen'));
 		}
-		if(product['imagePath'] != ''){
-			let test = productFrame.height();
-			$('.image'+product['id']).height(productFrame.height()+'px');
-		}
-		productFrame.after($('<hr />'));
-		
-		/*let currentElement = $('<div>');
-		let categoryHeader = $('<div>');
-	
-		currentDomElement.append(currentElement
-			.addClass('product-list-toggle')
-			.attr('data-id',category.id)
+		let productButtonDiv = $('<div>').addClass('multiProductAddButtonContainer');
+		let addButton = $('<button>');
+		productButtonDiv.append(addButton
+			.addClass('btn btn-default buttonAddProductMultiView btn-md')
+			.attr({'type':'button','data-id':product['id']})
 		);
-		currentElement.append(categoryHeader
-			.addClass('category sidebarElement')
-			.attr('data-id',category.id)
-			.text(category.name)
-			.append($('<span>')
-				.addClass('icon-list-collapse glyphicon glyphicon-collapse-down')
-				.attr('aria-hidden','true')
-			)
-			.append($('<span>')
-				.addClass('searchCategoryIcon glyphicon glyphicon-search')
-				.attr('aria-hidden','true')
-			)
-		);*/
+		addButton.append($('<span>')
+			.addClass('glyphicon glyphicon-triangle-right iconAddProduct')
+			.attr('aria-hidden','true')
+		);
+		productFrame.append(productButtonDiv);
+		
+		productFrame.after($('<hr />'));
 	}
 }
 
@@ -648,6 +655,24 @@ var main = function(){
 	$(document).on('click', ".multiProductContainer", function(event){
 		
 		showSingleProduct($(this).attr('data-id'));
+	});
+	
+	$(document).on('click', ".buttonAddProductMultiView", function(event){
+		event.stopPropagation();
+		let orderForm = $('#sendOrderForm');
+		let idProduct = $(this).attr('data-id');
+		if( orderForm.find('#'+idProduct).length < 1){
+			appendToProductList(orderForm,idProduct, 1, false);
+		}
+		$('input#'+idProduct).focus().select();
+	
+		/*event.stopPropagation();
+		var idProduct = $(this).parent().data('id');
+		if( $('#sendOrderForm').find('#'+idProduct).length < 1){
+			appendToProductList($('#sendOrderForm'),idProduct, 1, false);
+		}
+		$('input#'+idProduct).focus().select();*/
+		
 	});
 	
 	//show single article in product content on click on left sidebar

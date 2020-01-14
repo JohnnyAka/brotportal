@@ -60,6 +60,8 @@ EOT;
 	function getData($table_name, $args_names, $where_condition = NULL, $where_values = NULL, $noDuplicateEntries = NULL){
 		$mysqli = $this->mysqli;
 		
+		mysqli_set_charset($mysqli, 'utf8');  
+		
 		//prepare names of arguments
 		if(is_array($args_names)){
 			$strArgsNames="";

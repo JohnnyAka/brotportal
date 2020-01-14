@@ -72,8 +72,8 @@ var updateOrderDays = function(){
 	});
 }
 
-//create product list(dictionary) for name retrieval via id, product-category list for category retrieval via id
-//and category list for category name retrieval via id --- then show orders
+//create product list(dictionary) for name retrieval via id, productPriorityDict, product-category list for category retrieval via id
+//, category list for category name retrieval via id and categoryPriorityDict --- then show orders
 //productsNameDict, productsCategoryDict, categoriesNameDict
 $(function() {
 
@@ -267,19 +267,6 @@ function walkItemTree(currentTwig, currentDomElement, firstCall){
 				.attr('aria-hidden','true')
 			)
 		);
-		/*currentDomElement.append(currentElement
-			.addClass('listItem category showMultipleArticles sidebarElement product-list-toggle')
-			.attr('data-id',category.id)
-			.text(category.name)
-			.append($('<span>')
-				.addClass('icon-list-collapse glyphicon glyphicon-collapse-down')
-				.attr('aria-hidden','true')
-			)
-			.append($('<span>')
-				.addClass('searchCategoryIcon glyphicon glyphicon-search')
-				.attr('aria-hidden','true')
-			)
-		);*/
 		if(!firstCall){
 			currentElement.addClass('hidden');
 			currentElement.addClass('innerListItems');//padding: 0px evtl noch eigene divs geplant
@@ -308,13 +295,18 @@ function walkItemTree(currentTwig, currentDomElement, firstCall){
 					.addClass('glyphicon glyphicon-triangle-right iconAddProduct')
 					.attr('aria-hidden','true')
 				);
-				//<button class='btn btn-default btn-xs buttonAddProduct' type='button'><span class='glyphicon glyphicon-triangle-right iconAddProduct' aria-hidden='true'></span></button>
 			}
 		}
 	}
 }
 //product list done
 
+//Hier kommt die Suchfunktion hin!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+function getKeyByValue(object, value) {
+	return Object.keys(object).find(key => object[key] === value);
+}
+//search done
 
 $('#sendOrderForm').submit(function(event) {
 	// Stop the browser from submitting the form.
@@ -515,8 +507,107 @@ var showOrderSentIcon = function(){
 	window.onbeforeunload = null;
 }
 
-function showMultipleArticles(productList){
+function showMultipleArticles(productList, categoryId = null){
+	$('div.sidebarList').find('*').removeClass("active");
+	$('.productContent').empty();
+	//alert(productList[0]['id']);
 	
+	if(categoryId != null){
+		$('.productContent').append('<h3>'+categoriesNameDict[categoryId]+'</h3><hr />');
+	}
+	
+	for ( let product of productList ){		
+		
+		$('.productContent').append($('<div>')
+			.addClass('multiProductContainer')
+			.attr("id",'frame'+product['id'])
+			.attr("data-id",product['id'])
+		);
+		let productFrame = $('#frame'+product['id']);
+		if(product['imagePath'] != ''){
+			productFrame.append($('<div>')
+				.addClass('col-xxs-12 col-xs-4 col-sm-2 col-md-3')
+				.append($('<img>')
+					.addClass('multiProductImage image'+product['id'])
+					.attr('src',product['imagePath'])
+				)
+			);
+		}
+		productFrame.append($('<div>')
+			.attr("id",'body'+product['id'])
+		);
+		let productBody = $('#body'+product['id']);
+		productBody.append($('<h4>').text(product['name']));
+		if(product['weight'] != ''){
+			productBody.append($('<div>').text('Gewicht: '+product['weight']));
+		}
+		productBody.append($('<div>').text('Art.Nr: '+product['productID']));
+		if(typeof product['price'] !== 'undefined'){
+			productBody.append($('<div>').text('Preis: '+product['price']+' '+product['priceInfoText']));
+		}
+		if(product['preBakeExp'] !== 0){
+			let plural = 'Werktage';
+			if(product['preBakeExp']==1){
+				plural = 'Werktag';
+			}
+			productBody.append($('<div>').text('Bitte mindestens '+product['preBakeExp']+' '+plural+' im Voraus bestellen'));
+		}
+		if(product['imagePath'] != ''){
+			let test = productFrame.height();
+			$('.image'+product['id']).height(productFrame.height()+'px');
+		}
+		productFrame.after($('<hr />'));
+		
+		/*let currentElement = $('<div>');
+		let categoryHeader = $('<div>');
+	
+		currentDomElement.append(currentElement
+			.addClass('product-list-toggle')
+			.attr('data-id',category.id)
+		);
+		currentElement.append(categoryHeader
+			.addClass('category sidebarElement')
+			.attr('data-id',category.id)
+			.text(category.name)
+			.append($('<span>')
+				.addClass('icon-list-collapse glyphicon glyphicon-collapse-down')
+				.attr('aria-hidden','true')
+			)
+			.append($('<span>')
+				.addClass('searchCategoryIcon glyphicon glyphicon-search')
+				.attr('aria-hidden','true')
+			)
+		);*/
+	}
+}
+
+function showSingleProduct(id){
+	//ajax call for product data
+	$.post("ajax/orders_readProduct.php", {id:id}, function(response, status){
+		var productData = JSON.parse(response)[0];
+		
+		$('.productContent').empty();
+		$('.productContent').append('<h3>'+productData["name"]+'</h3>');
+		$('.productContent').append('<hr>');
+		var imagePath = productData["imagePath"];
+		if(imagePath){
+			$('.productContent').append('<img id="productImgSingle" src="'+imagePath+'">');
+		}
+		$('.productContent').append('<p>Gewicht: '+productData["weight"]+'</p>');
+		$('.productContent').append('<p>Artikelnummer: '+productData["productID"]+'</p>');
+		var prebake = productData["preBakeExp"];
+		if(prebake!=0){
+			var dayOrDays = " Werktage ";
+			if(prebake==1){dayOrDays = " Werktag "}
+			$('.productContent').append('<p>Bitte mindestens '+productData["preBakeExp"]+dayOrDays+'im Voraus bestellen.</p>');
+		}
+		$('.productContent').append('<p>Zutaten <br />'+productData["ingredients"]+'</p>');
+		$('.productContent').append('<p>Allergene <br />'+productData["allergens"]+'</p>');
+		$('.productContent').append('<p>Beschreibung <br />'+productData["description"]+'</p>');
+		if(typeof productData["price"] !== 'undefined'){
+			$('.productContent').append('<p>Preis <br />'+productData["price"]+productData["priceInfoText"]+'</p>');
+		}
+	});
 }
 
 
@@ -529,13 +620,34 @@ var main = function(){
 		//$(this).addClass("active");
 		
 		//remove addToOrder Button
-     $(".subSidebarElement").find(".buttonAddProduct").css('visibility','hidden');
+    $(".subSidebarElement").find(".buttonAddProduct").css('visibility','hidden');
 		
 		//ajax call for product data
-		//$.post("ajax/products_read.php", {id:$(this).data('id')}, function(response, status){
-		//	var productData = JSON.parse(response);
-			
-		//});
+		let categoryId = $(this).parent().data('id');
+		$.ajax({
+			type: 'POST',
+			url: 'ajax/orders_readProductsOfCategory.php',
+			data: {
+				categoryID: categoryId
+			}
+		}).done(function(response) {
+			//alert(response);
+			resData = JSON.parse(response);
+			showMultipleArticles(resData, categoryId);
+		}).fail(function(data) {
+			displayMessage('Fehler', 'Artikel konnten nicht gefunden werden.');
+			if (data.responseText !== '') {
+				logMessage(data.responseText);
+			} else {
+				logMessage('Fehler', 'Artikel konnten nicht gefunden werden.');
+			}
+		});
+	});
+	
+	//show single article on click in multiview
+	$(document).on('click', ".multiProductContainer", function(event){
+		
+		showSingleProduct($(this).attr('data-id'));
 	});
 	
 	//show single article in product content on click on left sidebar
@@ -543,33 +655,8 @@ var main = function(){
 		event.stopPropagation();
 		$('div.sidebarList').find('*').removeClass("active");
 		$(this).addClass("active");
-		
-		//ajax call for product data
-		$.post("ajax/orders_readProduct.php", {id:$(this).data('id')}, function(response, status){
-			var productData = JSON.parse(response)[0];
-			
-			$('.productContent').empty();
-			$('.productContent').append('<h3>'+productData["name"]+'</h3>');
-			$('.productContent').append('<hr>');
-			var imagePath = productData["imagePath"];
-			if(imagePath){
-				$('.productContent').append('<img id="productImgSingle" src="images/'+imagePath+'">');
-			}
-			$('.productContent').append('<p>Gewicht: '+productData["weight"]+'</p>');
-			$('.productContent').append('<p>Artikelnummer: '+productData["productID"]+'</p>');
-			var prebake = productData["preBakeExp"];
-			if(prebake!=0){
-				var dayOrDays = " Tage ";
-				if(prebake==1){dayOrDays = " Tag "}
-				$('.productContent').append('<p>Bitte '+productData["preBakeExp"]+dayOrDays+'im Voraus bestellen.</p>');
-			}
-			$('.productContent').append('<p>Zutaten <br />'+productData["ingredients"]+'</p>');
-			$('.productContent').append('<p>Allergene <br />'+productData["allergens"]+'</p>');
-			$('.productContent').append('<p>Beschreibung <br />'+productData["description"]+'</p>');
-			if(typeof productData["price"] !== 'undefined'){
-				$('.productContent').append('<p>Preis <br />'+productData["price"]+productData["priceInfoText"]+'</p>');
-			}
-		});
+		let id = $(this).data('id');
+		showSingleProduct(id);
 	});
 
 	$(document).on('click','.product-list-toggle' , function(event) {
@@ -579,7 +666,7 @@ var main = function(){
 		childElements.children(".icon-list-collapse").toggleClass("glyphicon-collapse-down glyphicon-collapse-up");
 	});
 
-	//show and hide addProduct button
+	//show and hide addProduct button in left menu (productlist)
 	$(document).on('mouseenter', ".subSidebarElement", function(event) { 
 		$(this).find(".buttonAddProduct").css('visibility','visible'); 
 	});

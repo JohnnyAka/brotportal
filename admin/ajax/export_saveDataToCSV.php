@@ -265,8 +265,8 @@ include("../db_crud.php");
 					
 					if($data) {
 						$newOrderList = [];
-						for ($x = 0; $x < count($data); $x++) {
-							$currentData = $data[$x];
+						for ($m = 0; $m < count($data); $m++) {
+							$currentData = $data[$m];
 
 							unset($currentData->noteBaking);
 							unset($currentData->important);

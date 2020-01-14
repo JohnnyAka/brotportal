@@ -6,3 +6,12 @@ mysqldump -u root -p --databases brotportal > brotportalDump.sql
 to reload a dumpfile in shell:
 
 mysql -u root -p < brotportalDump.sql
+oder
+mysql -u root -p < web13_brotportal_backup.sql
+
+
+to read from online-backup-file add to sql file:
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `brotportal` /*!40100 DEFAULT CHARACTER SET utf8 */;
+
+USE `brotportal`;

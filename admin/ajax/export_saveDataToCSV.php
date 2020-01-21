@@ -265,7 +265,8 @@ include("../db_crud.php");
 					
 					if($data) {
 						$newOrderList = [];
-						for ($m = 0; $m < count($data); $m++) {
+                        	$dataCount = count($data);
+						for ($m = 0; $m < $dataCount; $m++) {
 							$currentData = $data[$m];
 
 							unset($currentData->noteBaking);
@@ -274,8 +275,8 @@ include("../db_crud.php");
 							//set locked property to indicate that it has been exported
 							$db->updateData("orders", array('locked'), array('1'), "orderDate=?1 AND idCustomer=?2 AND idProduct=?3 AND hook=?4", array($currentData['orderDate'],$currentData['idCustomer'],$currentData['idProduct'],$currentData['hook']));
 
-							$data = $db->getData("users", array('preOrderCustomerId'), "id=?1", $currentData['idCustomer']);
-							$currentData['idCustomer'] = $data[0]['preOrderCustomerId'];
+							$userData = $db->getData("users", array('preOrderCustomerId'), "id=?1", $currentData['idCustomer']);
+							$currentData['idCustomer'] = $userData[0]['preOrderCustomerId'];
 							$currentData['idProduct'] = $productDict[$currentData['idProduct']];
 							$currentData['orderDate'] = date_format(getExportDate(), 'Y-m-d');
 

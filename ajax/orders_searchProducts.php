@@ -3,8 +3,7 @@ session_start();
 
 include('../db_crud.php');
 
-$pSearchText = $_POST['productSearchText'];
-
+$pSearchText = strip_tags(trim($_POST['productSearchText']));
 
 $db = new db_connection();
 

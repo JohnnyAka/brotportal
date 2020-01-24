@@ -644,13 +644,11 @@ function showSingleProduct(id, showBackButton = false){
 		$('.productContent').append(productButtonDiv);
 	});
 }
-
-
-//main function for click event handlers
-var main = function(){
-
-	$(document).on('click','.searchProductsButton', function(event) {
-		event.stopPropagation();
+//search box form
+$(function() {
+	var form = $('#searchBoxForm');
+	$(form).submit(function(event) {
+		event.preventDefault();
 		$('div.sidebarList').find('*').removeClass("active");
 		
 		let searchText = $('.productSearchTextInput').val();
@@ -661,8 +659,6 @@ var main = function(){
 			displayMessage('Eingabefehler','Spezielle Zeichen sind in der Suche nicht erlaubt');
 			return;
 		}
-		
-		
 		
 		$.ajax({
 			type: 'POST',
@@ -683,6 +679,12 @@ var main = function(){
 			}
 		});
 	});
+});
+
+//main function for click event handlers
+var main = function(){
+
+
 
 	$(document).on('click','.searchCategoryIcon', function(event) {
 		event.stopPropagation();

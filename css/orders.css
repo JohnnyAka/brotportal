@@ -1,4 +1,7 @@
 
+html {
+    overflow-y:scroll;
+}
 
 /*product content*/
 #productImgSingle{
@@ -103,6 +106,7 @@ position: relative;
   display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
+	cursor: pointer;
 }
 
 .multiProductImage{
@@ -130,6 +134,15 @@ hr{
 
 h4{
 	margin-top: 0px;
+}
+
+.singleProductAddButtonContainer{
+	flex: 0 0 50px;
+	display: flex;
+	align-items: flex-end;
+	justify-content: right;
+	margin-right: 3px;
+	margin-bottom: 10px;
 }
 
 /*datepicker colors*/

@@ -631,6 +631,18 @@ function showSingleProduct(id, showBackButton = false){
 		if(typeof productData["price"] !== 'undefined'){
 			$('.productContent').append('<p>Preis <br />'+productData["price"]+productData["priceInfoText"]+'</p>');
 		}
+		
+		let productButtonDiv = $('<div>').addClass('singleProductAddButtonContainer');
+		let addButton = $('<button>');
+		productButtonDiv.append(addButton
+			.addClass('btn btn-default buttonAddProductSingleView btn-md')
+			.attr({'type':'button','data-id':productData['id']})
+		);
+		addButton.append($('<span>')
+			.addClass('glyphicon glyphicon-triangle-right iconAddProduct')
+			.attr('aria-hidden','true')
+		);
+		$('.productContent').append(productButtonDiv);
 	});
 }
 
@@ -707,6 +719,16 @@ var main = function(){
 		let childElements = $(this).children("div");
 		childElements.not(':first-child').toggleClass("visible hidden");
 		childElements.children(".icon-list-collapse").toggleClass("glyphicon-collapse-down glyphicon-collapse-up");
+	});
+	
+		$(document).on('click', ".buttonAddProductSingleView", function(event){
+		event.stopPropagation();
+		let orderForm = $('#sendOrderForm');
+		let idProduct = $(this).attr('data-id');
+		if( orderForm.find('#'+idProduct).length < 1){
+			appendToProductList(orderForm,idProduct, 1, false);
+		}
+		$('input#'+idProduct).focus().select();
 	});
 
 	//show and hide addProduct button in left menu (productlist)

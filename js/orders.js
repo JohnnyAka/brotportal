@@ -607,6 +607,7 @@ function showSingleProduct(id, showBackButton = false){
 				let productList = JSON.parse($('.productContent').attr('data-backButtonContext'));
 				let productCategory = $('.productContent').attr('data-categoryID');
 				showMultipleArticles(productList, productCategory);
+				document.documentElement.scrollTop = $('.productContent').attr("data-previousPosition");
 			});
 			$('.productContent').append(backButton);
 		}
@@ -670,6 +671,7 @@ var main = function(){
 	//show single article on click in multiview
 	$(document).on('click', ".multiProductContainer", function(event){
 		let showBackButton = true;
+		$('.productContent').attr("data-previousPosition",document.documentElement.scrollTop);
 		showSingleProduct($(this).attr('data-id'), showBackButton, $(this).attr('data-categoryID'));
 	});
 	

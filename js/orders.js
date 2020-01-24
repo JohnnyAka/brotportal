@@ -529,6 +529,9 @@ var showOrderSentIcon = function(){
 function showMultipleArticles(productList, categoryId = null){
 	$('div.sidebarList').find('*').removeClass("active");
 	$('.productContent').empty();
+	let productListJson = JSON.stringify(productList);
+	$('.productContent').attr("data-backButtonContext",productListJson);
+	$('.productContent').attr("data-categoryID",categoryId);
 	//alert(productList[0]['id']);
 	
 	if(categoryId != null){
@@ -543,6 +546,7 @@ function showMultipleArticles(productList, categoryId = null){
 			.addClass('multiProductContainer')
 			.attr("id",'frame'+product['id'])
 			.attr("data-id",product['id'])
+			//.attr("data-categoryID",categoryId)
 		);
 		let productFrame = $('#frame'+product['id']);
 		if(imgPathExists){
@@ -588,12 +592,24 @@ function showMultipleArticles(productList, categoryId = null){
 	}
 }
 
-function showSingleProduct(id){
+function showSingleProduct(id, showBackButton = false){
 	//ajax call for product data
 	$.post("ajax/orders_readProduct.php", {id:id}, function(response, status){
 		var productData = JSON.parse(response)[0];
 		
 		$('.productContent').empty();
+		
+		if(showBackButton){
+			let backButton = $('<button>')
+			.addClass('backButton')
+			.append('<span class="glyphicon glyphicon-arrow-left"></span>')
+			.click(function (){
+				let productList = JSON.parse($('.productContent').attr('data-backButtonContext'));
+				let productCategory = $('.productContent').attr('data-categoryID');
+				showMultipleArticles(productList, productCategory);
+			});
+			$('.productContent').append(backButton);
+		}
 		$('.productContent').append('<h3>'+productData["name"]+'</h3>');
 		$('.productContent').append('<hr>');
 		var imagePath = productData["imagePath"];
@@ -653,8 +669,8 @@ var main = function(){
 	
 	//show single article on click in multiview
 	$(document).on('click', ".multiProductContainer", function(event){
-		
-		showSingleProduct($(this).attr('data-id'));
+		let showBackButton = true;
+		showSingleProduct($(this).attr('data-id'), showBackButton, $(this).attr('data-categoryID'));
 	});
 	
 	$(document).on('click', ".buttonAddProductMultiView", function(event){

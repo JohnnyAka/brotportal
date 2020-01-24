@@ -69,7 +69,13 @@ if(!isset($_SESSION['userid'])) {
 
     <div class="container">
 			<div class="row mainrow">
-				<div class="col-md-3 col-sm-6">
+				<div class="col-md-3 col-sm-6">				
+					<div class="input-group">
+						<input type="text" class="form-control productSearchTextInput" placeholder="Suche...">
+						<span class="input-group-btn">
+							<button class="btn btn-default searchProductsButton" type="button">Go!</button>
+						</span>
+					</div>
 					<h3>Produktliste</h3>
 					<div class="productList">
 					</div>

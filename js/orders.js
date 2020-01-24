@@ -76,7 +76,6 @@ var updateOrderDays = function(){
 //, category list for category name retrieval via id and categoryPriorityDict --- then show orders
 //productsNameDict, productsCategoryDict, categoriesNameDict
 $(function() {
-
 	// Submit the form using AJAX.
 	$.ajax({
 		type: 'POST',
@@ -649,6 +648,41 @@ function showSingleProduct(id, showBackButton = false){
 
 //main function for click event handlers
 var main = function(){
+
+	$(document).on('click','.searchProductsButton', function(event) {
+		event.stopPropagation();
+		$('div.sidebarList').find('*').removeClass("active");
+		
+		let searchText = $('.productSearchTextInput').val();
+		
+		//validate for special characters
+		let regEx = /\`|\~|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\+|\=|\[|\{|\]|\}|\||\\|\'|\<|\,|\.|\>|\?|\/|\"|\;|\:|\§/g;
+		if(regEx.test(searchText)){
+			displayMessage('Eingabefehler','Spezielle Zeichen sind in der Suche nicht erlaubt');
+			return;
+		}
+		
+		
+		
+		$.ajax({
+			type: 'POST',
+			url: 'ajax/orders_searchProducts.php',
+			data: {
+				productSearchText: searchText
+			}
+		}).done(function(response) {
+			//alert(response);
+			resData = JSON.parse(response);
+			showMultipleArticles(resData);
+		}).fail(function(data) {
+			displayMessage('Fehler', 'Die Suche ist fehlgeschlagen.');
+			if (data.responseText !== '') {
+				logMessage(data.responseText);
+			} else {
+				logMessage('Fehler', 'Die Suche ist fehlgeschlagen.');
+			}
+		});
+	});
 
 	$(document).on('click','.searchCategoryIcon', function(event) {
 		event.stopPropagation();

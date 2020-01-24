@@ -101,6 +101,10 @@ position: relative;
 	visibility:hidden;
 }
 
+.searchProductsButton{
+	margin-top: 0px;
+}
+
 /*product View in center*/
 .multiProductContainer {
   display: flex;

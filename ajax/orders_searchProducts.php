@@ -16,12 +16,18 @@ if($userPriceCategory !== "price0"){
     array_push($parameter, $userPriceCategory);
 }
 
+$pSearchTextArray = array(); $queryString = '';
+$pSearchTextArray = explode(' ', $pSearchText, 3);
 
-$pSearchText = '%'.$pSearchText.'%';
+//build searchquery
+$countSearchArray = count($pSearchTextArray);
+for($x = 1; $x <= $countSearchArray; $x++){
+	$pSearchTextArray[$x-1] = '%'.$pSearchTextArray[$x-1].'%';
+	$queryString .= ' name LIKE ?'.$x.' and';
+}
+$queryString = chop($queryString, 'and');
 
-
-//Achtug!!!!!!!!!!!!!!!!!!!!!!!!!!!! die 1 am Ende der nächsten Zeile muss geändert werden, wie auch productCategory
-$data = $db->getData("products", $parameter, "name LIKE ?1 and visibleForUser != '0'",$pSearchText);
+$data = $db->getData("products", $parameter, $queryString." and visibleForUser != '0'",$pSearchTextArray);
 
 $result = $db->getData("prizeCategories", array('infoText'), "id=?1",$priceCatNumber);
 if ($result != null){

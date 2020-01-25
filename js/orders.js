@@ -408,6 +408,8 @@ var showOrders = function(){
 				}).done(function(response){
 					//reset list
 					$('#sendOrderForm').empty();
+					//reset orderCounter in ButtonGroups
+					$('.productCountIcon').text(0);
 					showOrderSentIcon();
 					var ordersData = JSON.parse(response);
 					//set Item List/Form
@@ -510,6 +512,7 @@ var appendToProductList = function(formObj,idProduct, number, init){
 	}
 	let inputField = document.getElementById(idProduct);
 	inputField.addEventListener("input", showOrderNotYetSentIcon, false);
+	triggerChangeOfOrderCount(idProduct);
 }
 var showOrderNotYetSentIcon = function(){
 	var orderSent = $('#orderSentSign');
@@ -524,6 +527,9 @@ var showOrderSentIcon = function(){
 	orderSent.removeClass('glyphicon-share');
 	orderSent.addClass('glyphicon-check');
 	window.onbeforeunload = null;
+}
+var triggerChangeOfOrderCount = function (idProduct){
+	$('input#'+idProduct).trigger("input");
 }
 
 function showMultipleArticles(productList, categoryId = null){
@@ -668,7 +674,7 @@ function showSingleProduct(id, showBackButton = false){
 		countButton.append($('<span>')
 			.addClass('productCountIcon glyphicon iconAddProduct')
 			.text(productCount)
-			.attr('aria-hidden','true')
+			.attr({'aria-hidden':'true','id':productData['id']})
 		);
 		let minusButton = $('<button>');
 		productButtonDiv.append(minusButton
@@ -824,9 +830,13 @@ var main = function(){
 			appendToProductList(orderForm,idProduct, 1, false);
 		}else{
 			let numberInput = $('input#'+idProduct);
-			numberInput.val(parseInt(numberInput.val()) + 1);
+			let productCount = numberInput.val();
+			if(productCount == ''){
+				productCount = 0;
+			}
+			numberInput.val(parseInt(productCount) + 1);
 		}
-		$('input#'+idProduct).trigger("input");
+		triggerChangeOfOrderCount(idProduct);
 	});
 	
 	$(document).on('click', ".buttonMinusProductSingleView", function(event){
@@ -842,12 +852,16 @@ var main = function(){
 			if(numberInputCount > 0){
 				numberInput.val(parseInt(numberInputCount) - 1);
 			}
-			$('input#'+idProduct).trigger("input");
+			triggerChangeOfOrderCount(idProduct); 
 		}
 	});
 	//refresh buttongroupProductCounter
 	$(document).on('input','.orderProductInput',function (event){
-		$('.productCountIcon').text($('input#'+event.target.id).val());
+		let productCount = $('input#'+event.target.id).val();
+		if(productCount == ''){
+			productCount = 0;
+		}
+		$('#'+event.target.id+'.productCountIcon').text(productCount);
 	});
 
 	//show and hide addProduct button in left menu (productlist)

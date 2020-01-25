@@ -537,6 +537,8 @@ function showMultipleArticles(productList, categoryId = null){
 		$('.productContent').append('<h3>'+categoriesNameDict[categoryId]+'</h3><hr />');
 	}
 	
+	productList.sort((a, b) => a['name'].localeCompare(b['name']));
+	
 	for ( let product of productList ){		
 	
 		//set grid classes of product

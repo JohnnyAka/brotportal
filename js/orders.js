@@ -319,7 +319,7 @@ function addAddProductButton(parentObject, htmlClasses = ''){
 }
 //product list done
 
-//Hier kommt die Suchfunktion hin!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 
 function getKeyByValue(object, value) {
 	return Object.keys(object).find(key => object[key] === value);
@@ -504,11 +504,12 @@ var appendToProductList = function(formObj,idProduct, number, init){
 	else{
 		orderLabel = " class='orderListItem' ";
 	} 
-	formObj.append('<div class="field clearfix"><label'+orderLabel+'for='+idProduct+'>'+productName+'&nbsp;</label><input type="number" id="'+idProduct+'" value="'+number+'" min="0" name="'+idProduct+'"></div>');
+	formObj.append('<div class="field clearfix"><label'+orderLabel+'for='+idProduct+'>'+productName+'&nbsp;</label><input type="number" id="'+idProduct+'" class="orderProductInput" value="'+number+'" min="0" name="'+idProduct+'"></div>');
 	if(!init){
 		showOrderNotYetSentIcon();
 	}
-	document.getElementById(idProduct).addEventListener("input", showOrderNotYetSentIcon, false);
+	let inputField = document.getElementById(idProduct);
+	inputField.addEventListener("input", showOrderNotYetSentIcon, false);
 }
 var showOrderNotYetSentIcon = function(){
 	var orderSent = $('#orderSentSign');
@@ -803,7 +804,7 @@ var main = function(){
 		childElements.not(':first-child').toggleClass("visible hidden");
 		childElements.children(".icon-list-collapse").toggleClass("glyphicon-collapse-down glyphicon-collapse-up");
 	});
-	
+	//add ProductButtonGroup
 	$(document).on('click', ".buttonAddProductSingleView", function(event){
 		event.stopPropagation();
 		let orderForm = $('#sendOrderForm');
@@ -825,7 +826,7 @@ var main = function(){
 			let numberInput = $('input#'+idProduct);
 			numberInput.val(parseInt(numberInput.val()) + 1);
 		}
-		//$('.productCountIcon').text($('input#'+idProduct).val());
+		$('input#'+idProduct).trigger("input");
 	});
 	
 	$(document).on('click', ".buttonMinusProductSingleView", function(event){
@@ -834,19 +835,20 @@ var main = function(){
 		let idProduct = $(this).attr('data-id');
 		
 		if( orderForm.find('#'+idProduct).length < 1){
-			appendToProductList(orderForm,idProduct, 0, false);
+			//appendToProductList(orderForm,idProduct, 0, false);
 		}else{
 			let numberInput = $('input#'+idProduct);
 			let numberInputCount = numberInput.val();
 			if(numberInputCount > 0){
 				numberInput.val(parseInt(numberInputCount) - 1);
-			}else{
-				//do nothing
 			}
+			$('input#'+idProduct).trigger("input");
 		}
-		//$('.productCountIcon').text($('input#'+idProduct).val());
 	});
-	
+	//refresh buttongroupProductCounter
+	$(document).on('input','.orderProductInput',function (event){
+		$('.productCountIcon').text($('input#'+event.target.id).val());
+	});
 
 	//show and hide addProduct button in left menu (productlist)
 	$(document).on('mouseenter', ".subSidebarElement", function(event) { 

@@ -1,7 +1,7 @@
 
 
 
-/*product content*/
+/* single product content*/
 #productImgSingle{
 	width:60%;
 	height:auto;
@@ -14,6 +14,18 @@
 
 .multiProductImage{
 	
+}
+/*buttongroup in singleview*/
+.buttonAddProductSingleView{
+	margin: 0px;
+}
+
+.buttonCountProductSingleView:hover{
+	cursor: default;
+}
+
+.productCountIcon{
+	font-size: 14px;
 }
 
 /*right productlist*/
@@ -80,11 +92,12 @@ div.subSidebarElement{
 
 .btn{
 position: relative;
-	margin: 3px;
+	
 }
 
 .buttonAddProduct{
 	margin-top:2px;
+	margin-right: 3px;
 	visibility:hidden;
 	position: absolute;
 	right:0px;

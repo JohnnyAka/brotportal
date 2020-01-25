@@ -644,8 +644,40 @@ function showSingleProduct(id, showBackButton = false){
 		if(typeof productData["price"] !== 'undefined'){
 			$('.productContent').append('<p>Preis <br />'+productData["price"]+productData["priceInfoText"]+'</p>');
 		}
-		
-		let productButtonDiv = $('<div>').addClass('singleProductAddButtonContainer');
+		//create buttongroup for adding products
+		let productButtonDiv = $('<div>').addClass('singleProductAddButtonContainer btn-group').attr('role','group');
+		let plusButton = $('<button>');
+		productButtonDiv.append(plusButton
+			.addClass('btn btn-default buttonPlusProductSingleView btn-md')
+			.attr({'type':'button','data-id':productData['id']})
+		);
+		plusButton.append($('<span>')
+			.addClass('glyphicon glyphicon-plus iconAddProduct')
+			.attr('aria-hidden','true')
+		);
+		let countButton = $('<button disabled>');
+		productButtonDiv.append(countButton
+			.addClass('btn btn-default buttonCountProductSingleView btn-md')
+			.attr({'type':'button','data-id':productData['id']})
+		);
+		let productCount = $('input#'+productData['id']).val();
+		if(productCount == undefined){
+			productCount = 0;
+		}
+		countButton.append($('<span>')
+			.addClass('productCountIcon glyphicon iconAddProduct')
+			.text(productCount)
+			.attr('aria-hidden','true')
+		);
+		let minusButton = $('<button>');
+		productButtonDiv.append(minusButton
+			.addClass('btn btn-default buttonMinusProductSingleView btn-md')
+			.attr({'type':'button','data-id':productData['id']})
+		);
+		minusButton.append($('<span>')
+			.addClass('glyphicon glyphicon-minus iconAddProduct')
+			.attr('aria-hidden','true')
+		);
 		let addButton = $('<button>');
 		productButtonDiv.append(addButton
 			.addClass('btn btn-default buttonAddProductSingleView btn-md')
@@ -655,6 +687,7 @@ function showSingleProduct(id, showBackButton = false){
 			.addClass('glyphicon glyphicon-triangle-right iconAddProduct')
 			.attr('aria-hidden','true')
 		);
+		
 		$('.productContent').append(productButtonDiv);
 	});
 }
@@ -771,7 +804,7 @@ var main = function(){
 		childElements.children(".icon-list-collapse").toggleClass("glyphicon-collapse-down glyphicon-collapse-up");
 	});
 	
-		$(document).on('click', ".buttonAddProductSingleView", function(event){
+	$(document).on('click', ".buttonAddProductSingleView", function(event){
 		event.stopPropagation();
 		let orderForm = $('#sendOrderForm');
 		let idProduct = $(this).attr('data-id');
@@ -780,6 +813,40 @@ var main = function(){
 		}
 		$('input#'+idProduct).focus().select();
 	});
+	
+	$(document).on('click', ".buttonPlusProductSingleView", function(event){
+		event.stopPropagation();
+		let orderForm = $('#sendOrderForm');
+		let idProduct = $(this).attr('data-id');
+		
+		if( orderForm.find('#'+idProduct).length < 1){
+			appendToProductList(orderForm,idProduct, 1, false);
+		}else{
+			let numberInput = $('input#'+idProduct);
+			numberInput.val(parseInt(numberInput.val()) + 1);
+		}
+		//$('.productCountIcon').text($('input#'+idProduct).val());
+	});
+	
+	$(document).on('click', ".buttonMinusProductSingleView", function(event){
+		event.stopPropagation();
+		let orderForm = $('#sendOrderForm');
+		let idProduct = $(this).attr('data-id');
+		
+		if( orderForm.find('#'+idProduct).length < 1){
+			appendToProductList(orderForm,idProduct, 0, false);
+		}else{
+			let numberInput = $('input#'+idProduct);
+			let numberInputCount = numberInput.val();
+			if(numberInputCount > 0){
+				numberInput.val(parseInt(numberInputCount) - 1);
+			}else{
+				//do nothing
+			}
+		}
+		//$('.productCountIcon').text($('input#'+idProduct).val());
+	});
+	
 
 	//show and hide addProduct button in left menu (productlist)
 	$(document).on('mouseenter', ".subSidebarElement", function(event) { 

@@ -547,7 +547,6 @@ function showMultipleArticles(productList, categoryId = null){
 			.addClass('multiProductContainer')
 			.attr("id",'frame'+product['id'])
 			.attr("data-id",product['id'])
-			//.attr("data-categoryID",categoryId)
 		);
 		let productFrame = $('#frame'+product['id']);
 		if(imgPathExists){
@@ -558,24 +557,37 @@ function showMultipleArticles(productList, categoryId = null){
 		}
 		
 		productFrame.append($('<div>')
-			.addClass('productTextContainer')
+			.addClass('productTextFrameContainer')
 			.attr('id','body'+product['id'])
 		);
 		let productBody = $('#body'+product['id']);
-		productBody.append($('<h4>').text(product['name']));
+		productBody.append($('<div>')
+			.addClass('multiviewProductNameContainer')
+			.append($('<h4>').text(product['name'])
+				.addClass('multiviewBoxProductName')
+			)
+			.append($('<span>')
+				.text(categoriesNameDict[product['productCategory']])
+				.addClass('multiviewBoxCategory')
+			)
+		);
+		let productTextWrapper = $('<div>').addClass('multiviewProductTextContainerWrapper');
+		let productText = $('<div>').addClass('multiviewProductTextContainer');
+			productBody.append(productTextWrapper);
+			productTextWrapper.append(productText);
 		if(product['weight'] != ''){
-			productBody.append($('<div>').text('Gewicht: '+product['weight']));
+			productText.append($('<div>').text('Gewicht: '+product['weight']));
 		}
-		productBody.append($('<div>').text('Art.Nr: '+product['productID']));
+		productText.append($('<div>').text('Art.Nr: '+product['productID']));
 		if(typeof product['price'] !== 'undefined'){
-			productBody.append($('<div>').text('Preis: '+product['price']+' '+product['priceInfoText']));
+			productText.append($('<div>').text('Preis: '+product['price']+' '+product['priceInfoText']));
 		}
 		if(product['preBakeExp'] !== 0){
 			let plural = 'Werktage';
 			if(product['preBakeExp']==1){
 				plural = 'Werktag';
 			}
-			productBody.append($('<div>').text('Bitte mindestens '+product['preBakeExp']+' '+plural+' im Voraus bestellen'));
+			productText.append($('<div>').text('Bitte mindestens '+product['preBakeExp']+' '+plural+' im Voraus bestellen'));
 		}
 		let productButtonDiv = $('<div>').addClass('multiProductAddButtonContainer');
 		let addButton = $('<button>');
@@ -587,7 +599,7 @@ function showMultipleArticles(productList, categoryId = null){
 			.addClass('glyphicon glyphicon-triangle-right iconAddProduct')
 			.attr('aria-hidden','true')
 		);
-		productFrame.append(productButtonDiv);
+		productTextWrapper.append(productButtonDiv);
 		
 		productFrame.after($('<hr />'));
 	}

@@ -1,7 +1,5 @@
 
-html {
-    overflow-y:scroll;
-}
+
 
 /*product content*/
 #productImgSingle{
@@ -119,13 +117,41 @@ position: relative;
 	
 }
 
-.productTextContainer{
+.productTextFrameContainer{
 	flex: 1 0 200px;
 	padding-left: 10px;
 }
 
+.multiviewProductNameContainer{
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.multiviewBoxProductName{
+	flex:0 1 auto;
+	margin-right: 5px;
+	margin-bottom: 3px;
+}
+
+.multiviewBoxCategory{
+	color: grey;
+	font-size: 12px;
+	flex:0 1 auto;
+}
+
+.multiviewProductTextContainerWrapper{
+	display: flex;
+	flex: 1 0 auto;
+	flex-wrap: wrap;
+}
+
+.multiviewProductTextContainer{
+	flex: 4 1 auto;
+	padding-left: 10px;
+}
+
 .multiProductAddButtonContainer{
-	flex: 0 0 50px;
+	flex: 1 0 50px;
 	display: flex;
 	align-items: flex-end;
 	justify-content: center;

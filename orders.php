@@ -74,7 +74,7 @@ if(!isset($_SESSION['userid'])) {
 						<div class="input-group">
 							<input type="text" class="form-control productSearchTextInput" id="productSearchTextInput" name="productSearchTextInput" placeholder="Suche...">
 							<span class="input-group-btn">
-								<button class="btn btn-default searchProductsButton" type="submit">Go!</button>
+								<button class="btn btn-default searchProductsButton" type="submit"><span class='glyphicon glyphicon-search' aria-hidden='true'></span></button>
 							</span>
 						</div>
 					</form>

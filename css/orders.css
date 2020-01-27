@@ -24,8 +24,12 @@
 	cursor: default;
 }
 
-.productCountIcon{
+.productCountMD{
 	font-size: 14px;
+}
+
+.productCountXS{
+	font-size: 12px;
 }
 
 /*right productlist*/
@@ -95,7 +99,7 @@ position: relative;
 	
 }
 
-.buttonAddProduct{
+.listProductAddButtonContainer{
 	margin-top:2px;
 	margin-right: 3px;
 	visibility:hidden;
@@ -109,7 +113,8 @@ position: relative;
 }
 
 .searchCategoryIcon{
-	visibility:hidden;
+	/*visibility:hidden;*/
+	margin-left: 3px;
 }
 
 .searchProductsButton{

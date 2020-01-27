@@ -8,9 +8,15 @@ html {
 
 .sidebarList{
 	list-style-type: none;
+	
 }
+/*cursor: pointer wurde doppelt vergeben wegen browsercompatibilität*/
 .sidebarList div{
-cursor: pointer;
+	cursor: pointer;
+}
+
+.sidebarElement{
+	cursor: pointer;
 }
 
 .innerListItems{

@@ -285,38 +285,17 @@ function walkItemTree(currentTwig, currentDomElement, firstCall){
 					.attr({'data-id':product.id, 'name':product.name,'productCategory':product.productCategory})
 					.text(product.name)
 				);
-				let addButton = $('<button>');
-				currentListItem.append(addButton
-					.addClass('btn btn-default buttonAddProduct btn-xs')
-					.attr('type','button')
-				);
-				addButton.append($('<span>')
-					.addClass('glyphicon glyphicon-triangle-right iconAddProduct')
-					.attr('aria-hidden','true')
-				);
+				
+				//create buttongroup for adding products
+				let productButtonDiv = $('<div>').addClass('listProductAddButtonContainer btn-group').attr('role','group');
+				makeAddProductButtonGroup(productButtonDiv, product.id, 'btn-xs');
+				currentListItem.append(productButtonDiv);
+				
 			}
 		}
 	}
 }
 
-function addAddProductButton(parentObject, htmlClasses = ''){
-	let htmlClassString = '';
-	if(Array.isArray(htmlClasses)){
-		htmlClassString = htmlClasses.join(' ');
-	}
-	else{
-		htmlClassString = htmlClasses;
-	}
-	let addButton = $('<button>');
-	parentObject.append(addButton
-		.addClass(htmlClassString)
-		.attr('type','button')
-	);
-	addButton.append($('<span>')
-		.addClass('glyphicon glyphicon-triangle-right iconAddProduct')
-		.attr('aria-hidden','true')
-	);
-}
 //product list done
 
 
@@ -596,20 +575,59 @@ function showMultipleArticles(productList, categoryId = null){
 			}
 			productText.append($('<div>').text('Bitte mindestens '+product['preBakeExp']+' '+plural+' im Voraus bestellen'));
 		}
-		let productButtonDiv = $('<div>').addClass('multiProductAddButtonContainer');
-		let addButton = $('<button>');
-		productButtonDiv.append(addButton
-			.addClass('btn btn-default buttonAddProductMultiView btn-md')
-			.attr({'type':'button','data-id':product['id']})
-		);
-		addButton.append($('<span>')
-			.addClass('glyphicon glyphicon-triangle-right iconAddProduct')
-			.attr('aria-hidden','true')
-		);
+		
+		//create buttongroup for adding products
+		let productButtonDiv = $('<div>').addClass('multiProductAddButtonContainer btn-group').attr('role','group');
+		makeAddProductButtonGroup(productButtonDiv, product['id'], 'btn-md');
 		productTextWrapper.append(productButtonDiv);
 		
 		productFrame.after($('<hr />'));
 	}
+}
+
+function makeAddProductButtonGroup (productButtonDiv, productID, addedButtonClasses){
+	let plusButton = $('<button>');
+	productButtonDiv.append(plusButton
+		.addClass('btn btn-default buttonPlusProductSingleView '+addedButtonClasses)
+		.attr({'type':'button','data-id':productID})
+	);
+	plusButton.append($('<span>')
+		.addClass('glyphicon glyphicon-plus iconAddProduct')
+		.attr('aria-hidden','true')
+	);
+	let countButton = $('<button disabled>');
+	productButtonDiv.append(countButton
+		.addClass('btn btn-default buttonCountProductSingleView '+addedButtonClasses)
+		.attr({'type':'button','data-id':productID})
+	);
+	let productCount = $('input#'+productID).val();
+	if(productCount == undefined){
+		productCount = 0;
+	}
+	countButton.append($('<span>')
+		.addClass('productCountIcon glyphicon iconAddProduct productCounter'+productID)
+		.text(productCount)
+		.attr({'aria-hidden':'true'})
+		//.attr({'aria-hidden':'true','id':productID})
+	);
+	let minusButton = $('<button>');
+	productButtonDiv.append(minusButton
+		.addClass('btn btn-default buttonMinusProductSingleView '+addedButtonClasses)
+		.attr({'type':'button','data-id':productID})
+	);
+	minusButton.append($('<span>')
+		.addClass('glyphicon glyphicon-minus iconAddProduct')
+		.attr('aria-hidden','true')
+	);
+	let addButton = $('<button>');
+	productButtonDiv.append(addButton
+		.addClass('btn btn-default buttonAddProductSingleView '+addedButtonClasses)
+		.attr({'type':'button','data-id':productID})
+	);
+	addButton.append($('<span>')
+		.addClass('glyphicon glyphicon-triangle-right iconAddProduct')
+		.attr('aria-hidden','true')
+	);
 }
 
 function showSingleProduct(id, showBackButton = false){
@@ -652,52 +670,15 @@ function showSingleProduct(id, showBackButton = false){
 			$('.productContent').append('<p>Preis <br />'+productData["price"]+productData["priceInfoText"]+'</p>');
 		}
 		//create buttongroup for adding products
-		let productButtonDiv = $('<div>').addClass('singleProductAddButtonContainer btn-group').attr('role','group');
-		let plusButton = $('<button>');
-		productButtonDiv.append(plusButton
-			.addClass('btn btn-default buttonPlusProductSingleView btn-md')
-			.attr({'type':'button','data-id':productData['id']})
-		);
-		plusButton.append($('<span>')
-			.addClass('glyphicon glyphicon-plus iconAddProduct')
-			.attr('aria-hidden','true')
-		);
-		let countButton = $('<button disabled>');
-		productButtonDiv.append(countButton
-			.addClass('btn btn-default buttonCountProductSingleView btn-md')
-			.attr({'type':'button','data-id':productData['id']})
-		);
-		let productCount = $('input#'+productData['id']).val();
-		if(productCount == undefined){
-			productCount = 0;
-		}
-		countButton.append($('<span>')
-			.addClass('productCountIcon glyphicon iconAddProduct')
-			.text(productCount)
-			.attr({'aria-hidden':'true','id':productData['id']})
-		);
-		let minusButton = $('<button>');
-		productButtonDiv.append(minusButton
-			.addClass('btn btn-default buttonMinusProductSingleView btn-md')
-			.attr({'type':'button','data-id':productData['id']})
-		);
-		minusButton.append($('<span>')
-			.addClass('glyphicon glyphicon-minus iconAddProduct')
-			.attr('aria-hidden','true')
-		);
-		let addButton = $('<button>');
-		productButtonDiv.append(addButton
-			.addClass('btn btn-default buttonAddProductSingleView btn-md')
-			.attr({'type':'button','data-id':productData['id']})
-		);
-		addButton.append($('<span>')
-			.addClass('glyphicon glyphicon-triangle-right iconAddProduct')
-			.attr('aria-hidden','true')
-		);
+		//let productButtonDiv = $('<div>').addClass('singleProductAddButtonContainer btn-group').attr('role','group');
 		
+		//create buttongroup for adding products
+		let productButtonDiv = $('<div>').addClass('singleProductAddButtonContainer btn-group').attr('role','group');
+		makeAddProductButtonGroup(productButtonDiv, productData['id'], 'btn-md');
 		$('.productContent').append(productButtonDiv);
 	});
 }
+
 //search box form
 $(function() {
 	var form = $('#searchBoxForm');
@@ -746,7 +727,7 @@ var main = function(){
 		//$(this).addClass("active");
 		
 		//remove addToOrder Button
-    $(".subSidebarElement").find(".buttonAddProduct").css('visibility','hidden');
+    $(".subSidebarElement").find(".listProductAddButtonContainer").css('visibility','hidden');
 		
 		//ajax call for product data
 		let categoryId = $(this).parent().data('id');
@@ -861,23 +842,23 @@ var main = function(){
 		if(productCount == ''){
 			productCount = 0;
 		}
-		$('#'+event.target.id+'.productCountIcon').text(productCount);
+		$('.productCounter'+event.target.id).text(productCount);
 	});
 
 	//show and hide addProduct button in left menu (productlist)
 	$(document).on('mouseenter', ".subSidebarElement", function(event) { 
-		$(this).find(".buttonAddProduct").css('visibility','visible'); 
+		$(this).find(".listProductAddButtonContainer").css('visibility','visible'); 
 	});
 	$(document).on('mouseleave', ".subSidebarElement", function(event) {
 		if(!$(this).hasClass("active")){
-            $(this).find(".buttonAddProduct").css('visibility','hidden');
+            $(this).find(".listProductAddButtonContainer").css('visibility','hidden');
 		}
 	}).on('click', ".subSidebarElement", function(event){
-			$(".subSidebarElement").find(".buttonAddProduct").css('visibility','hidden');
-			$(this).find(".buttonAddProduct").css('visibility','visible');
+			$(".subSidebarElement").find(".listProductAddButtonContainer").css('visibility','hidden');
+			$(this).find(".listProductAddButtonContainer").css('visibility','visible');
 	});
 	
-	$(document).on('click', '.buttonAddProduct', function(event) {
+	$(document).on('click', '.listProductAddButtonContainer', function(event) {
 		event.stopPropagation();
 		var idProduct = $(this).parent().data('id');
 		if( $('#sendOrderForm').find('#'+idProduct).length < 1){
@@ -886,7 +867,7 @@ var main = function(){
 		$('input#'+idProduct).focus().select();
 	});
 	//show and hide category search icon
-	$(document).on('mouseenter', ".sidebarElement", function(event) { 
+	/*$(document).on('mouseenter', ".sidebarElement", function(event) { 
 		//event.stopPropagation();
 		$(this).find(".searchCategoryIcon").css('visibility','visible'); 
 	});
@@ -898,7 +879,7 @@ var main = function(){
 	}).on('click', ".sidebarElement", function(event){
 		$(".sidebarElement").find(".searchCategoryIcon").css('visibility','hidden');
 		$(this).find(".searchCategoryIcon").css('visibility','visible');
-	});	
+	});	*/
 	
 	$('.deleteOrderButton').click(function() {
 		//check dateinput and send ajax request

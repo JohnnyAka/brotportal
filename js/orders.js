@@ -639,7 +639,7 @@ function showSingleProduct(id, showBackButton = false){
 		
 		if(showBackButton){
 			let backButton = $('<button>')
-			.addClass('backButton')
+			.addClass('backButton btn btn-default btn-md')
 			.append('<span class="glyphicon glyphicon-arrow-left"></span>')
 			.click(function (){
 				let productList = JSON.parse($('.productContent').attr('data-backButtonContext'));
@@ -845,7 +845,7 @@ var main = function(){
 		$('.productCounter'+event.target.id).text(productCount);
 	});
 
-	//show and hide addProduct button in left menu (productlist)
+	//show and hide addProduct buttonGroup in left menu (productlist)
 	$(document).on('mouseenter', ".subSidebarElement", function(event) { 
 		$(this).find(".listProductAddButtonContainer").css('visibility','visible'); 
 	});
@@ -858,6 +858,8 @@ var main = function(){
 			$(this).find(".listProductAddButtonContainer").css('visibility','visible');
 	});
 	
+	
+	/*//add product functionality for counterButton in left productlist buttongroup
 	$(document).on('click', '.listProductAddButtonContainer', function(event) {
 		event.stopPropagation();
 		var idProduct = $(this).parent().data('id');
@@ -865,7 +867,10 @@ var main = function(){
 			appendToProductList($('#sendOrderForm'),idProduct, 1, false);
 		}
 		$('input#'+idProduct).focus().select();
-	});
+	});*/
+	
+	
+	
 	//show and hide category search icon
 	/*$(document).on('mouseenter', ".sidebarElement", function(event) { 
 		//event.stopPropagation();

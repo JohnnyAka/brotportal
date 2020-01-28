@@ -12,6 +12,12 @@
 	border-color: #000;
 }
 
+.backButton{
+	margin-right: 5px;
+	margin-left: auto;
+	float: right;
+}
+
 .multiProductImage{
 	
 }
@@ -20,9 +26,10 @@
 	margin: 0px;
 }
 
-.buttonCountProductSingleView:hover{
-	cursor: default;
+.buttonCountProductSingleView{
+	pointer-events: none;
 }
+
 
 .productCountMD{
 	font-size: 14px;
@@ -147,12 +154,13 @@ position: relative;
 
 .multiviewBoxProductName{
 	flex:0 1 auto;
-	margin-right: 5px;
+	margin-right: 0px;
 	margin-bottom: 3px;
 }
 
 .multiviewBoxCategory{
 	color: grey;
+	margin-left: 10px;
 	font-size: 12px;
 	flex:0 1 auto;
 }

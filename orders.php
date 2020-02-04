@@ -54,7 +54,7 @@ if(!isset($_SESSION['userid'])) {
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="index.php">Joldelunder</a>
+          <a class="navbar-brand" href="orders.php"><img class="brand-logo" src="images/joldelunderLogo.png" alt="Joldelunder"></a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -81,6 +81,7 @@ if(!isset($_SESSION['userid'])) {
 					<h3>Produktliste</h3>
 					<div class="productList">
 					</div>
+					<p class="oekoControlNumber">DE-Öko-006</p>
 				</div>
 				<div class="col-md-3 col-sm-6 col-md-push-6">
 					<hr class="controlsDivider">
@@ -104,7 +105,7 @@ if(!isset($_SESSION['userid'])) {
 					glyphicon glyphicon-check
 					-->
 					<hr class="orderListDivider">
-					<form id="sendOrderForm" class="rightListHeight" method="post" action="ajax/orders_sendOrder.php">					
+					<form id="sendOrderForm" class="rightListHeight" method="post" action="ajax/orders_sendOrder.php">			
 					</form>
 				</div>
 				<div class="col-md-6 col-sm-12 col-md-pull-3 main-content">

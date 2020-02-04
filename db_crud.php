@@ -100,6 +100,7 @@ EOT;
 					}
 					$where_values[$x-1] = "'".$value."'";
 				}
+				$placeholderArray = array_reverse($placeholderArray);
         $where_condition_final = str_replace($placeholderArray,$where_values,$where_condition);
 			}
 			$sql .= " WHERE " . $where_condition_final;

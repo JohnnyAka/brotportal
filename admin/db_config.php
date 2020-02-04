@@ -78,20 +78,25 @@ productID VARCHAR(10) NOT NULL,
 name VARCHAR(80) NOT NULL,
 productCategory INT(6),
 orderPriority INT(2) DEFAULT '50',
-visibleForUser TINYINT(1),
+visibleForUser TINYINT(1) DEFAULT '1',
 description VARCHAR(1000),
 imagePath VARCHAR(200),
+imagePathSmall VARCHAR(200),
+imagePathBig VARCHAR(200),
 ingredients VARCHAR(1000),
 allergens VARCHAR(300),
 weight VARCHAR(10),
-preBakeExp INT(3) UNSIGNED,
-preBakeMax INT(3) UNSIGNED,
+preBakeExp INT(3) UNSIGNED DEFAULT '0',
+preBakeMax INT(3) UNSIGNED DEFAULT '1',
 featureExp VARCHAR(200),
 price1 DECIMAL(8,2),
 price2 DECIMAL(8,2),
 price3 DECIMAL(8,2),
 price4 DECIMAL(8,2),
 price5 DECIMAL(8,2),
+salesTax DECIMAL(2,2),
+vpe INT(6) UNSIGNED,
+vpePricePerUnit DECIMAL(8,2),
 idCalendar INT(6)
 )";
 if ($conn->query($sql) === TRUE) {
@@ -108,10 +113,11 @@ name VARCHAR (80),
 password VARCHAR(255),
 customerCategory INT(6),
 priceCategory INT(1),
-discountInPercent DECIMAL(2,2) UNSIGNED DEFAULT '0',
+discountRelative DECIMAL(2,2) UNSIGNED DEFAULT '0',
 warningThreshold INT(6) UNSIGNED DEFAULT '25',
-mailAdressTo VARCHAR (80),
-mailAdressReceive VARCHAR (200),
+autoSendOrders  TINYINT(1) DEFAULT '1',
+mailAdressTo VARCHAR (100),
+mailAdressReceive VARCHAR (300),
 telephone1 VARCHAR (25),
 telephone2 VARCHAR (25),
 fax VARCHAR (25),
@@ -240,8 +246,9 @@ if ($conn->query($sql) === TRUE) {
 
 $sql = "CREATE TABLE productLabels (
 id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-name VARCHAR(80) NOT NULL,
-imagePath VARCHAR(200)
+name VARCHAR(100) NOT NULL,
+imagePath VARCHAR(200),
+imagePathSmall VARCHAR(200)
 )";
 if ($conn->query($sql) === TRUE) {
     echo "Table productLabels created successfully<br>";

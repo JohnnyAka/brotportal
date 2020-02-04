@@ -50,7 +50,7 @@ if(!isset($_SESSION['userid'])) {
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="index.php">Joldelunder</a>
+          <a class="navbar-brand" href="orders.php"><img class="brand-logo" src="images/joldelunderLogo.png" alt="Joldelunder"></a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">

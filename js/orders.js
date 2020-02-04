@@ -137,8 +137,8 @@ function createCategoryTree(treeDepth, startNode){
 			else{upperlvl = listlvl[x-1]};
 			listlvl.push(createListLevel(x, upperlvl, categoriesData));
 		}
-		var tree = compileTree(listlvl, treeDepth);
-		buildVisualProductList(tree, startNode);
+		productTree = compileTree(listlvl, treeDepth);//needs to be global -> see resize()
+		buildVisualProductList(productTree, startNode);
 	}).fail(function(data) {
 		displayMessage('Fehler', 'Produktliste konnte nicht erstellt werden.');
 		if (data.responseText !== '') {
@@ -288,7 +288,13 @@ function walkItemTree(currentTwig, currentDomElement, firstCall){
 				
 				//create buttongroup for adding products
 				let productButtonDiv = $('<div>').addClass('listProductAddButtonContainer btn-group').attr('role','group');
-				makeAddProductButtonGroup(productButtonDiv, product.id, 'btn-xs');
+				let buttonSize;
+				if( window.innerWidth <= 992){
+					buttonSize = 'btn-sm'
+				}else{
+					buttonSize = 'btn-xs'
+				}
+				makeAddProductButtonGroup(productButtonDiv, product.id, buttonSize);
 				currentListItem.append(productButtonDiv);
 				
 			}
@@ -655,7 +661,9 @@ function showSingleProduct(id, showBackButton = false){
 		if(imagePath){
 			$('.productContent').append('<img id="productImgSingle" src="'+imagePath+'">');
 		}
-		$('.productContent').append('<p>Gewicht: '+productData["weight"]+'</p>');
+		if(productData["weight"] != ''){
+			$('.productContent').append('<p>Gewicht: '+productData["weight"]+'</p>');
+		}
 		$('.productContent').append('<p>Artikelnummer: '+productData["productID"]+'</p>');
 		var prebake = productData["preBakeExp"];
 		if(prebake!=0){
@@ -663,9 +671,15 @@ function showSingleProduct(id, showBackButton = false){
 			if(prebake==1){dayOrDays = " Werktag "}
 			$('.productContent').append('<p>Bitte mindestens '+productData["preBakeExp"]+dayOrDays+'im Voraus bestellen.</p>');
 		}
-		$('.productContent').append('<p>Zutaten <br />'+productData["ingredients"]+'</p>');
-		$('.productContent').append('<p>Allergene <br />'+productData["allergens"]+'</p>');
-		$('.productContent').append('<p>Beschreibung <br />'+productData["description"]+'</p>');
+		if(productData["ingredients"] != ''){
+			$('.productContent').append('<p>Zutaten <br />'+productData["ingredients"]+'</p>');
+		}
+		if(productData["allergens"] != ''){
+			$('.productContent').append('<p>Allergene <br />'+productData["allergens"]+'</p>');
+		}
+		if(productData["description"] != ''){
+			$('.productContent').append('<p>Beschreibung <br />'+productData["description"]+'</p>');
+		}
 		if(typeof productData["price"] !== 'undefined'){
 			$('.productContent').append('<p>Preis <br />'+productData["price"]+productData["priceInfoText"]+'</p>');
 		}
@@ -817,6 +831,7 @@ var main = function(){
 			}
 			numberInput.val(parseInt(productCount) + 1);
 		}
+		showOrderNotYetSentIcon();
 		triggerChangeOfOrderCount(idProduct);
 	});
 	
@@ -833,6 +848,7 @@ var main = function(){
 			if(numberInputCount > 0){
 				numberInput.val(parseInt(numberInputCount) - 1);
 			}
+			showOrderNotYetSentIcon();
 			triggerChangeOfOrderCount(idProduct); 
 		}
 	});
@@ -885,6 +901,11 @@ var main = function(){
 		$(".sidebarElement").find(".searchCategoryIcon").css('visibility','hidden');
 		$(this).find(".searchCategoryIcon").css('visibility','visible');
 	});	*/
+	
+	$(window).resize(function(){
+		$(".productList").children().remove();
+		buildVisualProductList(productTree, ".productList");
+	});
 	
 	$('.deleteOrderButton').click(function() {
 		//check dateinput and send ajax request

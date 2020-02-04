@@ -28,6 +28,7 @@
 
 .buttonCountProductSingleView{
 	pointer-events: none;
+	opacity: 1 !important;
 }
 
 
@@ -101,9 +102,13 @@ div.subSidebarElement{
 	position: relative;
 }
 
+.oekoControlNumber{
+	float: right;
+	font-size: 10px;
+}
+
 .btn{
 position: relative;
-	
 }
 
 .listProductAddButtonContainer{
@@ -234,6 +239,9 @@ h4{
 		.rightListHeight{
 			height: 300px;
 		}
+		.sidebarList{
+			font-size: 20px;
+		}
 	}
 	
 	@media only screen and (min-width : 320px){
@@ -278,6 +286,9 @@ h4{
 		}
 		.productDivider{
 			display: none;
+		}
+		.sidebarList{
+			font-size: 14px;
 		}
 	}
 

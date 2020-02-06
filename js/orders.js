@@ -137,7 +137,7 @@ function createCategoryTree(treeDepth, startNode){
 			else{upperlvl = listlvl[x-1]};
 			listlvl.push(createListLevel(x, upperlvl, categoriesData));
 		}
-		productTree = compileTree(listlvl, treeDepth);//needs to be global -> see resize()
+		productTree = compileTree(listlvl, treeDepth);//needs to be global -> see $(window).resize()
 		buildVisualProductList(productTree, startNode);
 	}).fail(function(data) {
 		displayMessage('Fehler', 'Produktliste konnte nicht erstellt werden.');

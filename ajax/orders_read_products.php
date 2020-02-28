@@ -20,7 +20,7 @@ foreach($visibleCategories as $category){
 }
 $whereCondition = rtrim($whereCondition, " or ");
 
-$data = $db->getData("products", array('id','productID','name','orderPriority','productCategory'), "productCategory = ".$whereCondition,$whereValues);
+$data = $db->getData("products", array('id','productID','name','orderPriority','productCategory','visibleForUser'), "productCategory = ".$whereCondition,$whereValues);
 
 $jsonData = json_encode($data);
 echo $jsonData;

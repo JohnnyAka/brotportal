@@ -175,7 +175,7 @@ function createListLevel(x, upperlvl, categoriesData){
 //filter functions
 function findProducts(catID) {
   return function(product) {
-    if(product.productCategory == catID){
+    if(product.productCategory == catID && product.visibleForUser == 1){
 			return product.id;
 		};
   }

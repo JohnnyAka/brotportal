@@ -205,6 +205,7 @@ function linkSubcategories(category, lvlCounter, treeDepth, listlvl){
 	lvlCounter += 1;
 	if(lvlCounter < treeDepth){
 		let resultsSubcategories = listlvl[lvlCounter].filter(findSubcategories(category.id));
+		resultsSubcategories.sort(compareListItems);
 		category["subcategories"] = resultsSubcategories;
 		for(cat of category["subcategories"]){
 			linkSubcategories(cat, lvlCounter, treeDepth, listlvl);
@@ -574,7 +575,7 @@ function showMultipleArticles(productList, categoryId = null){
 		if(typeof product['price'] !== 'undefined'){
 			productText.append($('<div>').text('Preis: '+product['price']+' '+product['priceInfoText']));
 		}
-		if(product['preBakeExp'] !== 0){
+		if(product['preBakeExp'] != 0){
 			let plural = 'Werktage';
 			if(product['preBakeExp']==1){
 				plural = 'Werktag';

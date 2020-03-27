@@ -1,5 +1,7 @@
 /*This file contains event handlers for click events and form-submit events*/
 
+//depth of productList Tree on left productList
+var treeDepth = 3;
 
 //datepicker setup including onclose ajax orderlist load function
 $(function() {
@@ -105,7 +107,7 @@ $(function() {
 				categoriesPriorityDict[categoriesData[x].id] = categoriesData[x].orderPriority;
 			}
 			showOrders();
-			createCategoryTree(3, ".productList");
+			createCategoryTree(treeDepth, ".productList");
 		}).fail(function(data) {
 			displayMessage('Fehler', 'Kategorienamensliste konnte nicht erstellt werden.');
 			if (data.responseText !== '') {
@@ -750,7 +752,8 @@ var main = function(){
 			type: 'POST',
 			url: 'ajax/orders_readProductsOfCategory.php',
 			data: {
-				categoryID: categoryId
+				categoryID: categoryId,
+				categoryTreeDepth: treeDepth
 			}
 		}).done(function(response) {
 			//alert(response);

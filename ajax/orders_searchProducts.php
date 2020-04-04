@@ -7,7 +7,10 @@ $pSearchText = strip_tags(trim($_POST['productSearchText']));
 
 $db = new db_connection();
 
-$priceCatNumber = $db->getData("users", array('priceCategory'), "id=?1",$_SESSION['userid'])[0]['priceCategory'];
+$userId = $_SESSION['userid'];
+
+//prepare prices
+$priceCatNumber = $db->getData("users", array('priceCategory'), "id=?1",$userId)[0]['priceCategory'];
 $userPriceCategory = 'price'.$priceCatNumber;
 
 $parameter = array('id','productID','name','productCategory','visibleForUser','description','imagePath','ingredients','allergens','weight','preBakeExp','featureExp');
@@ -25,9 +28,25 @@ for($x = 1; $x <= $countSearchArray; $x++){
 	$pSearchTextArray[$x-1] = '%'.$pSearchTextArray[$x-1].'%';
 	$queryString .= ' name LIKE ?'.$x.' and';
 }
-$queryString = chop($queryString, 'and');
+$queryString = rtrim($queryString, 'and');
 
-$data = $db->getData("products", $parameter, $queryString." and visibleForUser != '0'",$pSearchTextArray);
+//prepare product visibility
+$userCategoryId = $db->getData("users", "customerCategory", "id=?1", $userId)[0]['customerCategory'];
+$visibleCategories = $db->getData("categoryRelations", "idProductCat", "idUserCat=?1",$userCategoryId);
+$whereValuesVisibility = array();
+$whereQueryVisibility = "(";
+$x = count($pSearchTextArray) + 1;
+foreach($visibleCategories as $category){
+    array_push($whereValuesVisibility, $category['idProductCat']);
+    $whereQueryVisibility .= "productCategory=?".$x." or ";
+    $x++;
+}
+$whereQueryVisibility = rtrim($whereQueryVisibility, " or ");
+$whereQueryVisibility .= ')';
+
+$testQuery = $queryString." and visibleForUser != '0' and ".$whereQueryVisibility;
+
+$data = $db->getData("products", $parameter, $testQuery, array_merge($pSearchTextArray, $whereValuesVisibility));
 
 $result = $db->getData("prizeCategories", array('infoText'), "id=?1",$priceCatNumber);
 if ($result != null){

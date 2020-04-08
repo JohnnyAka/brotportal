@@ -57,7 +57,7 @@ $(function() {
 
 			//close modal
 			$("#createUser").modal("hide");
-			//reload page to show new article
+			//reload page to show new user
 			location.reload(); 
 		}).fail(function(data) {
 			// Set the message text.
@@ -164,7 +164,7 @@ var deleteUserAndOrders = function(userID, deleteOrders = false){
 //main function for click event handlers
 var main = function(){
 
-	// click-event to retrieve data-id and alert
+	// click-event to show userdata on screen
 	$('ul.subSidebarList li').click(function() {
 		$('ul.sidebarList li').removeClass("active");
 		$(this).addClass("active");
@@ -175,6 +175,11 @@ var main = function(){
 			$(".customerIDDisp").text(userData[0]["customerID"]);
 			$(".nameDisp").text(userData[0]["name"]);
 			$(".customerCategoryDisp").text(categoriesNameDict[userData[0]["customerCategory"]]);
+			$(".discountRelativeDisp").text(userData[0]["discountRelative"]);
+			$(".warningThresholdDisp").text(userData[0]["warningThreshold"]);
+			var autoSendText = "Nein";
+			if(userData[0]["autoSendOrders"]!=0) autoSendText = "Ja";
+			$(".autoSendOrdersDisp").text(autoSendText);
 			$(".mailAdressToDisp").text(userData[0]["mailAdressTo"]);
 			$(".mailAdressReceiveDisp").text(userData[0]["mailAdressReceive"]);
 			$(".telephone1Disp").text(userData[0]["telephone1"]);
@@ -246,6 +251,13 @@ var main = function(){
 				$('#customerCategoryUp').val(userData[0]["customerCategory"]);
 				$('#mailAdressToUp').val(userData[0]["mailAdressTo"]);
 				$('#mailAdressReceiveUp').val(userData[0]["mailAdressReceive"]);
+				$("#discountRelativeUp").val(userData[0]["discountRelative"]);
+				$("#warningThresholdUp").val(userData[0]["warningThreshold"]);
+				//Boolean() doesnt seem to work
+				var autoSend = userData[0]["autoSendOrders"];
+				if (autoSend != 0){autoSend = true}
+				else{autoSend = false}
+				$("#autoSendOrdersUp").prop('checked', autoSend);
 				$('#telephone1Up').val(userData[0]["telephone1"]);
 				$('#telephone2Up').val(userData[0]["telephone2"]);
 				$('#faxUp').val(userData[0]["fax"]);

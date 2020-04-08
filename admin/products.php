@@ -201,7 +201,7 @@ if(!isset($_SESSION['trustedUser'])) {
 				</div>
 				<div class="field">
 					<label for="visibleForUser">Für Kunden sichtbar:</label>
-					<input type="checkbox" id="visibleForUser" name="visibleForUser" value="1">
+					<input type="checkbox" id="visibleForUser" name="visibleForUser" value="1" checked>
 				</div>
 				<div class="field">
 					<label for="description">Beschreibung:</label>

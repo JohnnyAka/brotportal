@@ -146,9 +146,9 @@ if(!isset($_SESSION['trustedUser'])) {
 		  Name: <span class="nameDisp"></span><br />
 			Kategorie: <span class="customerCategoryDisp"></span><br />
 			Preiskategorie: <span class="priceCategoryDisp"></span><br />
-			Rabatt: <span class="discountRelativeDisp"></span> %<br />
-			Bestellwarnungsgrenze: <span class="warningThresholdDisp"></span> €<br />
-			Automatisch abschicken: <span class="autoSendOrdersDisp"></span><br />
+			Rabatt: <span class="discountRelativeDisp"></span><br />
+			Bestellwarnschwelle: <span class="warningThresholdDisp"></span><br />
+			Automatisch Abschicken: <span class="autoSendOrdersDisp"></span><br />
 			E-Mail: <span class="mailAdressToDisp"></span><br />
 			E-Mail-Verteiler: <span class="mailAdressReceiveDisp"></span><br />
 			Telefon Laden: <span class="telephone1Disp"></span><br />
@@ -211,14 +211,14 @@ if(!isset($_SESSION['trustedUser'])) {
 					<input type="number" step="0.01" id="discountRelative" name="discountRelative">
 				</div>
 				<div class="field">
-					<label for="warningThreshold">Bestellwarnungsgrenze:</label>
+					<label for="warningThreshold">Bestellwarnschwelle:</label>
 					<input type="number" id="warningThreshold" name="warningThreshold">
 				</div>
 				<div class="field">
 					<input type="hidden" name="autoSendOrders" value="0">
 				</div>
 				<div class="field">
-					<label for="autoSendOrders">Automatisch abschicken:</label>
+					<label for="autoSendOrders">Automatisch Abschicken:</label>
 					<input type="checkbox" id="autoSendOrders" name="autoSendOrders" value="1" checked>
 				</div>
 				<div class="field">
@@ -309,14 +309,14 @@ if(!isset($_SESSION['trustedUser'])) {
 					<input type="number" step="0.01" id="discountRelativeUp" name="discountRelative">
 				</div>
 				<div class="field">
-					<label for="warningThresholdUp">Bestellwarnungsgrenze:</label>
+					<label for="warningThresholdUp">Bestellwarnschwelle:</label>
 					<input type="number" id="warningThresholdUp" name="warningThreshold">
 				</div>
 				<div class="field">
 					<input type="hidden" name="autoSendOrders" value="0">
 				</div>
 				<div class="field">
-					<label for="autoSendOrdersUp">Automatisch abschicken:</label>
+					<label for="autoSendOrdersUp">Automatisch Abschicken:</label>
 					<input type="checkbox" id="autoSendOrdersUp" name="autoSendOrders" value="1">
 				</div>
 				<div class="field">

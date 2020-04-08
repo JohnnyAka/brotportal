@@ -101,6 +101,10 @@ function showUserSettings(){
         var userData = JSON.parse(response);
         $(".customerIDDisp").text(userData[0]["customerID"]);
         $(".nameDisp").text(userData[0]["name"]);
+        $(".warningThresholdDisp").text(userData[0]["warningThreshold"]);
+        var autoSendText = "Nein";
+        if(userData[0]["autoSendOrders"]!=0) autoSendText = "Ja";
+        $(".autoSendOrdersDisp").text(autoSendText);
         $(".mailAdressToDisp").text(userData[0]["mailAdressTo"]);
         $(".mailAdressReceiveDisp").text(userData[0]["mailAdressReceive"]);
     });
@@ -127,6 +131,12 @@ var main = function(){
             //set values of form
             $('#EMail').val(userData[0]["mailAdressTo"]);
             $('#MailingList').val(userData[0]["mailAdressReceive"]);
+            $("#warningThreshold").val(userData[0]["warningThreshold"]);
+            //Boolean() doesnt seem to work
+            var autoSend = userData[0]["autoSendOrders"];
+            if (autoSend != 0){autoSend = true}
+            else{autoSend = false}
+            $("#autoSendOrders").prop('checked', autoSend);
 
             //show modal
             $("#updateUserMail").modal("show");

@@ -16,7 +16,7 @@ $currentPassword = $db->getData("users",array('password'),'id=?1',$id)[0]['passw
 $passwordCorrect = password_verify($password, $currentPassword);
 
 if(!$passwordCorrect){
-		$responseMessage->displayMessage = "Altes Passwort stimmt nicht.";
+		$responseMessage->displayMessage = "Das Passwort stimmt nicht.";
 		$responseMessage->success = false;
 		echo json_encode($responseMessage);
     return;
@@ -24,15 +24,17 @@ if(!$passwordCorrect){
 
 $mailAdressTo = strip_tags(trim($_POST["mailAdressTo"]));
 $mailAdressReceive = strip_tags(trim($_POST["mailAdressReceive"]));
+$warningThreshold = strip_tags(trim($_POST["warningThreshold"]));
+$autoSendOrders = (int)$_POST["autoSendOrders"];
 
 $result = $db->updateData("users", 
-array('mailAdressTo','mailAdressReceive'),
-array($mailAdressTo,$mailAdressReceive),
+array('mailAdressTo','mailAdressReceive','warningThreshold','autoSendOrders'),
+array($mailAdressTo,$mailAdressReceive,$warningThreshold,$autoSendOrders),
 "id=?1",$id);
 
 if(substr($result, 0, 1) != "R"){  
-	$responseMessage->appendLogMessage("Die Mailadresse konnte nicht geändert werden. Fehlermeldung: ".$result);
-	$responseMessage->appendDisplayMessage("Programmfehler: Die Mailadresse konnte nicht geändert werden. Bitte melden Sie sich in der Bäckerei\n");
+	$responseMessage->appendLogMessage("Die Einstellungen konnten nicht geändert werden. Fehlermeldung: ".$result);
+	$responseMessage->appendDisplayMessage("Programmfehler: Die Einstellungen konnten nicht geändert werden. Bitte melden Sie sich in der Bäckerei\n");
 	$responseMessage->success = false;
 }
 

@@ -77,15 +77,17 @@ if(!isset($_SESSION['userid'])) {
                             Passwort ändern
                         </button>
                         <button type="button" class="btn btn-primary updateEMailButton" >
-                            E-Mail &auml;ndern
+                            Einstellungen &auml;ndern
                         </button>
                     </div>
-                    <h3>Ihre Daten</h3>
+                    <h3>Ihre Daten und Einstellungen</h3>
                     <p>
                         Kunden Nr.: <span class="customerIDDisp"></span><br />
                         Name: <span class="nameDisp"></span><br />
                         E-Mail: <span class="mailAdressToDisp"></span><br />
                         E-Mail-Verteiler: <span class="mailAdressReceiveDisp"></span><br />
+                        Automatisch Abschicken: <span class="autoSendOrdersDisp"></span><br />
+                        Bestellwarnschwelle pro Artikel: <span class="warningThresholdDisp"></span><br />
                     </p>
                 </div>
 				</div>
@@ -132,13 +134,24 @@ if(!isset($_SESSION['userid'])) {
           <div class="modal-content">
               <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 class="modal-title" id="updateUserMailLabel">E-Mail Adressen &auml;ndern</h4>
+                  <h4 class="modal-title" id="updateUserMailLabel">Einstellungen &auml;ndern</h4>
               </div>
               <div class="modal-body">
                   <form id="updateUserMailForm" method="post" action="ajax/settings_updateMail.php">
                       <div class="field">
                           <label for="passwordOld">Passwort:</label>
                           <input type="password" id="passwordOldMail" name="passwordOld" required>
+                      </div>
+                      <div class="field">
+                         <label for="warningThresholdUp">Bestellwarnschwelle:</label>
+                         <input type="number" id="warningThreshold" name="warningThreshold">
+                      </div>
+                      <div class="field">
+                         <input type="hidden" name="autoSendOrders" value="0">
+                      </div>
+                      <div class="field">
+                          <label for="autoSendOrdersUp">Automatisch Abschicken:</label>
+                          <input type="checkbox" id="autoSendOrders" name="autoSendOrders" value="1">
                       </div>
                       <div class="field">
                           <label for="EMail">E-Mail (geschäftl.):</label>

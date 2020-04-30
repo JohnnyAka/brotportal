@@ -81,17 +81,21 @@ $(function() {
 	// Submit the form using AJAX.
 	$.ajax({
 		type: 'POST',
-		url: 'ajax/orders_read_products.php'
+		url: 'ajax/orders_read_productsForDicts.php'
 	}).done(function(response) {
 		productsData = JSON.parse(response);
 		//set Item List
 		productsNameDict = {};
 		productsCategoryDict = {};
 		productsOrderPriorityDict = {};
+		productsPriceDict = {};
+
 		for(var x=0; x < productsData.length; x++){
 			productsCategoryDict[productsData[x].id] = productsData[x].productCategory;
 			productsOrderPriorityDict[productsData[x].id] = productsData[x].orderPriority;
 			productsNameDict[productsData[x].id] = productsData[x].name;
+			//for order threshold only!!! category 'price0' has 'price2' for calculation of threshold in sendOrderForm submit
+			productsPriceDict[productsData[x].id] = productsData[x].price; 
 		}
 		//create product category list(dictionary) for name retrieval
 		$.ajax({
@@ -125,6 +129,23 @@ $(function() {
 		}
 	});
 });
+//get userdata - warningThreshold, discountRelative, autoSendOrders
+$(function(){
+	$.ajax({
+		type: 'POST',
+		url: 'ajax/orders_readUser.php'
+	}).done(function(response) {
+		let res = JSON.parse(response);
+		userData = res[0];
+	}).fail(function(data) {
+		displayMessage('Fehler', 'Verbindungsfehler, Warnungsschwelle konnte nicht geladen werden.');
+		if (data.responseText !== '') {
+			logMessage(data.responseText);
+		} else {
+			logMessage('Fehler', 'Verbindungsfehler, Warnungsschwelle konnte nicht geladen werden.');
+		}
+	});
+})
 
 //create productlist
 function createCategoryTree(treeDepth, startNode){
@@ -323,6 +344,18 @@ $('#sendOrderForm').submit(function(event) {
 	if(regExp.test(selectedDate)){
 		var form = $('#sendOrderForm');
 		var customerID = $('#userID').data("value");
+
+		var testFormData = form.serializeArray();
+		var warningNameString = '';
+		for(let productOrder of testFormData){
+			let productOrderSum = Number(productOrder['value']) * Number(productsPriceDict[productOrder['name']]);
+			if(productOrderSum > userData['warningThreshold']){
+				warningNameString += productOrder['value']+' x '+productsNameDict[productOrder['name']]+'\n';
+			}
+		}
+		if(warningNameString !== ''){
+			displayMessage('Achtung', 'Folgende Bestellungen überschreiten den Warnschwellwert: \n\n'+warningNameString+'\nBitte passen Sie die Bestellung an, wenn Sie so nicht geplant war. \n\nKleiner Tip: Sie können Sie den Warnschwellwert in den Einstellungen anpassen.');
+		}
 		form.append('<input type="hidden" value="'+selectedDate+'" name="orderDate">');
 		form.append('<input type="hidden" value="'+customerID+'" name="userID">');
 

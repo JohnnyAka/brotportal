@@ -176,7 +176,7 @@ var main = function(){
 			$(".nameDisp").text(userData[0]["name"]);
 			$(".customerCategoryDisp").text(categoriesNameDict[userData[0]["customerCategory"]]);
 			$(".discountRelativeDisp").text(userData[0]["discountRelative"]);
-			$(".warningThresholdDisp").text(userData[0]["warningThreshold"]);
+			$(".warningThresholdDisp").text(userData[0]["warningThreshold"]+" €");
 			var autoSendText = "Nein";
 			if(userData[0]["autoSendOrders"]!=0) autoSendText = "Ja";
 			$(".autoSendOrdersDisp").text(autoSendText);

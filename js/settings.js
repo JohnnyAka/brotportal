@@ -101,7 +101,7 @@ function showUserSettings(){
         var userData = JSON.parse(response);
         $(".customerIDDisp").text(userData[0]["customerID"]);
         $(".nameDisp").text(userData[0]["name"]);
-        $(".warningThresholdDisp").text(userData[0]["warningThreshold"]);
+        $(".warningThresholdDisp").text(userData[0]["warningThreshold"]+" €");
         var autoSendText = "Nein";
         if(userData[0]["autoSendOrders"]!=0) autoSendText = "Ja";
         $(".autoSendOrdersDisp").text(autoSendText);

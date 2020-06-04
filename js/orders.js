@@ -373,7 +373,7 @@ $('#sendOrderForm').submit(function(event) {
 			//update orderSentSign
 			showOrderSentIcon();
 			showOrders();
-			updateOrderDays();		
+			updateOrderDays();
 			if(!resData.success){
 				displayMessage("Nachricht", resData.displayMessage);
 				logMessage("Fehler", resData.logMessage);
@@ -491,7 +491,10 @@ var showOrders = function(){
 							$('#sendOrderForm').append('<hr class="orderListDivider">');
 						}
 					}
-					
+					if(document.cursorPositionFocused){
+						//alert("I was focused! "+  ' '+document.cursorPositionProductID);
+						$('#'+document.cursorPositionProductID+'.orderProductInput').focus();
+					}
 				}).fail(function(data){
 					displayMessage('Fehler', 'Bestellung konnte nicht geladen werden.');
 					if (data.responseText !== '') {
@@ -504,7 +507,6 @@ var showOrders = function(){
 			else{
 				displayMessage("Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
 			}
-			
 		}).fail(function(data) {
 			displayMessage('Fehler', 'Verbindung zum Server ist unterbrochen. (Stichwort: dataBlockedForDisplay)');
 			if (data.responseText !== '') {
@@ -533,12 +535,27 @@ var appendToProductList = function(formObj,idProduct, number, init){
 	}
 	let inputField = document.getElementById(idProduct);
 	inputField.addEventListener("input", showOrderNotYetSentIcon, false);
+	inputField.addEventListener("focus", saveCursorPosition, false);
+	inputField.addEventListener("blur", removeCursorPosition, true);
 	triggerChangeOfOrderCount(idProduct);
 }
 var showOrderNotYetSentIcon = function(){
 	var orderSent = $('#orderSentSign');
 	orderSent.removeClass('glyphicon-check');
 	orderSent.addClass('glyphicon-share');
+
+	if(showOrderNotYetSentIcon.timeoutObject != undefined){
+		clearTimeout(showOrderNotYetSentIcon.timeoutObject);
+	}
+
+	if(userData['autoSendOrders']){
+		showOrderNotYetSentIcon.timeoutObject = setTimeout(function () {
+			$('#sendOrderForm').submit();
+
+		},3000);
+
+	}
+
 	window.onbeforeunload = function() {
     return 'Die aktuelle Bestellung ist noch nicht abgeschickt.';
 	}
@@ -548,6 +565,21 @@ var showOrderSentIcon = function(){
 	orderSent.removeClass('glyphicon-share');
 	orderSent.addClass('glyphicon-check');
 	window.onbeforeunload = null;
+}
+//save position of cursor in right productlist for reloading after submit
+var saveCursorPosition = function(event){
+	var productID = event.target.id;
+	document.cursorPositionFocused = true;
+	document.cursorPositionStart = event.target.selectionStart;
+	document.cursorPositionEnd = event.target.selectionEnd;
+	document.cursorPositionProductID = productID;
+	clearTimeout(document.cursorPositionTimeoutFunction);
+}
+//if timeout shorter than 200 ms, submit function reloads cursor
+var removeCursorPosition = function(event){
+	document.cursorPositionTimeoutFunction = setTimeout(function(){
+		document.cursorPositionFocused = false;
+	}, 200);
 }
 var triggerChangeOfOrderCount = function (idProduct){
 	$('input#'+idProduct).trigger("input");
@@ -938,6 +970,8 @@ var main = function(){
 		$(".sidebarElement").find(".searchCategoryIcon").css('visibility','hidden');
 		$(this).find(".searchCategoryIcon").css('visibility','visible');
 	});	*/
+
+
 	
 	$(window).resize(function(){
 		$(".productList").children().remove();

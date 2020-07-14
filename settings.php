@@ -88,8 +88,8 @@ if(!isset($_SESSION['userid'])) {
                         Name: <span class="nameDisp"></span><br />
                         E-Mail: <span class="mailAdressToDisp"></span><br />
                         E-Mail-Verteiler: <span class="mailAdressReceiveDisp"></span><br />
-                        Automatisch Abschicken <a href="" title="Der Shop schickt die Bestellung 2 Minuten nach der letzten Änderung automatisch ab, wenn das Fenster offen gelassen wurde">(?)</a>: <span class="autoSendOrdersDisp"></span><br />
-                        Bestellwarnschwelle pro Artikel <a href="" title="Warnt Dich, wenn die Bestellung eines Artikels höher ist als dieser Wert, um Typos vorzubeugen">(?)</a>: <span class="warningThresholdDisp"></span><br />
+                        Automatisch Abschicken <a href="" title="Der Shop schickt die Bestellung 2 Minuten nach der letzten Änderung automatisch ab, wenn das Fenster offen gelassen wurde.">(?)</a>: <span class="autoSendOrdersDisp"></span><br />
+                        Bestellwarnschwelle pro Artikel <a href="" title="Warnt Sie, wenn der Bestellwert eines Artikels höher ist als dieser Wert. Richtig eingestellt sollte es helfen, versehentliche Vertipper zu vermeiden.">(?)</a>: <span class="warningThresholdDisp"></span><br />
                     </p>
                 </div>
 				</div>

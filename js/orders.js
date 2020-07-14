@@ -5,6 +5,9 @@ var treeDepth = 3;
 
 //datepicker setup including onclose ajax orderlist load function
 $(function() {
+
+	
+
 	$( "#ordersDatepicker" ).datepicker({
 	dateFormat:"dd.mm.yy",
 	minDate:"-380",
@@ -335,6 +338,8 @@ function getKeyByValue(object, value) {
 }
 //search done
 
+
+
 $('#sendOrderForm').submit(function(event) {
 	// Stop the browser from submitting the form.
 	event.preventDefault();
@@ -345,7 +350,7 @@ $('#sendOrderForm').submit(function(event) {
 		var form = $('#sendOrderForm');
 		var customerID = $('#userID').data("value");
 
-		var testFormData = form.serializeArray();
+		/*var testFormData = form.serializeArray();
 		var warningNameString = '';
 		for(let productOrder of testFormData){
 			let productOrderSum = Number(productOrder['value']) * Number(productsPriceDict[productOrder['name']]);
@@ -353,41 +358,43 @@ $('#sendOrderForm').submit(function(event) {
 				warningNameString += productOrder['value']+' x '+productsNameDict[productOrder['name']]+'\n';
 			}
 		}
-		if(warningNameString !== ''){
-			displayMessage('Achtung', 'Folgende Bestellungen überschreiten den Warnschwellwert: \n\n'+warningNameString+'\nBitte passen Sie die Bestellung an, wenn Sie so nicht geplant war. \n\nKleiner Tip: Sie können Sie den Warnschwellwert in den Einstellungen anpassen.');
-		}
-		form.append('<input type="hidden" value="'+selectedDate+'" name="orderDate">');
-		form.append('<input type="hidden" value="'+customerID+'" name="userID">');
+		if(warningNameString == ''){*/
+			form.append('<input type="hidden" value="'+selectedDate+'" name="orderDate">');
+			form.append('<input type="hidden" value="'+customerID+'" name="userID">');
 
-		// Serialize the form data.
-		var formData = form.serialize();
-		
-		// Submit the form using AJAX.
-		$.ajax({
-			type: 'POST',
-			url: form.attr('action'),
-			data: formData
-		}).done(function(response) {
-			//alert(response);
-			resData = JSON.parse(response);
-			//update orderSentSign
-			showOrderSentIcon();
-			showOrders();
-			updateOrderDays();
-			if(!resData.success){
-				displayMessage("Nachricht", resData.displayMessage);
-				logMessage("Fehler", resData.logMessage);
-			}else{
-				displayMessage("Bestellbestätigung", "Ihre Bestellung ist erfolgreich angekommen. Bis zum Bestellschluss können Sie die Bestellung noch anpassen.");
-			}
-		}).fail(function(data) {
-			displayMessage('Fehler', 'Artikel konnte nicht erstellt werden.');
-			if (data.responseText !== '') {
-				logMessage(data.responseText);
-			} else {
-				logMessage('Fehler', 'Artikel konnte nicht erstellt werden.');
-			}
-		});
+			// Serialize the form data.
+			var formData = form.serialize();
+			
+			// Submit the form using AJAX.
+			$.ajax({
+				type: 'POST',
+				url: form.attr('action'),
+				data: formData
+			}).done(function(response) {
+				//alert(response);
+				resData = JSON.parse(response);
+				//update orderSentSign
+				showOrderSentIcon();
+				showOrders();
+				updateOrderDays();
+				if(!resData.success){
+					displayMessage("Nachricht", resData.displayMessage);
+					logMessage("Fehler", resData.logMessage);
+				}else{
+					displayMessage("Bestellbestätigung", "Ihre Bestellung ist erfolgreich angekommen. \n\nBis zum Bestellschluss können Sie die Bestellung noch anpassen.");
+				}
+			}).fail(function(data) {
+				displayMessage('Fehler', 'Artikel konnte nicht erstellt werden.');
+				if (data.responseText !== '') {
+					logMessage(data.responseText);
+				} else {
+					logMessage('Fehler', 'Artikel konnte nicht erstellt werden.');
+				}
+			});
+			
+		/*}else{
+			displayMessage('Warnung', 'Folgende Bestellungen überschreiten den Warnschwellwert: \n\n'+warningNameString+'\nBitte passen Sie die Bestellung an, wenn Sie so nicht geplant war. \n\nKleiner Tip: Sie können Sie den Warnschwellwert in den Einstellungen anpassen.');
+		}*/
 	}
 	else{
 		displayMessage("Nachricht","Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
@@ -545,6 +552,7 @@ var showOrderNotYetSentIcon = function(){
 	var orderSent = $('#orderSentSign');
 	orderSent.removeClass('glyphicon-check');
 	orderSent.addClass('glyphicon-share');
+	orderSent.data('sent', false);
 
 	if(showOrderNotYetSentIcon.timeoutObject != undefined){
 		clearTimeout(showOrderNotYetSentIcon.timeoutObject);
@@ -566,6 +574,7 @@ var showOrderSentIcon = function(){
 	var orderSent = $('#orderSentSign');
 	orderSent.removeClass('glyphicon-share');
 	orderSent.addClass('glyphicon-check');
+	orderSent.data('sent', true);
 	window.onbeforeunload = null;
 
 	if(showOrderNotYetSentIcon.timeoutObject != undefined){
@@ -949,6 +958,45 @@ var main = function(){
 			$(this).find(".listProductAddButtonContainer").css('visibility','visible');
 	});
 	
+	//prevent loosing of unsent order changes while clicking on datePicker
+	$(document).on("mousedown", "#ordersDatepicker", function(event){
+		let orderSent = $("#orderSentSign");
+		if(!orderSent.data("sent")){
+			event.preventDefault();
+			$("#pickDateAlertModal").modal("show");
+		}
+	});
+	$(document).on("click", ".changeDateDespiteAlert", function(){
+
+		$("#pickDateAlertModal").modal("hide");
+		$("#ordersDatepicker").datepicker("show");
+	});
+
+	//prevent sending of order when warning threshold is violated
+	$(document).on("mousedown", ".sendOrderButton", function(event){
+		var form = $('#sendOrderForm');
+
+		var testFormData = form.serializeArray();
+		var warningNameString = '';
+		for(let productOrder of testFormData){
+			let productOrderSum = Number(productOrder['value']) * Number(productsPriceDict[productOrder['name']]);
+			if(productOrderSum > userData['warningThreshold']){
+				warningNameString += productOrder['value']+' x '+productsNameDict[productOrder['name']]+'\n';
+			}
+		}
+		if(warningNameString == ''){
+			$("#sendOrderForm").submit();
+		}else{
+			$('#warningThresholdAlertText').text('Folgende Bestellungen überschreiten den Warnschwellwert: \n\n'+warningNameString+'\nSoll die Bestellung dennoch jetzt abgeschickt werden? \n\nKleiner Tip: Sie können Sie den Warnschwellwert in den Einstellungen anpassen.');
+			$('#warningThresholdAlertModal').modal("show");
+		}
+	});
+
+	$(document).on("click", ".violateWarningThresholdAlert", function(){
+
+		$("#warningThresholdAlertModal").modal("hide");
+		$("#sendOrderForm").submit();
+	});
 	
 	/*//add product functionality for counterButton in left productlist buttongroup
 	$(document).on('click', '.listProductAddButtonContainer', function(event) {

@@ -1,4 +1,6 @@
-
+.modal-open[style] {
+padding-right: 0px !important;
+}
 
 
 /* single product content*/
@@ -228,6 +230,10 @@ h4{
 
 /*alertModal linebreaks*/
 #alertMessageText{
+	white-space: pre-line;
+}
+
+#warningThresholdAlertText{
 	white-space: pre-line;
 }
 

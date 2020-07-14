@@ -142,6 +142,50 @@ if(!isset($_SESSION['userid'])) {
 	</div>
 
 	<!-- Modal -->
+	<div id="pickDateAlertModal" class="modal fade" role="dialog">
+		<div class="modal-dialog" role="content">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Warnung</h4>
+				</div>
+				<div class="modal-body">
+					<p>Bei einem Datumswechsel verfallen die Änderungen, die noch nicht abgeschickt wurden. Wollen Sie dennoch das Datum wechseln?</p>
+				</div>
+				<div class="modal-footer">
+				<button type="button" class="btn btn-default changeDateDespiteAlert">Ja</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Nein</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<!-- Modal -->
+	<div id="warningThresholdAlertModal" class="modal fade" role="dialog">
+		<div class="modal-dialog" role="content">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Warnung</h4>
+				</div>
+				<div class="modal-body">
+					<p id="warningThresholdAlertText"></p>
+				</div>
+				<div class="modal-footer">
+				<button type="button" class="btn btn-default violateWarningThresholdAlert">Ja</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Nein</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<!-- Modal -->
   <div class="modal" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="alertModal">
       <div class="modal-dialog" role="document">
           <div class="modal-content">

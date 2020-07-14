@@ -377,6 +377,8 @@ $('#sendOrderForm').submit(function(event) {
 			if(!resData.success){
 				displayMessage("Nachricht", resData.displayMessage);
 				logMessage("Fehler", resData.logMessage);
+			}else{
+				displayMessage("Bestellbestätigung", "Ihre Bestellung ist erfolgreich angekommen. Bis zum Bestellschluss können Sie die Bestellung noch anpassen.");
 			}
 		}).fail(function(data) {
 			displayMessage('Fehler', 'Artikel konnte nicht erstellt werden.');
@@ -548,11 +550,11 @@ var showOrderNotYetSentIcon = function(){
 		clearTimeout(showOrderNotYetSentIcon.timeoutObject);
 	}
 
-	if(userData['autoSendOrders']){
+	if(userData['autoSendOrders'] == 1){
 		showOrderNotYetSentIcon.timeoutObject = setTimeout(function () {
 			$('#sendOrderForm').submit();
 
-		},3000);
+		},120000);
 
 	}
 
@@ -565,6 +567,10 @@ var showOrderSentIcon = function(){
 	orderSent.removeClass('glyphicon-share');
 	orderSent.addClass('glyphicon-check');
 	window.onbeforeunload = null;
+
+	if(showOrderNotYetSentIcon.timeoutObject != undefined){
+		clearTimeout(showOrderNotYetSentIcon.timeoutObject);
+	}
 }
 //save position of cursor in right productlist for reloading after submit
 var saveCursorPosition = function(event){
@@ -973,10 +979,10 @@ var main = function(){
 
 
 	
-	$(window).resize(function(){
-		$(".productList").children().remove();
-		buildVisualProductList(productTree, ".productList");
-	});
+	//$(window).resize(function(){
+		//$(".productList").children().remove();
+		//buildVisualProductList(productTree, ".productList");
+	//});
 	
 	$('.deleteOrderButton').click(function() {
 		//check dateinput and send ajax request

@@ -148,6 +148,9 @@ if(!isset($_SESSION['trustedUser'])) {
 		  <button type="button" class="btn btn-primary deleteProductButton" >
 			Artikel l&ouml;schen
 		  </button>
+		  <button type="button" class="btn btn-primary imageUploadButton" >
+			Bilder hochladen
+		  </button>
 		</div> 
 		<h1>Ausgew&auml;hlter Artikel</h1>
 		  <p>
@@ -397,6 +400,31 @@ if(!isset($_SESSION['trustedUser'])) {
 		  <div class="modal-footer">
 			<button type="button" class="btn btn-default" data-dismiss="modal">Nein</button>
 			<button type="button" class="btn btn-primary deleteProductAndOrdersButton">Ja</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+
+	<!-- Modal for image uploads-->
+	<div class="modal" id="imageUpload" tabindex="-1" role="dialog" aria-labelledby="imageUploadLabel">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="imageUploadLabel">Bilder hochladen</h4>
+		  </div>
+		  <div class="modal-body">
+		  	<p>Bitte wählen Sie die Bilder aus, die Sie hochladen wollen:</p>
+			<form id="uploadImagesForm" method="post" action="ajax/products_imageUpload.php">
+				<div class="field">
+					<label for="imageUploadInput"></label>
+					<input type="file" id="imageUploadInput" name="imageUploadInput" multiple>
+				</div>
+			</form>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
+			<button type="submit" form="uploadImagesForm" class="btn btn-primary imageUploadSubmitButton">Ok</button>
 		  </div>
 		</div>
 	  </div>

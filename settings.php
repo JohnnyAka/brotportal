@@ -20,6 +20,8 @@ if(!isset($_SESSION['userid'])) {
 
     <!-- Bootstrap core CSS -->
     <link href="external/bootstrap-3.3.5-dist/css/bootstrap.min.css" rel="stylesheet">
+
+
 		<!--jquery files -->
 		<link href="external/jquery-ui-1.11.4.custom/jquery-ui.css" rel="stylesheet">
 		<script src="external/jquery-ui-1.11.4.custom/external/jquery/jquery.js"></script>
@@ -86,8 +88,8 @@ if(!isset($_SESSION['userid'])) {
                         Name: <span class="nameDisp"></span><br />
                         E-Mail: <span class="mailAdressToDisp"></span><br />
                         E-Mail-Verteiler: <span class="mailAdressReceiveDisp"></span><br />
-                        Automatisch Abschicken: <span class="autoSendOrdersDisp"></span><br />
-                        Bestellwarnschwelle pro Artikel: <span class="warningThresholdDisp"></span><br />
+                        Automatisch Abschicken <a href="" title="Der Shop schickt die Bestellung 2 Minuten nach der letzten Änderung automatisch ab, wenn das Fenster offen gelassen wurde">(?)</a>: <span class="autoSendOrdersDisp"></span><br />
+                        Bestellwarnschwelle pro Artikel <a href="" title="Warnt Dich, wenn die Bestellung eines Artikels höher ist als dieser Wert, um Typos vorzubeugen">(?)</a>: <span class="warningThresholdDisp"></span><br />
                     </p>
                 </div>
 				</div>

@@ -401,6 +401,10 @@ var main = function(){
 		var itemID = $("li.active.subSidebarElement").data('id');
 		deleteProductAndOrders(itemID, true);
 	});
+
+	$('.imageUploadButton').click(function(){
+		$('#imageUpload').modal("show");
+	});
 }
 
 $(document).ready(main);

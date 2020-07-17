@@ -151,6 +151,9 @@ if(!isset($_SESSION['trustedUser'])) {
 		  <button type="button" class="btn btn-primary imageUploadButton" >
 			Bilder hochladen
 		  </button>
+		  <button type="button" class="btn btn-primary importProductDataButton" >
+			Artikeldaten aktualisieren
+		  </button>
 		</div> 
 		<h1>Ausgew&auml;hlter Artikel</h1>
 		  <p>
@@ -425,6 +428,43 @@ if(!isset($_SESSION['trustedUser'])) {
 		  <div class="modal-footer">
 			<button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
 			<button type="submit" form="uploadImagesForm" class="btn btn-primary imageUploadSubmitButton">Ok</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+
+	<!-- Modal for image uploads-->
+	<div class="modal" id="importProductData" tabindex="-1" role="dialog" aria-labelledby="importProductDataLabel">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="importProductDataLabel">Artikeldaten aktualisieren</h4>
+		  </div>
+		  <div class="modal-body">
+		  	<p>Bitte wählen Sie die .csv Datei mit den Artikeldaten aus:</p>
+			<form id="importProductDataForm" method="post" action="ajax/products_importProductData.php">
+				<div class="field">
+					<label for="priceTypeInput">Preis1:</label>
+					<input type="radio" name="priceTypeInput" value="1">
+					<label for="priceTypeInput">Preis2:</label>
+					<input type="radio" name="priceTypeInput" value="2">
+					<label for="priceTypeInput">Preis3:</label>
+					<input type="radio" name="priceTypeInput" value="3">
+					<label for="priceTypeInput">Preis4:</label>
+					<input type="radio" name="priceTypeInput" value="4">
+					<label for="priceTypeInput">Preis5:</label>
+					<input type="radio" name="priceTypeInput" value="5">
+				</div>
+				<div class="field">
+					<label for="productCsvInput"></label>
+					<input type="file" id="productCsvInput" name="productCsvInput" accept=".csv">
+				</div>
+			</form>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
+			<button type="submit" form="importProductDataForm" class="btn btn-primary importProductDataSubmitButton">Ok</button>
 		  </div>
 		</div>
 	  </div>

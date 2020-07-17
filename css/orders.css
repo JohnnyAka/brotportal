@@ -1,6 +1,5 @@
-.modal-open[style] {
-padding-right: 0px !important;
-}
+
+
 
 
 /* single product content*/
@@ -236,6 +235,8 @@ h4{
 #warningThresholdAlertText{
 	white-space: pre-line;
 }
+
+
 
 	/* Custom, iPhone Retina */
 	@media only screen and (min-width : 0px){

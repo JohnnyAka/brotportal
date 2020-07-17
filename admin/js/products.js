@@ -214,6 +214,81 @@ var deleteProductAndOrders = function(itemID, deleteOrders = false){
 	}
 	$('#deleteProductChoice').modal("hide");
 }
+
+
+
+$(function() {
+    // Get the form.
+    var form = $('#importProductDataForm');
+
+    // Get the messages div.
+    var messages = $('#messages');
+		
+
+	// Set up an event listener for the createProduct form.
+	$(form).submit(function(event) {
+		// Stop the browser from submitting the form.
+		event.preventDefault();
+		//check input of form
+		var formArray = $(form).serializeArray();
+
+		let csvFile = event.target[5].files[0];
+		var priceType = formArray[0].value;
+
+		var reader = new FileReader();
+		reader.onload = function(e) {
+			var lines = e.target.result.split('\r\n');
+		    var properties;
+		    var productObjects = [];
+		    for (i = 0; i < lines.length; ++i){
+		    	properties = lines[i].split('|');
+		    	productObjects.push({
+		    		'artikelNummer':properties[0],
+		    		'name':properties[1],
+		    		'preis':properties[5],
+		    		'gewicht':properties[26],
+		    		'zutaten':properties[29],
+		    		'kj':properties[71],
+		    		'kcal':properties[72],
+		    		'eiweiss':properties[73],
+		    		'fett':properties[74],
+		    		'kohlenhydrate':properties[75],
+		    		'gesFettS':properties[76],
+		    		'zucker':properties[77],
+		    		'ballaststoffe':properties[78],
+		    		'kochsalz':properties[79],
+		    		'broteinheiten':properties[80],
+		    		'grammBE':properties[81],
+		    		'allergene':properties[82]
+		    	});
+		    }
+			
+			$.ajax({
+				type: 'POST',
+				url: $(form).attr('action'),
+				data:{
+					productObj: JSON.stringify(productObjects),
+					priceT: priceType
+				}
+			}).done(function(response) {
+
+				// Set the message text.
+				$(messages).text(response);
+				
+				//close modal
+				$("#importProductData").modal("hide");
+			}).fail(function(data) {
+				// Set the message text.
+				if (data.responseText !== '') {
+					$(messages).text(data.responseText);
+				} else {
+					$(messages).text('Fehler, Daten konnten nicht importiert werden.');
+				}
+			});
+		};
+		reader.readAsText(csvFile);
+	});
+});
 			
 //main function for click event handlers
 var main = function(){
@@ -404,6 +479,10 @@ var main = function(){
 
 	$('.imageUploadButton').click(function(){
 		$('#imageUpload').modal("show");
+	});
+
+	$('.importProductDataButton').click(function(){
+		$('#importProductData').modal("show");
 	});
 }
 

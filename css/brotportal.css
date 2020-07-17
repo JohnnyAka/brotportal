@@ -60,3 +60,11 @@ div.active{
 float: right;
 
 }
+
+/*Versuch den Modal-Anzeigebug mit shift nach links zu beheben - soweit keine Probleme*/
+body{
+	padding-right: 0px !important;
+}
+nav{
+	padding-right: 0px !important;
+}

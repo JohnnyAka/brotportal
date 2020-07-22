@@ -117,7 +117,7 @@ $(function() {
     // Get the messages div.
     var messages = $('#messages');
 		
-			//clear formfields after modal close (event)
+		//clear formfields after modal close (event)
 		$('#updateProduct').on('hidden.bs.modal', function () {
 			$(this).find('form')[0].reset();
 			//clear selects separately
@@ -216,7 +216,7 @@ var deleteProductAndOrders = function(itemID, deleteOrders = false){
 }
 
 
-
+//import product data from file to database table "products"
 $(function() {
     // Get the form.
     var form = $('#importProductDataForm');
@@ -287,6 +287,70 @@ $(function() {
 			});
 		};
 		reader.readAsText(csvFile);
+	});
+});
+
+//upload product image
+$(function() {
+    // Get the form.
+    var form = $('#uploadImagesForm');
+
+    // Get the messages div.
+    var messages = $('#messages');
+
+	//clear formfields after modal close (event)
+	$('#imageUpload').on('hidden.bs.modal', function () {
+		$(this).find('form')[0].reset();
+		//clear selects separately
+		$('#directoryInput').empty();
+	})
+		
+
+	// Set up an event listener for the createProduct form.
+	$(form).submit(function(event) {
+		// Stop the browser from submitting the form.
+		event.preventDefault();
+		//check input of form
+		var formArray = $(form).serializeArray();
+
+		//let csvFile = event.target[5].files[0];
+		var dir = formArray[0].value;
+
+
+		for(var imageFile of event.target[1].files){
+			readFile(imageFile);
+		}
+		//close modal
+		$("#imageUpload").modal("hide");
+
+		function readFile(imgFile){
+			var reader = new FileReader();
+			reader.onload = function(e) {
+				var fileDataString = e.target.result;
+				$.ajax({
+					type: 'POST',
+					url: $(form).attr('action'),
+					data:{
+						image: JSON.stringify(fileDataString),
+						directory: dir,
+						name: fileName
+					}
+				}).done(function(response) {
+					// Set the message text.
+					$(messages).text(response);
+				}).fail(function(data) {
+					// Set the message text.
+					if (data.responseText !== '') {
+						$(messages).text(data.responseText);
+					} else {
+						$(messages).text('Fehler, Bild konnte nicht hochgeladen werden.');
+					}
+				});
+			}
+
+			var fileName = imgFile.name;
+			reader.readAsDataURL(imgFile);
+		}
 	});
 });
 			
@@ -478,7 +542,34 @@ var main = function(){
 	});
 
 	$('.imageUploadButton').click(function(){
-		$('#imageUpload').modal("show");
+
+		//get subdirectories of images directory
+		$.ajax({
+			type: 'POST',
+			url: 'ajax/products_imageDirectories_read.php'
+		}).done(function(response){
+			var directoryList = JSON.parse(response);
+			
+			//set options of directory select
+			for (var dirName of directoryList) {
+				//if (dirName === 'length' || !categoriesNameDict.hasOwnProperty(key)){ 
+				//	continue;
+				//}
+				$('#directoryInput').append($('<option>', {
+					value: dirName,
+					text: dirName
+				}));
+			}
+			//show modal
+			$('#imageUpload').modal("show");
+		}).fail(function(data){
+			// Set the message text.
+			if (data.responseText !== '') {
+				$(messages).text(data.responseText);
+			} else {
+				$(messages).text('Fehler, Ordner konnten nicht geladen werden.');
+			}
+		});
 	});
 
 	$('.importProductDataButton').click(function(){

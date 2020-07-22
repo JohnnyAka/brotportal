@@ -420,8 +420,12 @@ if(!isset($_SESSION['trustedUser'])) {
 		  	<p>Bitte wählen Sie die Bilder aus, die Sie hochladen wollen:</p>
 			<form id="uploadImagesForm" method="post" action="ajax/products_imageUpload.php">
 				<div class="field">
+					<label for="directoryInput">Speichern in:</label>
+					<select id="directoryInput" name="directoryInput" required></select>
+				</div>
+				<div class="field">
 					<label for="imageUploadInput"></label>
-					<input type="file" id="imageUploadInput" name="imageUploadInput" multiple>
+					<input type="file" id="imageUploadInput" name="imageUploadInput" accept="image/*" multiple required>
 				</div>
 			</form>
 		  </div>
@@ -446,19 +450,19 @@ if(!isset($_SESSION['trustedUser'])) {
 			<form id="importProductDataForm" method="post" action="ajax/products_importProductData.php">
 				<div class="field">
 					<label for="priceTypeInput">Preis1:</label>
-					<input type="radio" name="priceTypeInput" value="1">
+					<input type="radio" name="priceTypeInput" value="1" required>
 					<label for="priceTypeInput">Preis2:</label>
-					<input type="radio" name="priceTypeInput" value="2">
+					<input type="radio" name="priceTypeInput" value="2" required>
 					<label for="priceTypeInput">Preis3:</label>
-					<input type="radio" name="priceTypeInput" value="3">
+					<input type="radio" name="priceTypeInput" value="3" required>
 					<label for="priceTypeInput">Preis4:</label>
-					<input type="radio" name="priceTypeInput" value="4">
+					<input type="radio" name="priceTypeInput" value="4" required>
 					<label for="priceTypeInput">Preis5:</label>
-					<input type="radio" name="priceTypeInput" value="5">
+					<input type="radio" name="priceTypeInput" value="5" required>
 				</div>
 				<div class="field">
 					<label for="productCsvInput"></label>
-					<input type="file" id="productCsvInput" name="productCsvInput" accept=".csv">
+					<input type="file" id="productCsvInput" name="productCsvInput" accept=".csv" required>
 				</div>
 			</form>
 		  </div>

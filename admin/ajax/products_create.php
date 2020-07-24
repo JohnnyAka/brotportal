@@ -8,6 +8,8 @@ $orderPriority = strip_tags(trim($_POST["orderPriority"]));
 $visibleForUser = (int)$_POST["visibleForUser"];
 $description = strip_tags(trim($_POST["description"]));
 $imagePath = strip_tags(trim($_POST["imagePath"]));
+$imagePathSmall = strip_tags(trim($_POST["imagePathSmall"]));
+$imagePathBig = strip_tags(trim($_POST["imagePathBig"]));
 $ingredients = strip_tags(trim($_POST["ingredients"]));
 $allergens = strip_tags(trim($_POST["allergens"]));
 $weight = strip_tags(trim($_POST["weight"]));
@@ -24,8 +26,8 @@ $idCalendar = (int)$_POST["idCalendar"];
 $db = new db_connection();
 	$result = $db->createData(
 	"products", 
-	array('productID','name','productCategory','orderPriority','visibleForUser','description','imagePath','ingredients','allergens','weight','preBakeExp','preBakeMax','featureExp','price1','price2','price3','price4','price5','idCalendar'), 
-	array($productid,$name,$productCategory, $orderPriority, $visibleForUser,$description,$imagePath,$ingredients,$allergens,$weight,$preBakeExp,$preBakeMax,$featureExp,$price1,$price2,$price3,$price4,$price5,$idCalendar)
+	array('productID','name','productCategory','orderPriority','visibleForUser','description','imagePath','imagePathSmall','imagePathBig','ingredients','allergens','weight','preBakeExp','preBakeMax','featureExp','price1','price2','price3','price4','price5','idCalendar'), 
+	array($productid,$name,$productCategory, $orderPriority, $visibleForUser,$description,$imagePath,$imagePathSmall,$imagePathBig,$ingredients,$allergens,$weight,$preBakeExp,$preBakeMax,$featureExp,$price1,$price2,$price3,$price4,$price5,$idCalendar)
 );
 
 

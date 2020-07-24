@@ -54,7 +54,7 @@ if(!isset($_SESSION['userid'])) {
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="orders.php"><img class="brand-logo" src="images/Logo.png" alt="Joldelunder"></a>
+          <a class="navbar-brand" href="orders.php"><img class="brand-logo" src="images/small/Logo/Logo.png" alt="Joldelunder"></a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -203,6 +203,24 @@ if(!isset($_SESSION['userid'])) {
       </div>
   </div>
 	
+	<!-- Modal -->
+  <div class="modal" id="imgBigModal" tabindex="-1" role="dialog" aria-labelledby="imgBigModal">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title" id="imgBigInModalTitle"></h4>
+              </div>
+              <div class="modal-body">
+					<img id="productImgBigInModal">
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+              </div>
+          </div>
+      </div>
+  </div>
+
 
 	<!-- Bootstrap core JavaScript
     ================================================== -->

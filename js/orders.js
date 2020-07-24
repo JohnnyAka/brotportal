@@ -617,7 +617,7 @@ function showMultipleArticles(productList, categoryId = null){
 	for ( let product of productList ){		
 	
 		//set grid classes of product
-		let imgPathExists = product['imagePath'] != '';
+		let imgPathExists = product['imagePathSmall'] != '' && product['imagePathSmall'] != null;
 		$('.productContent').append($('<div>')
 			.addClass('multiProductContainer')
 			.attr("id",'frame'+product['id'])
@@ -627,7 +627,7 @@ function showMultipleArticles(productList, categoryId = null){
 		if(imgPathExists){
 			productFrame.append($('<img>')
 				.addClass('multiProductImage image'+product['id'])
-				.attr('src',product['imagePath'])
+				.attr('src','images/small/'+product['imagePathSmall'])
 			)
 		}
 		
@@ -740,9 +740,32 @@ function showSingleProduct(id, showBackButton = false){
 		}
 		$('.productContent').append('<h3>'+productData["name"]+'</h3>');
 		$('.productContent').append('<hr>');
-		var imagePath = productData["imagePath"];
-		if(imagePath){
-			$('.productContent').append('<img id="productImgSingle" src="'+imagePath+'">');
+		if(productData["imagePath"] != '' && productData['imagePath'] != null){
+			var imagePath = 'images/medium/' + productData["imagePath"];
+			var imgNode = $('<img>')
+				.attr({'id':'productImgSingle', 'src':imagePath});
+
+			
+
+
+
+
+			if(productData["imagePathBig"] != '' && productData['imagePathBig'] != null){
+				var imagePathBig = 'images/big/' + productData["imagePathBig"];
+
+				$('#imgBigInModalTitle').text(productData["name"]);;
+				$('#productImgBigInModal').attr({'src':imagePathBig})
+
+				var linkBigImg = $('<a>')
+					.addClass('productImgBigModalHook');
+					linkBigImg.append(imgNode);
+				$('.productContent').append(linkBigImg);
+
+			}else{
+				$('.productContent').append(imgNode);
+			}
+
+			//$('.productContent').append('<img id="productImgSingle" src="'+imagePath+'">');
 		}
 		if(productData["weight"] != ''){
 			$('.productContent').append('<p>Gewicht: '+productData["weight"]+'</p>');
@@ -824,7 +847,7 @@ var main = function(){
 		//$(this).addClass("active");
 		
 		//remove addToOrder Button
-    $(".subSidebarElement").find(".listProductAddButtonContainer").css('visibility','hidden');
+    	$(".subSidebarElement").find(".listProductAddButtonContainer").css('visibility','hidden');
 		
 		//ajax call for product data
 		let categoryId = $(this).parent().data('id');
@@ -881,6 +904,12 @@ var main = function(){
 		$(this).addClass("active");
 		let id = $(this).data('id');
 		showSingleProduct(id);
+	});
+
+	//show big image Modal on click on product image
+	$(document).on('click', '.productImgBigModalHook', function(event) {
+		event.stopPropagation();
+		$('#imgBigModal').modal('show');
 	});
 
 	$(document).on('click','.product-list-toggle' , function(event) {

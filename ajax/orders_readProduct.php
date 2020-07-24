@@ -8,7 +8,7 @@ $priceCatNumber = $db->getData("users", array('priceCategory'), "id=?1",$_SESSIO
  
 $userPriceCategory = 'price'.$priceCatNumber;
 
-$parameter = array('id','productID','name','productCategory','visibleForUser','description','imagePath','ingredients','allergens','weight','preBakeExp','featureExp');
+$parameter = array('id','productID','name','productCategory','visibleForUser','description','imagePath','imagePathBig','ingredients','allergens','weight','preBakeExp','featureExp');
 //add the price if pricecategory not "0"
 if($userPriceCategory !== "price0"){
     array_push($parameter, $userPriceCategory);

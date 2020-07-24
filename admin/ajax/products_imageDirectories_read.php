@@ -1,6 +1,6 @@
 <?php
-
-$directories = scandir("../../images/");
+//get directories to make list for uploading to specific directory
+$directories = scandir("../../images/medium/");
 $newDir = [];
 
 foreach($directories as $dir){

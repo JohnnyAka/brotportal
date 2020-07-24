@@ -9,6 +9,14 @@
 	float: right;
 }
 
+a.productImgBigModalHook{
+	cursor:pointer;
+}
+
+img#productImgBigInModal{
+	width: 100%;
+}
+
 .productDivider, .controlsDivider{
 	border-color: #000;
 }

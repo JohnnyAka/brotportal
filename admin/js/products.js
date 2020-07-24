@@ -315,9 +315,10 @@ $(function() {
 
 		//let csvFile = event.target[5].files[0];
 		var dir = formArray[0].value;
+		var imageSize = formArray[1].value;
 
 
-		for(var imageFile of event.target[1].files){
+		for(var imageFile of event.target[4].files){
 			readFile(imageFile);
 		}
 		//close modal
@@ -333,7 +334,8 @@ $(function() {
 					data:{
 						image: JSON.stringify(fileDataString),
 						directory: dir,
-						name: fileName
+						name: fileName,
+						imgSize: imageSize
 					}
 				}).done(function(response) {
 					// Set the message text.
@@ -375,6 +377,8 @@ var main = function(){
 			$(".displayProductCategory").text(categoriesNameDict[productData[0]["productCategory"]]);
 			$(".displayOrderPriority").text(productData[0]["orderPriority"]);
 			$(".displayImagePath").text(productData[0]["imagePath"]);
+			$(".displayImagePathSmall").text(productData[0]["imagePathSmall"]);
+			$(".displayImagePathBig").text(productData[0]["imagePathBig"]);
 			$(".displayIngredients").text(productData[0]["ingredients"]);
 			$(".displayAllergens").text(productData[0]["allergens"]);
 			$(".displayWeight").text(productData[0]["weight"]);
@@ -472,6 +476,8 @@ var main = function(){
 				$('#productCategoryUp').val(productData[0]["productCategory"]);
 				$('#orderPriorityUp').val(productData[0]["orderPriority"]);
 				$('#imagePathUp').val(productData[0]["imagePath"]);
+				$('#imagePathSmallUp').val(productData[0]["imagePathSmall"]);
+				$('#imagePathBigUp').val(productData[0]["imagePathBig"]);
 				$('#ingredientsUp').val(productData[0]["ingredients"]);
 				$('#allergensUp').val(productData[0]["allergens"]);
 				$('#weightUp').val(productData[0]["weight"]);

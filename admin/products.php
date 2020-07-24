@@ -163,7 +163,9 @@ if(!isset($_SESSION['trustedUser'])) {
 			Kategorie: <span class="displayProductCategory"></span><br />
 			Listen Priorit&auml;t: <span class="displayOrderPriority"></span><br />
 			Beschreibung: <span class="displayDescription"></span><br />
-			Bildpfad: <span class="displayImagePath"></span><br />
+			Bildpfad normal: <span class="displayImagePath"></span><br />
+			Bildpfad klein: <span class="displayImagePathSmall"></span><br />
+			Bildpfad gross: <span class="displayImagePathBig"></span><br />
 			Inhaltsstoffe: <span class="displayIngredients"></span><br />
 			Allergene: <span class="displayAllergens"></span><br />
 			Gewicht: <span class="displayWeight"></span><br />
@@ -223,8 +225,16 @@ if(!isset($_SESSION['trustedUser'])) {
 					<input type="number" min="1" max="99" value="50" id="orderPriority" name="orderPriority">
 				</div>
 				<div class="field">
-					<label for="imagePath">Bild-Pfad:</label>
+					<label for="imagePath">Bild-Pfad normal:</label>
 					<input type="text" id="imagePath" name="imagePath">
+				</div>
+				<div class="field">
+					<label for="imagePathSmall">Bild-Pfad klein:</label>
+					<input type="text" id="imagePathSmall" name="imagePathSmall">
+				</div>
+				<div class="field">
+					<label for="imagePathBig">Bild-Pfad groß:</label>
+					<input type="text" id="imagePathBig" name="imagePathBig">
 				</div>
 				<div class="field">
 					<label for="ingredients">Inhaltsstoffe:</label>
@@ -327,8 +337,16 @@ if(!isset($_SESSION['trustedUser'])) {
 					<input type="hidden" id="idUp" name="id">
 				</div>
 				<div class="field">
-					<label for="imagePathUp">Bild-Pfad:</label>
+					<label for="imagePathUp">Bild-Pfad normal:</label>
 					<input type="text" id="imagePathUp" name="imagePath">
+				</div>
+				<div class="field">
+					<label for="imagePathSmallUp">Bild-Pfad klein:</label>
+					<input type="text" id="imagePathSmallUp" name="imagePathSmall">
+				</div>
+				<div class="field">
+					<label for="imagePathBigUp">Bild-Pfad groß:</label>
+					<input type="text" id="imagePathBigUp" name="imagePathBig">
 				</div>
 				<div class="field">
 					<label for="ingredientsUp">Inhaltsstoffe:</label>
@@ -422,6 +440,14 @@ if(!isset($_SESSION['trustedUser'])) {
 				<div class="field">
 					<label for="directoryInput">Speichern in:</label>
 					<select id="directoryInput" name="directoryInput" required></select>
+				</div>
+				<div class="field">
+					<label for="imageSizeInput">Bildgröße klein:</label>
+					<input type="radio" name="imageSizeInput" value="1" required>
+					<label for="imageSizeInput">Bildgröße mittel:</label>
+					<input type="radio" name="imageSizeInput" value="2" required checked>
+					<label for="imageSizeInput">Bildgröße groß:</label>
+					<input type="radio" name="imageSizeInput" value="3" required>
 				</div>
 				<div class="field">
 					<label for="imageUploadInput"></label>

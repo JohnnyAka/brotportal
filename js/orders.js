@@ -1084,6 +1084,7 @@ var main = function(){
 					}
 					displayMessage('Nachricht', responseObject.displayMessage);
 				}
+				displayMessage('Bestätigung', 'Ihre Bestellung für diesen Tag wurde gelöscht.\n\n Wenn Sie keine erneute Bestellung eingeben, werden Sie an diesem Tag nicht von uns beliefert.')
 			}).fail(function(data) {
 				displayMessage('Fehler', 'Bestellungen konnten nicht gelöscht werden.');
 				if (data.responseText !== '') {

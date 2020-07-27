@@ -19,16 +19,19 @@ if($userPriceCategory !== "price0"){
     array_push($parameter, $userPriceCategory);
 }
 
-$pSearchTextArray = array(); $queryString = '';
+$pSearchTextArray = array(); $queryStringName = ''; $queryStringID = '';
 $pSearchTextArray = explode(' ', $pSearchText, 3);
+$pSearchIdArray = $pSearchTextArray;
 
-//build searchquery
+//build searchqueries (search for name and search for productID)
 $countSearchArray = count($pSearchTextArray);
 for($x = 1; $x <= $countSearchArray; $x++){
 	$pSearchTextArray[$x-1] = '%'.$pSearchTextArray[$x-1].'%';
-	$queryString .= ' name LIKE ?'.$x.' and';
+	$queryStringName .= ' name LIKE ?'.$x.' and';
+	$queryStringID .= " productID=?".$x." or";
 }
-$queryString = rtrim($queryString, 'and');
+$queryStringName = rtrim($queryStringName, 'and');
+$queryStringID = rtrim($queryStringID, 'or');
 
 //prepare product visibility
 $userCategoryId = $db->getData("users", "customerCategory", "id=?1", $userId)[0]['customerCategory'];
@@ -44,9 +47,29 @@ foreach($visibleCategories as $category){
 $whereQueryVisibility = rtrim($whereQueryVisibility, " or ");
 $whereQueryVisibility .= ')';
 
-$testQuery = $queryString." and visibleForUser != '0' and ".$whereQueryVisibility;
+$nameQuery = $queryStringName." and visibleForUser != '0' and ".$whereQueryVisibility;
+$idQuery = $queryStringID." and visibleForUser != '0' and ".$whereQueryVisibility;
 
-$data = $db->getData("products", $parameter, $testQuery, array_merge($pSearchTextArray, $whereValuesVisibility));
+$nameData = $db->getData("products", $parameter, $nameQuery, array_merge($pSearchTextArray, $whereValuesVisibility));
+
+$productIdData = $db->getData("products", $parameter, $idQuery, array_merge($pSearchIdArray, $whereValuesVisibility));
+
+
+$finalData = $nameData;
+foreach($productIdData as $productIdObj){
+    $found = false;
+    foreach($nameData as $productNameObj){
+        if($productNameObj['id'] == $productNameObj['id']){
+            $found = true;
+        }
+    }
+    if(!$found){
+        array_unshift($finalData, $productIdObj);
+    }
+}
+
+
+
 
 $result = $db->getData("prizeCategories", array('infoText'), "id=?1",$priceCatNumber);
 if ($result != null){
@@ -56,15 +79,15 @@ else{
     $priceCatInfoText = '';
 }
 
-if($userPriceCategory !== "price0" && is_array($data) ) {
-	foreach ($data as $index => $product){
-		$data[$index]['price'] = $product[$userPriceCategory];
-		unset($data[$index][$userPriceCategory]);
-		$data[$index]['priceInfoText'] = $priceCatInfoText;
+if($userPriceCategory !== "price0" && is_array($finalData) ) {
+	foreach ($finalData as $index => $product){
+		$finalData[$index]['price'] = $product[$userPriceCategory];
+		unset($finalData[$index][$userPriceCategory]);
+		$finalData[$index]['priceInfoText'] = $priceCatInfoText;
 	}
 }
 	
-$jsonData = json_encode($data);
+$jsonData = json_encode($finalData);
 echo $jsonData;
 
 

@@ -89,6 +89,7 @@ $(function() {
 		productsData = JSON.parse(response);
 		//set Item List
 		productsNameDict = {};
+		productsIdIdDict = {};
 		productsCategoryDict = {};
 		productsOrderPriorityDict = {};
 		productsPriceDict = {};
@@ -97,6 +98,8 @@ $(function() {
 			productsCategoryDict[productsData[x].id] = productsData[x].productCategory;
 			productsOrderPriorityDict[productsData[x].id] = productsData[x].orderPriority;
 			productsNameDict[productsData[x].id] = productsData[x].name;
+			productsIdIdDict[productsData[x].productID] = productsData[x].id;
+
 			//for order threshold only!!! category 'price0' has 'price2' for calculation of threshold in sendOrderForm submit
 			productsPriceDict[productsData[x].id] = productsData[x].price; 
 		}
@@ -745,11 +748,6 @@ function showSingleProduct(id, showBackButton = false){
 			var imgNode = $('<img>')
 				.attr({'id':'productImgSingle', 'src':imagePath});
 
-			
-
-
-
-
 			if(productData["imagePathBig"] != '' && productData['imagePathBig'] != null){
 				var imagePathBig = 'images/big/' + productData["imagePathBig"];
 
@@ -839,7 +837,7 @@ $(function() {
 //main function for click event handlers
 var main = function(){
 
-
+	
 
 	$(document).on('click','.searchCategoryIcon', function(event) {
 		event.stopPropagation();
@@ -859,7 +857,6 @@ var main = function(){
 				categoryTreeDepth: treeDepth
 			}
 		}).done(function(response) {
-			//alert(response);
 			resData = JSON.parse(response);
 			showMultipleArticles(resData, categoryId);
 		}).fail(function(data) {
@@ -871,6 +868,36 @@ var main = function(){
 			}
 		});
 	});
+
+	//change focus to product with productID of searchbarinput on searchbar-enterhit (only numpad)
+	document.getElementById('productSearchTextInput').addEventListener('keydown', function(event){
+		if(event.code == 'NumpadEnter'){
+		event.preventDefault();
+			let productIDinput = $('.productSearchTextInput').val();
+			if(productIDinput in productsIdIdDict){
+				let orderForm = $('#sendOrderForm');
+				let idProduct = productsIdIdDict[productIDinput];
+				if( orderForm.find('#'+idProduct).length < 1){
+					appendToProductList(orderForm,idProduct, 1, false);
+				}
+				$('input#'+idProduct).focus().select();
+			}
+		}
+	});
+	//stop orderlist form from submitting numpad enter
+	document.getElementById('sendOrderForm').addEventListener('keydown', function(event){
+		if(event.code == 'NumpadEnter'){
+			//console.log(event.target.id);
+			$('.productSearchTextInput').focus().select();
+			event.preventDefault();
+		}
+	});
+	/*document.getElementsByClassName('orderProductInput').addEventListener('keydown', function(event){
+		if(event.code == 'NumpadEnter'){
+			event.preventDefault();
+		}
+	});*/
+
 	
 	//show single article on click in multiview
 	$(document).on('click', ".multiProductContainer", function(event){

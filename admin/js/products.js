@@ -61,6 +61,10 @@ $(function() {
 			$('#productCategory').empty();
 			$('#idCalendar').empty();
 			$('#imageDirectory').empty();
+
+			$('#imagePath').empty();
+			$('#imagePathSmall').empty();
+			$('#imagePathBig').empty();
 		})
 
 	// Set up an event listener for the createProduct form.
@@ -125,6 +129,10 @@ $(function() {
 			$('#productCategoryUp').empty();
 			$('#idCalendarUp').empty();
 			$('#imageDirectoryUp').empty();
+
+			$('#imagePathUp').empty();
+			$('#imagePathSmallUp').empty();
+			$('#imagePathBigUp').empty();
 		})
 
 	// Set up an event listener for the updateProduct form.
@@ -482,7 +490,7 @@ var main = function(){
 			url: 'ajax/products_imageDirectories_read.php'
 		}).done(function(response){
 			var directoryList = JSON.parse(response);
-			$('#imageDirectory').append($('<option>', {
+			$('#imageDirectory').append($('<option selected="selected">', {
 					value: '',
 					text: ''
 				}));
@@ -496,6 +504,10 @@ var main = function(){
 					text: dirName
 				}));
 			}
+			//set imagePath fields to empty String
+			$('#imagePath').append($('<option selected="selected">', {	value: '',	text: ''}));
+			$('#imagePathSmall').append($('<option selected="selected">', {	value: '',	text: ''}));
+			$('#imagePathBig').append($('<option selected="selected">', {	value: '',	text: ''}));
 			//show modal
 			$("#createProduct").modal("show");
 		}).fail(function(data){
@@ -578,6 +590,11 @@ var main = function(){
 					$('#visibleForUserUp').prop('checked', visForU);
 					$('#productCategoryUp').val(productData[0]["productCategory"]);
 					$('#orderPriorityUp').val(productData[0]["orderPriority"]);
+
+					//set imagePath fields to empty String
+					$('#imagePathUp').append($('<option selected="selected">', {	value: '',	text: ''}));
+					$('#imagePathSmallUp').append($('<option selected="selected">', {	value: '',	text: ''}));
+					$('#imagePathBigUp').append($('<option selected="selected">', {	value: '',	text: ''}));
 
 					//cut image Path Strings and display in form
 					var productImageObjects = [];

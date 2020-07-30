@@ -59,7 +59,7 @@ $finalData = $nameData;
 foreach($productIdData as $productIdObj){
     $found = false;
     foreach($nameData as $productNameObj){
-        if($productNameObj['id'] == $productNameObj['id']){
+        if($productNameObj['id'] == $productIdObj['id']){
             $found = true;
         }
     }

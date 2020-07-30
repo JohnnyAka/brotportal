@@ -9,6 +9,7 @@ $productCategory = strip_tags(trim($_POST["productCategory"]));
 $orderPriority = strip_tags(trim($_POST["orderPriority"]));
 $visibleForUser = (int)$_POST["visibleForUser"];
 $description = strip_tags(trim($_POST["description"]));
+$imageDirectory = strip_tags(trim($_POST["imageDirectory"]));
 $imagePath = strip_tags(trim($_POST["imagePath"]));
 $imagePathSmall = strip_tags(trim($_POST["imagePathSmall"]));
 $imagePathBig = strip_tags(trim($_POST["imagePathBig"]));
@@ -24,6 +25,17 @@ $price3 = strip_tags(trim($_POST["price3"]));
 $price4 = strip_tags(trim($_POST["price4"]));
 $price5 = strip_tags(trim($_POST["price5"]));
 $idCalendar = (int)$_POST["idCalendar"];
+
+//set paths of image directories
+if($imagePath){
+	$imagePath = $imageDirectory.'/'.$imagePath;	
+}
+if($imagePathSmall){
+	$imagePathSmall = $imageDirectory.'/'.$imagePathSmall;
+}
+if($imagePathBig){
+	$imagePathBig = $imageDirectory.'/'.$imagePathBig;
+}
 
 $db = new db_connection();
 $result = $db->updateData("products", 

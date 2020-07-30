@@ -225,16 +225,24 @@ if(!isset($_SESSION['trustedUser'])) {
 					<input type="number" min="1" max="99" value="50" id="orderPriority" name="orderPriority">
 				</div>
 				<div class="field">
-					<label for="imagePath">Bild-Pfad normal:</label>
-					<input type="text" id="imagePath" name="imagePath">
+					<label for="imageDirectory">Bild-Ordner:</label>
+					<select id="imageDirectory" name="imageDirectory">
+					</select>
 				</div>
 				<div class="field">
-					<label for="imagePathSmall">Bild-Pfad klein:</label>
-					<input type="text" id="imagePathSmall" name="imagePathSmall">
+					<label for="imagePath">Bild normal:</label>
+					<select id="imagePath" name="imagePath">
+					</select>
 				</div>
 				<div class="field">
-					<label for="imagePathBig">Bild-Pfad groß:</label>
-					<input type="text" id="imagePathBig" name="imagePathBig">
+					<label for="imagePathSmall">Bild klein:</label>
+					<select id="imagePathSmall" name="imagePathSmall">
+					</select>
+				</div>
+				<div class="field">
+					<label for="imagePathBig">Bild groß:</label>
+					<select id="imagePathBig" name="imagePathBig">
+					</select>
 				</div>
 				<div class="field">
 					<label for="ingredients">Inhaltsstoffe:</label>
@@ -337,16 +345,24 @@ if(!isset($_SESSION['trustedUser'])) {
 					<input type="hidden" id="idUp" name="id">
 				</div>
 				<div class="field">
-					<label for="imagePathUp">Bild-Pfad normal:</label>
-					<input type="text" id="imagePathUp" name="imagePath">
+					<label for="imageDirectoryUp">Bild-Ordner:</label>
+					<select id="imageDirectoryUp" name="imageDirectory">
+					</select>
 				</div>
 				<div class="field">
-					<label for="imagePathSmallUp">Bild-Pfad klein:</label>
-					<input type="text" id="imagePathSmallUp" name="imagePathSmall">
+					<label for="imagePathUp">Bild normal:</label>
+					<select id="imagePathUp" name="imagePath">
+					</select>
 				</div>
 				<div class="field">
-					<label for="imagePathBigUp">Bild-Pfad groß:</label>
-					<input type="text" id="imagePathBigUp" name="imagePathBig">
+					<label for="imagePathSmallUp">Bild klein:</label>
+					<select id="imagePathSmallUp" name="imagePathSmall">
+					</select>
+				</div>
+				<div class="field">
+					<label for="imagePathBigUp">Bild groß:</label>
+					<select id="imagePathBigUp" name="imagePathBig">
+					</select>
 				</div>
 				<div class="field">
 					<label for="ingredientsUp">Inhaltsstoffe:</label>

@@ -60,6 +60,7 @@ $(function() {
 			//clear selects separately
 			$('#productCategory').empty();
 			$('#idCalendar').empty();
+			$('#imageDirectory').empty();
 		})
 
 	// Set up an event listener for the createProduct form.
@@ -123,6 +124,7 @@ $(function() {
 			//clear selects separately
 			$('#productCategoryUp').empty();
 			$('#idCalendarUp').empty();
+			$('#imageDirectoryUp').empty();
 		})
 
 	// Set up an event listener for the updateProduct form.
@@ -355,9 +357,60 @@ $(function() {
 		}
 	});
 });
+
+function setImgsReloadInCreateProductForm(size, selectObjectHandle, changingObjectHandle){
+	changingObjectHandle.addEventListener('change', function(event){
+	selectObjectHandle.empty();
+
+	$.ajax({
+		type: 'POST',
+		url: 'ajax/products_imagesOfDirectory_read.php',
+		data: {
+			'directory': this.value,
+			'size': size
+		}
+	}).done(function(response){
+		var imageList = JSON.parse(response);
+		
+		selectObjectHandle.append($('<option>', {
+			value: '',
+			text: ''
+		}));
+		//set options of directory select
+		for (var imgName of imageList) {
+			//if (dirName === 'length' || !categoriesNameDict.hasOwnProperty(key)){ 
+			//	continue;
+			//}
+			selectObjectHandle.append($('<option>', {
+				value: imgName,
+				text: imgName
+			}));
+		}
+	}).fail(function(data){
+		// Set the message text.
+		if (data.responseText !== '') {
+			$(messages).text(data.responseText);
+		} else {
+			$(messages).text('Fehler, Bilder konnten nicht geladen werden.');
+		}
+	});
+	}, false);
+}
+
 			
 //main function for click event handlers
 var main = function(){
+	//events for loading image selects in create product form
+	let imageDirectoryHandle = document.getElementById('imageDirectory');
+	setImgsReloadInCreateProductForm('medium', $('#imagePath'), imageDirectoryHandle);
+	setImgsReloadInCreateProductForm('small', $('#imagePathSmall'), imageDirectoryHandle);
+	setImgsReloadInCreateProductForm('big', $('#imagePathBig'), imageDirectoryHandle);
+	//events for loading image selects in update product form
+	let imageDirectoryUpHandle = document.getElementById('imageDirectoryUp');
+	setImgsReloadInCreateProductForm('medium', $('#imagePathUp'), imageDirectoryUpHandle);
+	setImgsReloadInCreateProductForm('small', $('#imagePathSmallUp'), imageDirectoryUpHandle);
+	setImgsReloadInCreateProductForm('big', $('#imagePathBigUp'), imageDirectoryUpHandle);
+
 
 	// click-event to retrieve data-id and alert
 	$('ul.subSidebarList li').click(function() {
@@ -421,8 +474,38 @@ var main = function(){
 					text: calendarsNameDict[key]
 				}));
 		}
+
 		
-		$("#createProduct").modal("show");
+		//get subdirectories of images directory
+		$.ajax({
+			type: 'POST',
+			url: 'ajax/products_imageDirectories_read.php'
+		}).done(function(response){
+			var directoryList = JSON.parse(response);
+			$('#imageDirectory').append($('<option>', {
+					value: '',
+					text: ''
+				}));
+			//set options of directory select
+			for (var dirName of directoryList) {
+				//if (dirName === 'length' || !categoriesNameDict.hasOwnProperty(key)){ 
+				//	continue;
+				//}
+				$('#imageDirectory').append($('<option>', {
+					value: dirName,
+					text: dirName
+				}));
+			}
+			//show modal
+			$("#createProduct").modal("show");
+		}).fail(function(data){
+			// Set the message text.
+			if (data.responseText !== '') {
+				$(messages).text(data.responseText);
+			} else {
+				$(messages).text('Fehler, Ordner konnten nicht geladen werden.');
+			}
+		});
 	});
 	
 	$('.updateProductButton').click(function(){
@@ -462,37 +545,155 @@ var main = function(){
 							text: calendarsNameDict[key]
 						}));
 				}
+				//get subdirectories of images directory
+				$.ajax({
+					type: 'POST',
+					url: 'ajax/products_imageDirectories_read.php'
+				}).done(function(response){
+					var directoryList = JSON.parse(response);
+					$('#imageDirectoryUp').append($('<option>', {
+							value: '',
+							text: ''
+						}));
+					//set options of directory select
+					for (var dirName of directoryList) {
+						//if (dirName === 'length' || !categoriesNameDict.hasOwnProperty(key)){ 
+						//	continue;
+						//}
+						$('#imageDirectoryUp').append($('<option>', {
+							value: dirName,
+							text: dirName
+						}));
+					}
+
+					//set values of form
+					$('#productidUp').val(productData[0]["productID"]);
+					$('#nameUp').val(productData[0]["name"]);
+					$('#descriptionUp').val(productData[0]["description"]);
+					$('#idUp').val(productData[0]["id"]);
+					//Boolean() doesnt seem to work
+					var visForU = productData[0]["visibleForUser"];
+					if (visForU != 0){visForU = true}
+					else{visForU = false}
+					$('#visibleForUserUp').prop('checked', visForU);
+					$('#productCategoryUp').val(productData[0]["productCategory"]);
+					$('#orderPriorityUp').val(productData[0]["orderPriority"]);
+
+					//cut image Path Strings and display in form
+					var productImageObjects = [];
+					if(productData[0]["imagePath"] != '' && productData[0]["imagePath"] != null){
+						let imageString = productData[0]["imagePath"].split('/');
+						productImageObjects.push({
+							'imageNames' : imageString[1],
+							'imageSelectHandles' : $('#imagePathUp'),
+							'imagePathsDir' : imageString[0],
+							'size' : 'medium'
+						});
+					}
+					if(productData[0]["imagePathSmall"] != '' && productData[0]["imagePathSmall"] != null){
+						let imageStringSmall = productData[0]["imagePathSmall"].split('/');
+						productImageObjects.push({
+							'imageNames' : imageStringSmall[1],
+							'imageSelectHandles' : $('#imagePathSmallUp'),
+							'imagePathsDir' : imageStringSmall[0],
+							'size' : 'small'
+						});
+					}
+					if(productData[0]["imagePathBig"] != '' && productData[0]["imagePathBig"] != null){
+						let imageStringBig = productData[0]["imagePathBig"].split('/');
+						productImageObjects.push({
+							'imageNames' : imageStringBig[1],
+							'imageSelectHandles' : $('#imagePathBigUp'),
+							'imagePathsDir' : imageStringBig[0],
+							'size' : 'big'
+						});
+					}
+					for(let imagePathObject of productImageObjects){
+						if(imagePathObject['imagePathsDir'] != ''){
+							$('#imageDirectoryUp').val(imagePathObject['imagePathsDir']);
+							var imagePathDirectory = imagePathObject['imagePathsDir'];
+						}
+					}
+					/*//trigger onchange event on imageDirectory select to load images to image selects
+					if ("createEvent" in document) {
+					    var evt = document.createEvent("HTMLEvents");
+					    evt.initEvent("change", false, true);
+					    document.getElementById('imageDirectoryUp').dispatchEvent(evt);
+					}
+					else{
+					    document.getElementById('imageDirectoryUp').fireEvent("onchange");
+					}*/
+					if(imagePathDirectory != ''){
+						for(let imagePathObject of productImageObjects){
+							let selectObjectHandle = imagePathObject['imageSelectHandles'];
+							$.ajax({
+								type: 'POST',
+								url: 'ajax/products_imagesOfDirectory_read.php',
+								data: {
+									'directory': imagePathDirectory,
+									'size': imagePathObject['size']
+								}
+							}).done(function(response){
+								var imageList = JSON.parse(response);
+								//set empty option
+								selectObjectHandle.append($('<option>', {
+									value: '',
+									text: ''
+								}));
+								//set options of directory select
+								for (var imgName of imageList) {
+									selectObjectHandle.append($('<option>', {
+										value: imgName,
+										text: imgName
+									}));
+								}
+								//set image selects 
+									if(imagePathObject['imageNames'] != ''){
+										selectObjectHandle.val(imagePathObject['imageNames']);
+									
+								}
+							}).fail(function(data){
+								// Set the message text.
+								if (data.responseText !== '') {
+									$(messages).text(data.responseText);
+								} else {
+									$(messages).text('Fehler, Pfade konnten nicht geladen werden.');
+								}
+							});
+						}
+					}
+
+
+					
+					
+					$('#ingredientsUp').val(productData[0]["ingredients"]);
+					$('#allergensUp').val(productData[0]["allergens"]);
+					$('#weightUp').val(productData[0]["weight"]);
+					$('#preBakeExpUp').val(productData[0]["preBakeExp"]);
+					$('#preBakeMaxUp').val(productData[0]["preBakeMax"]);
+					$('#featureExpUp').val(productData[0]["featureExp"]);
+					$("#price1Up").val(productData[0]["price1"]);
+					$("#price2Up").val(productData[0]["price2"]);
+					$("#price3Up").val(productData[0]["price3"]);
+					$("#price4Up").val(productData[0]["price4"]);
+					$("#price5Up").val(productData[0]["price5"]);
+					$("#idCalendarUp").val(productData[0]["idCalendar"]);
+
+
+					//show modal
+					$("#updateProduct").modal("show");
+				}).fail(function(data){
+					// Set the message text.
+					if (data.responseText !== '') {
+						$(messages).text(data.responseText);
+					} else {
+						$(messages).text('Fehler, Ordner konnten nicht geladen werden.');
+					}
+				});
 				
-				//set values of form
-				$('#productidUp').val(productData[0]["productID"]);
-				$('#nameUp').val(productData[0]["name"]);
-				$('#descriptionUp').val(productData[0]["description"]);
-				$('#idUp').val(productData[0]["id"]);
-				//Boolean() doesnt seem to work
-				var visForU = productData[0]["visibleForUser"];
-				if (visForU != 0){visForU = true}
-				else{visForU = false}
-				$('#visibleForUserUp').prop('checked', visForU);
-				$('#productCategoryUp').val(productData[0]["productCategory"]);
-				$('#orderPriorityUp').val(productData[0]["orderPriority"]);
-				$('#imagePathUp').val(productData[0]["imagePath"]);
-				$('#imagePathSmallUp').val(productData[0]["imagePathSmall"]);
-				$('#imagePathBigUp').val(productData[0]["imagePathBig"]);
-				$('#ingredientsUp').val(productData[0]["ingredients"]);
-				$('#allergensUp').val(productData[0]["allergens"]);
-				$('#weightUp').val(productData[0]["weight"]);
-				$('#preBakeExpUp').val(productData[0]["preBakeExp"]);
-				$('#preBakeMaxUp').val(productData[0]["preBakeMax"]);
-				$('#featureExpUp').val(productData[0]["featureExp"]);
-				$("#price1Up").val(productData[0]["price1"]);
-				$("#price2Up").val(productData[0]["price2"]);
-				$("#price3Up").val(productData[0]["price3"]);
-				$("#price4Up").val(productData[0]["price4"]);
-				$("#price5Up").val(productData[0]["price5"]);
-				$("#idCalendarUp").val(productData[0]["idCalendar"]);
 				
-				//show modal
-				$("#updateProduct").modal("show");
+
+				
 			}).fail(function(data){
 				// Set the message text.
 				if (data.responseText !== '') {

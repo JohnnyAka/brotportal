@@ -9,3 +9,52 @@ li.activeOrder{
 .orderListItem{
 	cursor: pointer;
 }
+
+
+/*left productlist*/
+
+.sidebarList{
+	overflow-y: scroll;
+}
+
+
+	/* Custom, iPhone Retina */
+	@media only screen and (min-width : 0px){
+		.listsHeight{
+			height: 300px;
+		}
+	}
+	
+	@media only screen and (min-width : 320px){
+		.listsHeight{
+			height: 300px;
+		}
+	}
+
+	/* Extra Small Devices, Phones */
+	@media only screen and (min-width : 480px){
+		.listsHeight{
+			height: 300px;
+		}
+	}
+
+	/* Small Devices, Tablets */
+	@media only screen and (min-width : 768px){
+		.listsHeight{
+			height: 400px;
+		}
+	}
+
+	/* Medium Devices, Desktops */
+	@media only screen and (min-width : 992px){
+		.listsHeight{
+			height: 500px;
+		}
+	}
+
+	/* Large Devices, Wide Screens */
+	@media only screen and (min-width : 1200px){
+		.listsHeight{
+			height: 600px;
+		}
+	}

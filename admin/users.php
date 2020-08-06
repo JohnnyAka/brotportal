@@ -89,11 +89,22 @@ if(!isset($_SESSION['trustedUser'])) {
 	    <div class="col-md-3">
             <h3>Kunden</h3>
             <ul class="sidebarList listsHeight">
+            	<ul class="subSidebarList">
                 <?php
                 include('db_crud.php');
                 $db = new db_connection();
+
+                	$queryResult = $db->getData("users",array("id","customerID","name","customerCategory"));
+
+                	function compareUsers($a, $b){
+					    return strcasecmp($a['name'],$b['name']);
+					}
+					usort($queryResult, "compareUsers");
+					foreach($queryResult as $user){
+						echo "<li class='subSidebarElement showSingleArticle' data-id=".$user['id'].">".$user['name']."</li>";
+					}
                 //get cats
-                $Cats = $db->getData("userCategories",array("id"));
+                /*$Cats = $db->getData("userCategories",array("id"));
                 //get products and make products dictionary and category dictionary
                 //produces a an associative array with key = product ID and objects with keys: "id","productID","name","productCategory","visibleForUser"
                 //for category dict: associative array with key = category ID and value = name
@@ -120,9 +131,10 @@ if(!isset($_SESSION['trustedUser'])) {
                     });
                     foreach($usersOfCategory as $user){
                         echo "<li class='subSidebarElement showSingleArticle' data-id=".$user['id'].">".$user['name']."</li>";
-                    }
+                    }*/
                     echo '</ul>';
-                }
+                echo '</ul>';
+                //}
                 ?>
             </ul>
 	    </div>

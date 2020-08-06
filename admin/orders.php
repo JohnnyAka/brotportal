@@ -27,8 +27,8 @@ if(!isset($_SESSION['trustedUser'])) {
 		<script src="../external/jquery-ui-1.11.4.custom/datepicker-de.js"></script>
 
     <!-- Custom styles for this template -->
-	<link href="css/admin.css" rel="stylesheet">
-	<link href="css/orders.css" rel="stylesheet">
+	<link href="css/admin.css" rel="stylesheet" type="text/css">
+	<link href="css/orders.css" rel="stylesheet" type="text/css">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -86,12 +86,21 @@ if(!isset($_SESSION['trustedUser'])) {
 			<div class="row mainrow">
 				<div class="col-md-3">
 					<h3>Benutzer</h3>
-					<ul class="sidebarList">
+					<ul class="sidebarList listsHeight crazyFrog">
 						<?php
 							include('db_crud.php');
 							$db = new db_connection();
+
 						$sidebarList = $db->getData("users",array("id","name"));
-							foreach($sidebarList as $item){
+						function cmp($a, $b)
+							{
+							    if ($a['name'] == $b['name']) {
+							        return 0;
+							    }
+							    return ($a['name'] < $b['name']) ? -1 : 1;
+							}
+						usort($sidebarList, "cmp");
+						foreach($sidebarList as $item){
 							echo "<li class='sidelist' data-id=".$item['id'].">".$item['name']."</li>";
 						}	
 						?>

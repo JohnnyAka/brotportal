@@ -94,15 +94,30 @@ if(!isset($_SESSION['trustedUser'])) {
                 include('db_crud.php');
                 $db = new db_connection();
 
-                	$queryResult = $db->getData("users",array("id","customerID","name","customerCategory"));
+								$queryResult = $db->getData("users",array("id","customerID","name","customerCategory"));
 
-                	function compareUsers($a, $b){
-					    return strcasecmp($a['name'],$b['name']);
-					}
-					usort($queryResult, "compareUsers");
-					foreach($queryResult as $user){
-						echo "<li class='subSidebarElement showSingleArticle' data-id=".$user['id'].">".$user['name']."</li>";
-					}
+								function compareUsers($a, $b){
+									$regEx = "/^[0-9]+/";
+									$aHasNumber = preg_match($regEx, $a['name'], $aMatch);
+									$bHasNumber = preg_match($regEx, $b['name'], $bMatch);
+									if($aHasNumber and $bHasNumber){
+										$aMatch = (int) $aMatch[0];
+										$bMatch = (int) $bMatch[0];
+										if ($aMatch == $bMatch) {
+                                            return ($a['name'] < $b['name']) ? -1 : 1;
+										}
+										return ($aMatch < $bMatch) ? -1 : 1;
+									}
+								
+									if ($a['name'] == $b['name']) {
+										return 0;
+									}
+									return ($a['name'] < $b['name']) ? -1 : 1;
+								}
+								usort($queryResult, "compareUsers");
+								foreach($queryResult as $user){
+									echo "<li class='subSidebarElement showSingleArticle' data-id=".$user['id'].">".$user['name']."</li>";
+								}
                 //get cats
                 /*$Cats = $db->getData("userCategories",array("id"));
                 //get products and make products dictionary and category dictionary

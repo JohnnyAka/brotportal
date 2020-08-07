@@ -92,13 +92,24 @@ if(!isset($_SESSION['trustedUser'])) {
 							$db = new db_connection();
 
 						$sidebarList = $db->getData("users",array("id","name"));
-						function cmp($a, $b)
-							{
-							    if ($a['name'] == $b['name']) {
-							        return 0;
-							    }
-							    return ($a['name'] < $b['name']) ? -1 : 1;
+						function cmp($a, $b){
+							$regEx = "/^[0-9]+/";
+							$aHasNumber = preg_match($regEx, $a['name'], $aMatch);
+							$bHasNumber = preg_match($regEx, $b['name'], $bMatch);
+							if($aHasNumber and $bHasNumber){
+								$aMatch = (int) $aMatch[0];
+								$bMatch = (int) $bMatch[0];
+								if ($aMatch == $bMatch) {
+																				return ($a['name'] < $b['name']) ? -1 : 1;
+								}
+								return ($aMatch < $bMatch) ? -1 : 1;
 							}
+						
+							if ($a['name'] == $b['name']) {
+								return 0;
+							}
+							return ($a['name'] < $b['name']) ? -1 : 1;
+						}
 						usort($sidebarList, "cmp");
 						foreach($sidebarList as $item){
 							echo "<li class='sidelist' data-id=".$item['id'].">".$item['name']."</li>";

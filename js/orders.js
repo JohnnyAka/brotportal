@@ -548,7 +548,6 @@ var appendToProductList = function(formObj,idProduct, number, init){
 	}
 	let inputField = document.getElementById(idProduct);
 	inputField.addEventListener("input", showOrderNotYetSentIcon, false);
-	updateOrderedProductsCounter();
 	inputField.addEventListener("focus", saveCursorPosition, false);
 	inputField.addEventListener("blur", removeCursorPosition, true);
 	triggerChangeOfOrderCount(idProduct);
@@ -558,6 +557,7 @@ var showOrderNotYetSentIcon = function(){
 	orderSent.removeClass('glyphicon-check');
 	orderSent.addClass('glyphicon-share');
 	orderSent.data('sent', false);
+	updateOrderedProductsCounter();
 
 	if(showOrderNotYetSentIcon.timeoutObject != undefined){
 		clearTimeout(showOrderNotYetSentIcon.timeoutObject);
@@ -603,6 +603,17 @@ var removeCursorPosition = function(event){
 }
 var triggerChangeOfOrderCount = function (idProduct){
 	$('input#'+idProduct).trigger("input");
+}
+function updateOrderedProductsCounter(){
+var inputsOfForm = document.forms['sendOrderForm'].getElementsByTagName('input');
+	var counter = 0;
+	for( let inp of inputsOfForm){
+		counter+= parseInt(inp.value);
+	}
+	if(isNaN(counter)){
+		counter = "Fehler in der Eingabe"
+	}
+	$('.orderedProductsCounter').text('Insgesamt (Anzahl): '+counter);
 }
 
 function showMultipleArticles(productList, categoryId = null){
@@ -836,14 +847,7 @@ $(function() {
 	});
 });
 
-function updateOrderedProductsCounter(){
-var inputsOfForm = document.forms['sendOrderForm'].getElementsByTagName('input');
-	var counter = 0;
-	for( let inp of inputsOfForm){
-		counter+= parseInt(inp.value);
-	}
-	$('.orderedProductsCounter').text('Insgesamt (Anzahl): '+counter);
-}
+
 
 //main function for click event handlers
 var main = function(){
@@ -1065,9 +1069,6 @@ var main = function(){
 		$("#sendOrderForm").submit();
 	});
 
-	$(document).on("change", "#sendOrderForm", function(){
-		updateOrderedProductsCounter();
-	});
 	
 	
 	/*//add product functionality for counterButton in left productlist buttongroup

@@ -503,6 +503,7 @@ var showOrders = function(){
 							$('#sendOrderForm').append('<hr class="orderListDivider">');
 						}
 					}
+					updateOrderedProductsCounter();
 					if(document.cursorPositionFocused){
 						//alert("I was focused! "+  ' '+document.cursorPositionProductID);
 						$('#'+document.cursorPositionProductID+'.orderProductInput').focus();
@@ -547,6 +548,7 @@ var appendToProductList = function(formObj,idProduct, number, init){
 	}
 	let inputField = document.getElementById(idProduct);
 	inputField.addEventListener("input", showOrderNotYetSentIcon, false);
+	updateOrderedProductsCounter();
 	inputField.addEventListener("focus", saveCursorPosition, false);
 	inputField.addEventListener("blur", removeCursorPosition, true);
 	triggerChangeOfOrderCount(idProduct);
@@ -615,7 +617,7 @@ function showMultipleArticles(productList, categoryId = null){
 		$('.productContent').append('<h3>'+categoriesNameDict[categoryId]+'</h3><hr />');
 	}
 	
-	productList.sort((a, b) => a['name'].localeCompare(b['name']));
+	//productList.sort((a, b) => a['name'].localeCompare(b['name']));
 	
 	for ( let product of productList ){		
 	
@@ -833,6 +835,15 @@ $(function() {
 		});
 	});
 });
+
+function updateOrderedProductsCounter(){
+var inputsOfForm = document.forms['sendOrderForm'].getElementsByTagName('input');
+	var counter = 0;
+	for( let inp of inputsOfForm){
+		counter+= parseInt(inp.value);
+	}
+	$('.orderedProductsCounter').text('Insgesamt (Anzahl): '+counter);
+}
 
 //main function for click event handlers
 var main = function(){
@@ -1053,6 +1064,11 @@ var main = function(){
 		$("#warningThresholdAlertModal").modal("hide");
 		$("#sendOrderForm").submit();
 	});
+
+	$(document).on("change", "#sendOrderForm", function(){
+		updateOrderedProductsCounter();
+	});
+	
 	
 	/*//add product functionality for counterButton in left productlist buttongroup
 	$(document).on('click', '.listProductAddButtonContainer', function(event) {

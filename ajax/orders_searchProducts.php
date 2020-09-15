@@ -54,6 +54,11 @@ $nameData = $db->getData("products", $parameter, $nameQuery, array_merge($pSearc
 
 $productIdData = $db->getData("products", $parameter, $idQuery, array_merge($pSearchIdArray, $whereValuesVisibility));
 
+function compareProducts($a, $b){
+    return strcasecmp($a['name'],$b['name']);
+}
+usort($nameData, "compareProducts");
+
 
 $finalData = $nameData;
 foreach($productIdData as $productIdObj){
@@ -67,9 +72,6 @@ foreach($productIdData as $productIdObj){
         array_unshift($finalData, $productIdObj);
     }
 }
-
-
-
 
 $result = $db->getData("prizeCategories", array('infoText'), "id=?1",$priceCatNumber);
 if ($result != null){

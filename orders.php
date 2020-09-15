@@ -89,10 +89,10 @@ if(!isset($_SESSION['userid'])) {
 					<?php
 					echo '<input type="hidden" id="userID" data-value="'.$_SESSION["userid"].'">'
 					?>
-					<h3>Bestellung</h3>
+					<h3>Bestellung zum</h3>
 					<input type="text" id="ordersDatepicker">
 					<button type="submit" form="sendOrderForm" class="btn btn-primary sendOrderButton">
-						abschicken
+						bestellen
 					</button>
 					<button type="button" class="btn btn-primary deleteOrderButton">
 						löschen
@@ -107,6 +107,7 @@ if(!isset($_SESSION['userid'])) {
 					<hr class="orderListDivider">
 					<form id="sendOrderForm" class="rightListHeight" method="post" action="ajax/orders_sendOrder.php">			
 					</form>
+					<span class="orderedProductsCounter"></span>
 				</div>
 				<div class="col-md-6 col-sm-12 col-md-pull-3 main-content">
 					<hr class="productDivider">

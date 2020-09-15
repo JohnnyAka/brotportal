@@ -73,6 +73,16 @@ if($userPriceCategory !== "price0" && is_array($data) ) {
 		$data[$index]['priceInfoText'] = $priceCatInfoText;
 	}
 }
+
+function compareProducts($a, $b){
+    return strcasecmp($a['name'],$b['name']);
+    /*if ($a['name'] == $b['name']) {
+        return 0;
+    }
+    return ($a['name'] < $b['name']) ? -1 : 1;*/
+}
+usort($data, "compareProducts");
+
 	
 $jsonData = json_encode($data);
 echo $jsonData;

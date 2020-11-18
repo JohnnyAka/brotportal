@@ -117,7 +117,11 @@ if(!isset($_SESSION['userid'])) {
 					</button>
 					<span id="orderSentSign" class="btn glyphicon glyphicon-check sendOrderButton" aria-hidden="true"></span>
 					<span id="sendListOptionsExpander" class=" glyphicon glyphicon-plus"></span>
-					
+					<div class="sendListOptions">
+						Liste sortieren: 
+						<span id="sortOrderListByAlphabet" class="btn btn-xs glyphicon glyphicon-sort-by-alphabet"></span>
+						<span id="sortOrderListByNumber" class="btn btn-xs glyphicon glyphicon-sort-by-order"></span>
+					</div>
 					<hr class="orderListDivider">
 					<form id="sendOrderForm" class="rightListHeight" method="post" action="ajax/orders_sendOrder.php">			
 					</form>
@@ -147,7 +151,6 @@ if(!isset($_SESSION['userid'])) {
 					<p>Bitte wählen Sie den Tag aus, von dem die Bestellung übernommen werden soll:</p>
 					<input type="text" id="takeDatepicker">
 					<div class="standardOrderTakeoverSlot">
-
 					<p>Standardbestellungen</p>
 						<span data-value="1" class="btn btn-xs standardOrderTakeover">1</span>
 						<span data-value="2" class="btn btn-xs standardOrderTakeover">2</span>

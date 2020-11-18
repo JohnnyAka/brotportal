@@ -967,6 +967,11 @@ var main = function(){
 		showSingleProduct(id);
 	});
 
+	$(document).on('click', '.orderListItem', function(event){
+		let id = event.target.nextSibling.id;
+		showSingleProduct(id);
+	});
+
 	//show big image Modal on click on product image
 	$(document).on('click', '.productImgBigModalHook', function(event) {
 		event.stopPropagation();

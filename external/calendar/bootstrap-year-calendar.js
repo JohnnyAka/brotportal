@@ -292,7 +292,6 @@
 					
 					table.append(row);
 				}
-				
 				monthDiv.append(table);
 				
 				monthsDiv.append(monthDiv);

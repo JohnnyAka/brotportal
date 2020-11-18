@@ -4,6 +4,7 @@ session_start();
 include('../db_crud.php');
 include('../admin/permission_check_helpers.php');
 include('../admin/classAjaxResponseMessage.php');
+include('orders_helpers.php');
 
 //block reload of shopping list
 $_SESSION['dataBlockedForDisplay'] = true;
@@ -15,13 +16,22 @@ $hook = 1;
 
 $strDate = $_POST['orderDate'];
 $idCustomer = $_POST['userID'];
+$orderModeNormal = !($_POST['normalOrderMode'] == 'false');
+if(!$orderModeNormal){
+    $standardOrderSlot = $_POST['standardOrderSlot'];
+    unset($_POST['standardOrderSlot']);
+    $orderDate = getStandardOrderDate($standardOrderSlot);
+}else{
+    //format Date for normal orders
+    $day = strtok($strDate, ".");
+    $month = strtok(".");
+    $year = strtok(".");
+    $orderDate = $year."-".$month."-".$day;
+}
 unset($_POST['orderDate']);
 unset($_POST['userID']);
-//format Date
-$day = strtok($strDate, ".");
-$month = strtok(".");
-$year = strtok(".");
-$orderDate = $year."-".$month."-".$day;
+unset($_POST['normalOrderMode']);
+
 
 $db = new db_connection();
 $preProductCalendarDict = makeDict($db,'products', 'id', 'idCalendar');
@@ -40,8 +50,9 @@ if(!$responseTmp[0]){
 }
 
 foreach ($_POST as $id => $number) {
-	if($number<0){
-		$responseMessage->appendDisplayMessage("Werte kleiner als 0 werden nicht verarbeitet.");
+	$id = preg_replace("/[^0-9a-zA-Z]/", "", $id);
+	if($number<0 or is_nan($number)){
+		$responseMessage->appendDisplayMessage("Nicht numerische Werte und Werte kleiner als 0 werden nicht verarbeitet.");
 		continue;
 	}
     $productName = $db->getData("products", array('name'), "id='".$id."'")[0]['name'];
@@ -55,15 +66,16 @@ foreach ($_POST as $id => $number) {
 		continue;
 	}
 
-	if(!checkForPermission($db, $id, $orderDate, $preProductCalendarDict)) {   //check, ob Artikel noch in angemessener Zeit hergestellt wird
-		if(isset($orderData[0]) and $number == $orderData[0]['number'] and $hook == $orderData[0]['hook']) {
-				//do nothing
-		}
-		else{
-			array_push($notProducedTime, $productName);
-		}
-		continue;
-	}
+	if($orderModeNormal) {
+        if (!checkForPermission($db, $id, $orderDate, $preProductCalendarDict)) {   //check, ob Artikel noch in angemessener Zeit hergestellt wird
+            if (isset($orderData[0]) and $number == $orderData[0]['number'] and $hook == $orderData[0]['hook']) {
+                //do nothing
+            } else {
+                array_push($notProducedTime, $productName);
+            }
+            continue;
+        }
+    }
 	if($orderData){//same as orderExists
 			if($number==0) {
 					$result = $db->deleteData("orders",
@@ -138,5 +150,6 @@ function compileNameString($names){
 	}
 	return $namesStr;
 }
+
 
 ?>

@@ -2,6 +2,7 @@
 
 //depth of productList Tree on left productList
 var treeDepth = 3;
+var orderSendMode = true; //Switches between normal and standard orders -> if sendMode=true normal handling of orders; if sendMode=false Standardorders are displayed and changed
 
 //datepicker setup including onclose ajax orderlist load function
 $(function() {
@@ -9,12 +10,12 @@ $(function() {
 	
 
 	$( "#ordersDatepicker" ).datepicker({
-	dateFormat:"dd.mm.yy",
-	minDate:"-380",
-	onClose:function(selectedDate, picker){
-		showOrders();
-	},
-	beforeShowDay:function(date){
+		dateFormat:"dd.mm.yy",
+		minDate:"-380",
+		onClose:function(selectedDate, picker){
+			showOrders();
+		},
+		beforeShowDay:function(date){
 			day  = ('0' + date.getDate()).slice(-2);
 			month = ('0' + (date.getMonth() + 1)).slice(-2);
 			year =  date.getFullYear();
@@ -24,8 +25,8 @@ $(function() {
 			}
 			return [true, 'ui-state-noOrderDays', 'Keine Bestellung vorhanden.'];
 		}
-}).attr('readonly','readonly');
-$( "#ordersDatepicker" ).datepicker( "setDate", "+1" );
+	}).attr('readonly','readonly');
+	$( "#ordersDatepicker" ).datepicker( "setDate", "+1" );
 
 	/*$( "#ordersDatepicker" ).datepicker($.datepicker.regional[ "de" ]);
 	$( "#ordersDatepicker" ).datepicker( "option", "dateFormat", "dd.mm.yy" );
@@ -348,6 +349,7 @@ $('#sendOrderForm').submit(function(event) {
 	event.preventDefault();
 	
 	var selectedDate = $( "#ordersDatepicker" ).datepicker().val();
+	console.log(selectedDate);
 	var regExp = /\d\d.\d\d.\d\d\d\d/;
 	if(regExp.test(selectedDate)){
 		var form = $('#sendOrderForm');
@@ -364,6 +366,11 @@ $('#sendOrderForm').submit(function(event) {
 		if(warningNameString == ''){*/
 			form.append('<input type="hidden" value="'+selectedDate+'" name="orderDate">');
 			form.append('<input type="hidden" value="'+customerID+'" name="userID">');
+			form.append('<input type="hidden" value="'+orderSendMode+'" name="normalOrderMode">');
+			if(!orderSendMode){
+				form.append('<input type="hidden" value="'+$(".standardOrder.selectedStandardOrder").data("value")+'" name="standardOrderSlot">');
+			}
+			
 
 			// Serialize the form data.
 			var formData = form.serialize();
@@ -384,7 +391,11 @@ $('#sendOrderForm').submit(function(event) {
 					displayMessage("Nachricht", resData.displayMessage);
 					logMessage("Fehler", resData.logMessage);
 				}else{
-					displayMessage("Bestellbestätigung", "Ihre Bestellung ist erfolgreich angekommen. \n\nBis zum Bestellschluss können Sie die Bestellung noch anpassen.");
+					if(!orderSendMode){
+						displayMessage("Standardbestellung gespeichert", "Ihre Standardbestellung wurde gespeichert. \n\nSie können die Standardbestellung nun auf das gewünschte Datum übernehmen.");
+					}else{
+						displayMessage("Bestellbestätigung", "Ihre Bestellung ist erfolgreich angekommen. \n\nBis zum Bestellschluss können Sie die Bestellung noch anpassen.");
+					}
 				}
 			}).fail(function(data) {
 				displayMessage('Fehler', 'Artikel konnte nicht erstellt werden.');
@@ -431,12 +442,19 @@ var showOrders = function(){
 			var regExp = /\d\d.\d\d.\d\d\d\d/;
 			if(regExp.test(selectedDate)){
 				var customerID = $('#userID').data("value");
+				var standardOrderSlotSelected = 0;
+
+				if(!orderSendMode){
+					standardOrderSlotSelected = $(".selectedStandardOrder").data("value");;
+				}
 				$.ajax({
 					type: 'POST',
 					url: 'ajax/orders_readOrders.php',
 					data: {
 						id:customerID,
-						date:selectedDate
+						date:selectedDate,
+						normalOrderMode:orderSendMode,
+						standardSlot:standardOrderSlotSelected
 					}
 				}).done(function(response){
 					//reset list
@@ -611,7 +629,7 @@ var inputsOfForm = document.forms['sendOrderForm'].getElementsByTagName('input')
 		counter+= parseInt(inp.value);
 	}
 	if(isNaN(counter)){
-		counter = "Fehler in der Eingabe"
+		counter = "Fehler bei der Eingabe"
 	}
 	$('.orderedProductsCounter').text('Insgesamt (Anzahl): '+counter);
 }
@@ -853,6 +871,7 @@ $(function() {
 var main = function(){
 
 	
+
 
 	$(document).on('click','.searchCategoryIcon', function(event) {
 		event.stopPropagation();
@@ -1104,19 +1123,26 @@ var main = function(){
 		//$(".productList").children().remove();
 		//buildVisualProductList(productTree, ".productList");
 	//});
-	
+
+
 	$('.deleteOrderButton').click(function() {
 		//check dateinput and send ajax request
 		var selectedDate = $( "#ordersDatepicker" ).datepicker().val();
 		var regExp = /\d\d.\d\d.\d\d\d\d/;
 		if(regExp.test(selectedDate)){
 			var customerID = $('#userID').data("value");
+			var standardOrderSlotSelected = 0;
+			if(!orderSendMode){
+				standardOrderSlotSelected = $(".selectedStandardOrder").data("value");;
+			}
 			$.ajax({
 				type: 'POST',
 				url: 'ajax/orders_deleteOrdersOfDay.php',
 				data: {
 					orderDate:selectedDate,
-					userID:customerID
+					userID:customerID,
+					normalOrderMode:orderSendMode,
+					standardSlot:standardOrderSlotSelected
 				}
 			}).done(function(response) {
 				showOrderSentIcon();
@@ -1128,7 +1154,11 @@ var main = function(){
 					}
 					displayMessage('Nachricht', responseObject.displayMessage);
 				}
-				displayMessage('Bestätigung', 'Ihre Bestellung für diesen Tag wurde gelöscht.\n\n Wenn Sie keine erneute Bestellung eingeben, werden Sie an diesem Tag nicht von uns beliefert.')
+				if(!orderSendMode){
+					displayMessage('Bestätigung', 'Ihre Standardbestellung auf diesem Speicherplatz wurde gelöscht.')
+				}else{
+					displayMessage('Bestätigung', 'Ihre Bestellung für diesen Tag wurde gelöscht.\n\n Wenn Sie keine erneute Bestellung eingeben, werden Sie an diesem Tag nicht von uns beliefert.')
+				}
 			}).fail(function(data) {
 				displayMessage('Fehler', 'Bestellungen konnten nicht gelöscht werden.');
 				if (data.responseText !== '') {
@@ -1140,7 +1170,7 @@ var main = function(){
 			setTimeout(function(){showOrders(); }, 50);
 		}
 		else{
-			displayMessage("Nachricht","Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
+			displayMessage("Fehler","Das Datum entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
 		}
 	});
 	
@@ -1149,7 +1179,18 @@ var main = function(){
 		var selectedDate = $( "#ordersDatepicker" ).datepicker().val();
 		var takeFromDateSelected = $( "#takeDatepicker" ).datepicker().val();
 		var regExp = /\d\d.\d\d.\d\d\d\d/;
-		if(regExp.test(selectedDate) && regExp.test(takeFromDateSelected)){
+
+		if(regExp.test(selectedDate) && (regExp.test(takeFromDateSelected) || !orderSendMode || $('.selectedStandardOrderTakeover').length)){
+			var standardOrderSlotSelected = 0;
+			if(!orderSendMode){
+				standardOrderSlotSelected = $(".selectedStandardOrder").data("value");
+			}
+			var selectedTakeoverSlot = $(".selectedStandardOrderTakeover");
+			var standardOrderTakeoverSelected = 0;
+			if(selectedTakeoverSlot.length){
+				standardOrderTakeoverSelected = selectedTakeoverSlot.data("value");
+			}
+
 			//only take over orders, if no order exists on this date
 			if(!$('#sendOrderForm').children('.field').length){
 				var customerID = $('#userID').data("value");
@@ -1159,7 +1200,10 @@ var main = function(){
 					data: {
 						takeFromDate:takeFromDateSelected,
 						orderDate:selectedDate,
-						userID:customerID
+						userID:customerID,
+						normalOrderMode:orderSendMode,
+						standardSlot:standardOrderSlotSelected,
+						standardTakeoverSlot:standardOrderTakeoverSelected
 					}
 				}).done(function(response) {
 					$('#pickDateModal').modal('hide');
@@ -1190,10 +1234,55 @@ var main = function(){
 			}
 		}
 		else{
-			displayMessage("Nachricht"," Mindestens eines der Daten entspricht nicht dem vorgegebenen Format ( dd.mm.yyyy )");
+			displayMessage("Nachricht","Bitte wählen Sie ein Datum oder eine Standardbestellung aus.");
 		}
 	});
-	
+	//show standard options menu
+	$('#sendListOptionsExpander').click(function(event){
+		$(this).toggleClass("glyphicon-minus").toggleClass("glyphicon-plus");
+		$(".sendListOptions").toggle(); 	
+	});
+
+	$('.orderTabMenuItemNormal').click(function(event){
+		$("#sendOrderForm").empty();
+		$('.orderTabMenuItemStandard').removeClass("active");
+		$(this).addClass("active");
+		$("#sendOrdersText").text("Bestellung zum");
+		$("button.sendOrderButton").text("bestellen");
+		$(".standardOrderSlot").hide();
+		$(".standardOrder").removeClass("selectedStandardOrder");
+		$("#ordersDatepicker").show();
+		orderSendMode = true; //send normal orders
+		showOrders();
+	});
+
+	$('.orderTabMenuItemStandard').click(function(event){
+		$("#sendOrderForm").empty();
+		$('.orderTabMenuItemNormal').removeClass("active");
+		$(this).addClass("active");
+		$("#sendOrdersText").text("Standardbestellung");
+		$("button.sendOrderButton").text("speichern");
+		$(".standardOrderSlot").show();
+		$("#ordersDatepicker").hide();
+		updateOrderedProductsCounter();
+		orderSendMode = false; //send standard orders
+	});
+
+	$('.standardOrder').click(function(event){
+		$(".standardOrder").removeClass("selectedStandardOrder");
+		$(event.target).addClass("selectedStandardOrder");
+		showOrders();
+	});
+
+	$('#takeDatepicker').click(function(event){
+		$(".standardOrderTakeover").removeClass("selectedStandardOrderTakeover");
+	});
+
+	$('.standardOrderTakeover').click(function(event){
+		var takeFromDateSelected = $( "#takeDatepicker" ).datepicker().val('');
+		$(".standardOrderTakeover").removeClass("selectedStandardOrderTakeover");
+		$(event.target).addClass("selectedStandardOrderTakeover");
+	});
 }
 $(document).ready(main);
 

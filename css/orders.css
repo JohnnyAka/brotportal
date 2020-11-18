@@ -87,8 +87,66 @@ input[type="number"] {
 	padding: 0px;
 }
 
+#sendListOptionsExpander{
+	cursor: pointer;
+}
+
+.sendListOptions{
+	display: none;
+}
+
+.standardOrderSlot{
+	display: none;
+}
+
+#sendOrdersText{
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.rightScreenOrderColumn > .btn{
+	
+}
+
+ul.nav-tabs-ordermode>li>a{
+	color: black;
+	padding: 3px 3px 3px 3px;
+}
+
+.standardOrder{
+	margin-bottom:3px;
+}
+
+.selectedStandardOrder{
+	background-color: #e7e7e7;
+}
+
+.standardOrderTakeoverSlot{
+	margin-top: 3px;
+	margin-bottom: 3px;
+}
+.standardOrderTakeoverSlot>p{
+	margin-top: 12px;
+	margin-bottom: 0px;
+}
+
+.standardOrderTakeover{
+	margin-top: 3px;
+	margin-bottom:3px;
+}
+
+.selectedStandardOrderTakeover{
+	background-color: #e7e7e7;
+}
+
 .orderListDivider{
 	margin: 3px;
+}
+
+.orderedProductsCounter{
+	text-align:right;
+	margin-left:auto;
+	margin-right:16px;
 }
 
 /*left productlist*/

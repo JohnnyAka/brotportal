@@ -3,6 +3,7 @@ session_start();
 include('../db_crud.php');
 include('../admin/permission_check_helpers.php');
 include('../admin/classAjaxResponseMessage.php');
+include('orders_helpers.php');
 
 $_SESSION['dataBlockedForDisplay'] = true;
 
@@ -13,13 +14,24 @@ $hook = 1;
 
 $strDate = $_POST['orderDate'];
 $idCustomer = $_POST['userID'];
+$standardSlot = $_POST["standardSlot"];
+$normalOrderMode = $_POST["normalOrderMode"];
 unset($_POST['orderDate']);
 unset($_POST['userID']);
-//format Date
-$day = strtok($strDate, ".");
-$month = strtok(".");
-$year = strtok(".");
-$orderDate = $year."-".$month."-".$day;
+unset($_POST['standardSlot']);
+unset($_POST['normalOrderMode']);
+
+if($normalOrderMode == "false"){
+	if($standardSlot == 0){
+		return;
+	}
+	$orderDate = getStandardOrderDate($standardSlot);
+}else{
+	$day = strtok($strDate, ".");
+	$month = strtok(".");
+	$year = strtok(".");
+	$orderDate = $year."-".$month."-".$day;
+}
 
 $responseMessage = new AjaxResponseMessage;
 $productNamesLocked =[];

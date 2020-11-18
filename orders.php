@@ -83,14 +83,29 @@ if(!isset($_SESSION['userid'])) {
 					</div>
 					<p class="oekoControlNumber">DE-Öko-006</p>
 				</div>
-				<div class="col-md-3 col-sm-6 col-md-push-6">
+				<div class="col-md-3 col-sm-6 col-md-push-6 rightScreenOrderColumn">
 					<hr class="controlsDivider">
 					<!-- share the session variables with orders.js -->
 					<?php
 					echo '<input type="hidden" id="userID" data-value="'.$_SESSION["userid"].'">'
 					?>
-					<h3>Bestellung zum</h3>
+					<ul class="nav nav-tabs nav-tabs-ordermode">
+					  <li role="presentation" class="orderTabMenuItemNormal active"><a href="#">Normal</a></li>
+					  <li role="presentation" class="orderTabMenuItemStandard"><a href="#">Standard</a></li>
+					</ul>
+					<h3 id="sendOrdersText">Bestellung zum</h3>
 					<input type="text" id="ordersDatepicker">
+					<div class="standardOrderSlot">
+						<span data-value="1" class="btn btn-xs standardOrder">1</span>
+						<span data-value="2" class="btn btn-xs standardOrder">2</span>
+						<span data-value="3" class="btn btn-xs standardOrder">3</span>
+						<span data-value="4" class="btn btn-xs standardOrder">4</span>
+						<span data-value="5" class="btn btn-xs standardOrder">5</span>
+						<span data-value="6" class="btn btn-xs standardOrder">6</span>
+						<span data-value="7" class="btn btn-xs standardOrder">7</span>
+						<span data-value="8" class="btn btn-xs standardOrder">8</span>
+						<span data-value="9" class="btn btn-xs standardOrder">9</span>
+					</div>
 					<button type="submit" form="sendOrderForm" class="btn btn-primary sendOrderButton">
 						bestellen
 					</button>
@@ -101,13 +116,12 @@ if(!isset($_SESSION['userid'])) {
 						übernehmen
 					</button>
 					<span id="orderSentSign" class="btn glyphicon glyphicon-check sendOrderButton" aria-hidden="true"></span>
-					<!--glyphicon glyphicon-share
-					glyphicon glyphicon-check
-					-->
+					<span id="sendListOptionsExpander" class=" glyphicon glyphicon-plus"></span>
+					
 					<hr class="orderListDivider">
 					<form id="sendOrderForm" class="rightListHeight" method="post" action="ajax/orders_sendOrder.php">			
 					</form>
-					<span class="orderedProductsCounter"></span>
+					<p class="orderedProductsCounter"></p>
 				</div>
 				<div class="col-md-6 col-sm-12 col-md-pull-3 main-content">
 					<hr class="productDivider">
@@ -132,6 +146,19 @@ if(!isset($_SESSION['userid'])) {
 				<div class="modal-body">
 					<p>Bitte wählen Sie den Tag aus, von dem die Bestellung übernommen werden soll:</p>
 					<input type="text" id="takeDatepicker">
+					<div class="standardOrderTakeoverSlot">
+
+					<p>Standardbestellungen</p>
+						<span data-value="1" class="btn btn-xs standardOrderTakeover">1</span>
+						<span data-value="2" class="btn btn-xs standardOrderTakeover">2</span>
+						<span data-value="3" class="btn btn-xs standardOrderTakeover">3</span>
+						<span data-value="4" class="btn btn-xs standardOrderTakeover">4</span>
+						<span data-value="5" class="btn btn-xs standardOrderTakeover">5</span>
+						<span data-value="6" class="btn btn-xs standardOrderTakeover">6</span>
+						<span data-value="7" class="btn btn-xs standardOrderTakeover">7</span>
+						<span data-value="8" class="btn btn-xs standardOrderTakeover">8</span>
+						<span data-value="9" class="btn btn-xs standardOrderTakeover">9</span>
+					</div>
 				</div>
 				<div class="modal-footer">
 				<button type="button" class="btn btn-default takeOrdersFromButton">Übernehmen</button>

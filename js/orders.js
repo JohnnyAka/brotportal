@@ -3,6 +3,7 @@
 //depth of productList Tree on left productList
 var treeDepth = 3;
 var orderSendMode = true; //Switches between normal and standard orders -> if sendMode=true normal handling of orders; if sendMode=false Standardorders are displayed and changed
+var sortRightProductListByProductId = false;
 
 //datepicker setup including onclose ajax orderlist load function
 $(function() {
@@ -99,7 +100,8 @@ $(function() {
 			productsCategoryDict[productsData[x].id] = productsData[x].productCategory;
 			productsOrderPriorityDict[productsData[x].id] = productsData[x].orderPriority;
 			productsNameDict[productsData[x].id] = productsData[x].name;
-			productsIdIdDict[productsData[x].productID] = productsData[x].id;
+			//productsIdIdDict[productsData[x].productID] = productsData[x].id;
+			productsIdIdDict[productsData[x].id] = productsData[x].productID;
 
 			//for order threshold only!!! category 'price0' has 'price2' for calculation of threshold in sendOrderForm submit
 			productsPriceDict[productsData[x].id] = productsData[x].price; 
@@ -494,26 +496,18 @@ var showOrders = function(){
 						}
 						return result;
 					});
+					//aProductId = array_search(a, productsIdIdDict);
 					//sort products and build form
 					for (var y=0; y < keys.length; y++){
 						var category = keys[y];
 						if (productList.hasOwnProperty(category)) {
 							var currentList = productList[category];
-							currentList.sort(function(a,b){
-								let result = 0;
-								let aId = a[0], bId = b[0];
-								let aPrio = productsOrderPriorityDict[aId];
-								let bPrio = productsOrderPriorityDict[bId];
-								if (aPrio < bPrio){
-									result = -1;
-								}else if (aPrio > bPrio){
-									result = 1;
-								}
-								else {
-									result = productsNameDict[aId].localeCompare(productsNameDict[bId]);
-								}
-								return result;
-							});
+							if(sortRightProductListByProductId){
+								currentList.sort(sortProductsByProductId);
+							}else{
+								currentList.sort(sortProductsByAlphabet);
+							}
+							
 							$('#sendOrderForm').append('<p class="orderListHeading">'+categoriesNameDict[category]+'</p>');
 							for(var x = 0; x < currentList.length; x++){
 								appendToProductList($('#sendOrderForm'), currentList[x][0], currentList[x][1], true);
@@ -546,9 +540,49 @@ var showOrders = function(){
 				logMessage('Fehler', 'Verbindung zum Server ist unterbrochen. (Stichwort: dataBlockedForDisplay)');
 			}
 		});
-	
-		
-
+};
+var sortProductsByProductId = function(a,b){
+	let result = 0;
+	let aId = a[0], bId = b[0];
+	//for sorting of showMultipleArticles
+	if(aId === undefined && bId === undefined){
+		aId = a.id;
+		bId = b.id;
+	}
+	//find product id in productsIdIdDict, which is the key of the dict, by the internal product id, which is the value of the dict
+	let aProductIdStr =  productsIdIdDict[aId];
+	let bProductIdStr = productsIdIdDict[bId];
+	aProductId = parseInt(aProductIdStr);
+	bProductId = parseInt(bProductIdStr);
+	if (aProductId < bProductId){
+		result = -1;
+	}else if (aProductId > bProductId){
+		result = 1;
+	}
+	else {
+		result = aProductIdStr.localeCompare(bProductIdStr);
+	}
+	return result;
+};
+var sortProductsByAlphabet = function(a,b){
+	let result = 0;
+	let aId = a[0], bId = b[0];
+	//for sorting of showMultipleArticles
+	if(aId === undefined && bId === undefined){
+		aId = a.id;
+		bId = b.id;
+	}
+	let aPrio = productsOrderPriorityDict[aId];
+	let bPrio = productsOrderPriorityDict[bId];
+	if (aPrio < bPrio){
+		result = -1;
+	}else if (aPrio > bPrio){
+		result = 1;
+	}
+	else {
+		result = productsNameDict[aId].localeCompare(productsNameDict[bId]);
+	}
+	return result;
 };
 var appendToProductList = function(formObj,idProduct, number, init){
 	var productName = productsNameDict[idProduct];
@@ -637,6 +671,12 @@ var inputsOfForm = document.forms['sendOrderForm'].getElementsByTagName('input')
 function showMultipleArticles(productList, categoryId = null){
 	$('div.sidebarList').find('*').removeClass("active");
 	$('.productContent').empty();
+	//sort like right productlist
+	if(sortRightProductListByProductId){
+		productList.sort(sortProductsByProductId);
+	}else{
+		productList.sort(sortProductsByAlphabet);
+	}
 	let productListJson = JSON.stringify(productList);
 	$('.productContent').attr("data-backButtonContext",productListJson);
 	$('.productContent').attr("data-categoryID",categoryId);
@@ -647,7 +687,7 @@ function showMultipleArticles(productList, categoryId = null){
 	}
 	
 	//productList.sort((a, b) => a['name'].localeCompare(b['name']));
-	
+
 	for ( let product of productList ){		
 	
 		//set grid classes of product
@@ -906,7 +946,22 @@ var main = function(){
 	//change focus to product with productID of searchbarinput on searchbar-enterhit (only numpad)
 	document.getElementById('productSearchTextInput').addEventListener('keydown', function(event){
 		if(event.code == 'NumpadEnter'){
-		event.preventDefault();
+			event.preventDefault();
+			let productIDinput = $('.productSearchTextInput').val();
+			let productIdStr = Object.keys(productsIdIdDict).find(key => productsIdIdDict[key] === productIDinput);
+			if(productIdStr != undefined){
+				let orderForm = $('#sendOrderForm');
+				if( orderForm.find('#'+productIdStr).length < 1){
+					appendToProductList(orderForm,productIdStr, 1, false);
+				}
+				$('input#'+productIdStr).focus().select();
+			}
+		}
+	});
+
+	/*document.getElementById('productSearchTextInput').addEventListener('keydown', function(event){
+		if(event.code == 'NumpadEnter'){
+			event.preventDefault();
 			let productIDinput = $('.productSearchTextInput').val();
 			if(productIDinput in productsIdIdDict){
 				let orderForm = $('#sendOrderForm');
@@ -917,7 +972,9 @@ var main = function(){
 				$('input#'+idProduct).focus().select();
 			}
 		}
-	});
+	});*/
+
+
 	//stop orderlist form from submitting numpad enter
 	document.getElementById('sendOrderForm').addEventListener('keydown', function(event){
 		if(event.code == 'NumpadEnter'){
@@ -1288,6 +1345,18 @@ var main = function(){
 		$(".standardOrderTakeover").removeClass("selectedStandardOrderTakeover");
 		$(event.target).addClass("selectedStandardOrderTakeover");
 	});
+
+	//sort right productlist button functionality
+	$('#sortOrderListByAlphabet').click(function(event){
+		sortRightProductListByProductId = false;
+		showOrders();
+	});
+
+	$('#sortOrderListByProductId').click(function(event){
+		sortRightProductListByProductId = true;
+		showOrders();
+	});
+
 }
 $(document).ready(main);
 

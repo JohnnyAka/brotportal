@@ -120,7 +120,7 @@ if(!isset($_SESSION['userid'])) {
 					<div class="sendListOptions">
 						Liste sortieren: 
 						<span id="sortOrderListByAlphabet" class="btn btn-xs glyphicon glyphicon-sort-by-alphabet"></span>
-						<span id="sortOrderListByNumber" class="btn btn-xs glyphicon glyphicon-sort-by-order"></span>
+						<span id="sortOrderListByProductId" class="btn btn-xs glyphicon glyphicon-sort-by-order"></span>
 					</div>
 					<hr class="orderListDivider">
 					<form id="sendOrderForm" class="rightListHeight" method="post" action="ajax/orders_sendOrder.php">			

@@ -81,6 +81,10 @@ input[type="number"] {
 	overflow: auto; 
 }
 
+#ordersDatepicker{
+	margin-bottom: 3px;
+}
+
 #orderSentSign{
 	font-size: 2em;
 	margin: 0px;
@@ -271,6 +275,10 @@ h4{
 	justify-content: right;
 	margin-right: 3px;
 	margin-bottom: 10px;
+}
+
+.buttonAddProductSingleView{
+	margin-right: 2px;
 }
 
 /*datepicker colors*/

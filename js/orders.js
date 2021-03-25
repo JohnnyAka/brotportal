@@ -1243,62 +1243,89 @@ var main = function(){
 		var regExp = /\d\d.\d\d.\d\d\d\d/;
 
 		if(regExp.test(selectedDate) && (regExp.test(takeFromDateSelected) || !orderSendMode || $('.selectedStandardOrderTakeover').length)){
-			var standardOrderSlotSelected = 0;
-			if(!orderSendMode){
-				standardOrderSlotSelected = $(".selectedStandardOrder").data("value");
-			}
-			var selectedTakeoverSlot = $(".selectedStandardOrderTakeover");
-			var standardOrderTakeoverSelected = 0;
-			if(selectedTakeoverSlot.length){
-				standardOrderTakeoverSelected = selectedTakeoverSlot.data("value");
-			}
+			
 
 			//only take over orders, if no order exists on this date
 			if(!$('#sendOrderForm').children('.field').length){
-				var customerID = $('#userID').data("value");
-				$.ajax({
-					type: 'POST',
-					url: 'ajax/orders_takeOverOrdersFrom.php',
-					data: {
-						takeFromDate:takeFromDateSelected,
-						orderDate:selectedDate,
-						userID:customerID,
-						normalOrderMode:orderSendMode,
-						standardSlot:standardOrderSlotSelected,
-						standardTakeoverSlot:standardOrderTakeoverSelected
-					}
-				}).done(function(response) {
-					$('#pickDateModal').modal('hide');
-					var responseObject = JSON.parse(response);
-					if(!responseObject.success){
-						if(responseObject.logMessage != null){
-							logMessage('Fehler', responseObject.logMessage);
-						}
-						if(responseObject.displayMessage != null){
-							displayMessage('Nachricht', responseObject.displayMessage);
-						}
-					}
-					showOrderSentIcon();
-					updateOrderDays();
-				}).fail(function(data) {
-					$('#pickDateModal').modal('hide');
-					if (data.responseText !== '') {
-						logMessage("Fehler",data.responseText);
-					} else {
-						logMessage("Fehler", 'Fehler, Bestellungen konnten nicht übernommen werden.');
-					}
-					displayMessage("Fehler", 'Fehler, Bestellungen konnten nicht übernommen werden.');
-				});
-				setTimeout(function(){showOrders(); }, 100);
+				orderTakeover();
 			}
 			else{
-				displayMessage("Nachricht","Es sind noch Bestellungen an diesem Tag vorhanden. Bitte löschen Sie diese, bevor Sie eine Bestellung von einem anderen Tag übernehmen.");
+				$('#takeOverOrderWithExistingModal').modal("show");
 			}
 		}
 		else{
 			displayMessage("Nachricht","Bitte wählen Sie ein Datum oder eine Standardbestellung aus.");
 		}
 	});
+
+	$('.deleteExistingOrder').click(function() {
+		let deleteKeepOrAddExisting = 1;
+		orderTakeover(deleteKeepOrAddExisting);
+	});
+	$('.keepExistingOrder').click(function() {
+		let deleteKeepOrAddExisting = 2;
+		orderTakeover(deleteKeepOrAddExisting);
+	});
+	$('.addToExistingOrder').click(function() {
+		let deleteKeepOrAddExisting = 3;
+		orderTakeover(deleteKeepOrAddExisting);
+	});
+
+	function orderTakeover(deleteKeepOrAddExisting=0){
+		var selectedDate = $( "#ordersDatepicker" ).datepicker().val();
+		var takeFromDateSelected = $( "#takeDatepicker" ).datepicker().val();
+
+		var standardOrderSlotSelected = 0;
+		if(!orderSendMode){
+			standardOrderSlotSelected = $(".selectedStandardOrder").data("value");
+		}
+		var selectedTakeoverSlot = $(".selectedStandardOrderTakeover");
+		var standardOrderTakeoverSelected = 0;
+		if(selectedTakeoverSlot.length){
+			standardOrderTakeoverSelected = selectedTakeoverSlot.data("value");
+		}
+
+		var customerID = $('#userID').data("value");
+		$.ajax({
+			type: 'POST',
+			url: 'ajax/orders_takeOverOrdersFrom.php',
+			data: {
+				takeFromDate:takeFromDateSelected,
+				orderDate:selectedDate,
+				userID:customerID,
+				normalOrderMode:orderSendMode,
+				standardSlot:standardOrderSlotSelected,
+				standardTakeoverSlot:standardOrderTakeoverSelected,
+				deleteKeepOrAdd:deleteKeepOrAddExisting
+			}
+		}).done(function(response) {
+			$('#pickDateModal').modal('hide');
+			$('#takeOverOrderWithExistingModal').modal("hide");
+			var responseObject = JSON.parse(response);
+			if(!responseObject.success){
+				if(responseObject.logMessage != null){
+					logMessage('Fehler', responseObject.logMessage);
+				}
+				if(responseObject.displayMessage != null){
+					displayMessage('Nachricht', responseObject.displayMessage);
+				}
+			}
+			showOrderSentIcon();
+			updateOrderDays();
+		}).fail(function(data) {
+			$('#pickDateModal').modal('hide');
+			$('#takeOverOrderWithExistingModal').modal("hide");
+			if (data.responseText !== '') {
+				logMessage("Fehler",data.responseText);
+			} else {
+				logMessage("Fehler", 'Fehler, Bestellungen konnten nicht übernommen werden.');
+			}
+			displayMessage("Fehler", 'Fehler, Bestellungen konnten nicht übernommen werden.');
+		});
+		setTimeout(function(){showOrders(); }, 100);
+	
+	}
+
 	//show standard options menu
 	$('#sendListOptionsExpander').click(function(event){
 		$(this).toggleClass("glyphicon-minus").toggleClass("glyphicon-plus");

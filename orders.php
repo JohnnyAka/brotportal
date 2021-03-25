@@ -1,8 +1,9 @@
 <?php
 session_start();
 if(!isset($_SESSION['userid'])) {
-   die("Bitte erst einloggen");  
-	 echo "<script>window.location.href = 'index.php';</script>";
+     
+   header("Location:index.php");
+   die("Bitte erst einloggen");
 }
 ?>
 <!DOCTYPE html>
@@ -233,6 +234,30 @@ if(!isset($_SESSION['userid'])) {
           </div>
       </div>
   </div>
+
+  <!-- Modal -->
+	<div id="takeOverOrderWithExistingModal" class="modal fade" role="dialog">
+		<div class="modal-dialog" role="content">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Bestellung übernehmen</h4>
+				</div>
+				<div class="modal-body">
+					<p>Es ist noch eine Bestellung für diesen Tag vorhanden. Was soll mit der vorhandenen Bestellung passieren?</p>
+				</div>
+				<div class="modal-footer">
+				<button type="button" class="btn btn-default deleteExistingOrder">Löschen</button>
+				<button type="button" class="btn btn-default keepExistingOrder">Behalten</button>
+				<button type="button" class="btn btn-default addToExistingOrder">Mengen hinzufügen</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
 	
 	<!-- Modal -->
   <div class="modal" id="imgBigModal" tabindex="-1" role="dialog" aria-labelledby="imgBigModal">

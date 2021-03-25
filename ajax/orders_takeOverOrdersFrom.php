@@ -20,11 +20,13 @@ $idCustomer = $_POST['userID'];
 $standardSlot = $_POST["standardSlot"];
 $normalOrderMode = $_POST["normalOrderMode"];
 $standardTakeoverSlot = $_POST["standardTakeoverSlot"];
+$deleteKeepOrAddExisting = $_POST["deleteKeepOrAdd"];
 unset($_POST['orderDate']);
 unset($_POST['userID']);
 unset($_POST['standardSlot']);
 unset($_POST['normalOrderMode']);
 unset($_POST['standardTakeoverSlot']);
+unset($_POST["deleteKeepOrAdd"]);
 
 
 

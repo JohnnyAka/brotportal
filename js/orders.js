@@ -1277,8 +1277,16 @@ var main = function(){
 						logMessage('Fehler', responseObject.logMessage);
 					}
 					if(responseObject.displayMessage != null){
-						
-						displayMessage('Nachricht', responseObject.displayMessage);
+						//wait for modal to show until open alert modal is closed
+						var alertModal = $("#alertModal");
+						if((alertModal.data('bs.modal') || {}).isShown ){
+							alertModal.on('hidden.bs.modal', function () {
+								$('#alertModal').unbind('hidden.bs.modal');
+							    displayMessage('Nachricht', responseObject.displayMessage);
+							});
+						}else{
+							displayMessage('Nachricht', responseObject.displayMessage);
+						}
 					}
 				}
 				showOrderSentIcon();

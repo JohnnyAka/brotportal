@@ -49,6 +49,7 @@ $strTakeFromDate = $_POST['takeFromDate'];
 unset($_POST['takeFromDate']);
 
 if($standardTakeoverSlot != 0){
+	//standard slots are saved as dates in the year 6666
 	$takeFromDate = getStandardOrderDate($standardTakeoverSlot);
 }else{
 	//format Date
@@ -66,9 +67,9 @@ $preProductCalendarDict = makeDict($db,'products', 'id', 'idCalendar');
 if(!checkForPastAndAfterhour($db, $orderDate)){
     return;
 }
-
+//Bestellung, die übernommen wird
 $data = $db->getData("orders", 
-	array('idProduct','idCustomer','orderDate','number','hook','important','noteBaking','noteDelivery'), 
+	array('idProduct','idCustomer','orderDate','number','hook','important','noteBaking','noteDelivery','locked'),
 	"idCustomer=?1 AND orderDate=?2", array($idCustomer,$takeFromDate));
 
 foreach ($data as $order) {
@@ -81,14 +82,36 @@ foreach ($data as $order) {
 		continue;
 	}
 	else{
-		$result = $db->createData("orders",
-			array('idProduct','idCustomer','orderDate','number','hook','important','noteDelivery','noteBaking'),
-			$order);
-		if(substr($result, 0, 1) != "N"){ //wenn die Datenbankaktion einen Fehler auslöst
-			$responseMessage->logMessage .= $result;
-			$responseMessage->displayMessage .= "Ein Fehler ist beim Erstellen des Artikels ".$productName." aufgetreten.\n";
-			$responseMessage->false;
-		}
+		$existingOrder = $db->getData("orders", 
+			array('idProduct','idCustomer','orderDate','number','hook','important','noteBaking','noteDelivery','locked'),
+			"idCustomer=?1 AND orderDate=?2 AND idProduct=?3 AND hook=?4", array($idCustomer, $orderDate, $order['idProduct'], $order['hook']));
+		if($existingOrder != null){
+            $existingOrder = $existingOrder[0];
+		    //dieser Fall sollte eigentlich nicht eintreten, da nur Produkte gelockt werden, die nicht mehr in angemessener Zeit hergestellt werden
+            if($order['locked']) {
+                continue;
+            }
+            else{
+                $order['number'] = $order['number'] + $existingOrder['number'];
+                $order['noteBaking'] = $existingOrder['noteBaking'] + ' | ' + $order['noteBaking'];
+                $order['noteDelivery'] = $existingOrder['noteDelivery'] + ' | ' + $order['noteDelivery'];
+                $db->updateData("orders",
+                    array('number', 'noteBaking', 'noteDelivery'),
+                    array($order['number'], $order['noteBaking'], $order['noteDelivery']),
+                    "idCustomer=?1 AND orderDate=?2 AND idProduct=?3 AND hook=?4",
+                    array($idCustomer, $orderDate, $order['idProduct'], $order['hook']));
+            }
+        }
+        else {
+            $result = $db->createData("orders",
+                array('idProduct', 'idCustomer', 'orderDate', 'number', 'hook', 'important', 'noteDelivery', 'noteBaking','locked'),
+                $order);
+            if (substr($result, 0, 1) != "N") { //wenn die Datenbankaktion einen Fehler auslöst
+                $responseMessage->logMessage .= $result;
+                $responseMessage->displayMessage .= "Ein Fehler ist beim Erstellen des Artikels " . $productName . " aufgetreten.\n";
+                $responseMessage->false;
+            }
+        }
 	}
 }
 

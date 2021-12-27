@@ -1254,46 +1254,45 @@ var main = function(){
 			}
 
 			//only take over orders, if no order exists on this date
-			if(!$('#sendOrderForm').children('.field').length){
-				var customerID = $('#userID').data("value");
-				$.ajax({
-					type: 'POST',
-					url: 'ajax/orders_takeOverOrdersFrom.php',
-					data: {
-						takeFromDate:takeFromDateSelected,
-						orderDate:selectedDate,
-						userID:customerID,
-						normalOrderMode:orderSendMode,
-						standardSlot:standardOrderSlotSelected,
-						standardTakeoverSlot:standardOrderTakeoverSelected
-					}
-				}).done(function(response) {
-					$('#pickDateModal').modal('hide');
-					var responseObject = JSON.parse(response);
-					if(!responseObject.success){
-						if(responseObject.logMessage != null){
-							logMessage('Fehler', responseObject.logMessage);
-						}
-						if(responseObject.displayMessage != null){
-							displayMessage('Nachricht', responseObject.displayMessage);
-						}
-					}
-					showOrderSentIcon();
-					updateOrderDays();
-				}).fail(function(data) {
-					$('#pickDateModal').modal('hide');
-					if (data.responseText !== '') {
-						logMessage("Fehler",data.responseText);
-					} else {
-						logMessage("Fehler", 'Fehler, Bestellungen konnten nicht übernommen werden.');
-					}
-					displayMessage("Fehler", 'Fehler, Bestellungen konnten nicht übernommen werden.');
-				});
-				setTimeout(function(){showOrders(); }, 100);
+			if($('#sendOrderForm').children('.field').length){
+				displayMessage("Nachricht","Es sind schon Bestellungen an diesem Tag vorhanden. \n\n Sollte ein Produkt in der aktuellen Bestellung und der übernommenen Bestellung vorkommen, werden die Anzahlen zusammengezählt.\n\n Bitte prüfen Sie die Bestellung sorgfältig, da die Überschreitung der Warnschwelle keine Fehlermeldung auslöst.");
 			}
-			else{
-				displayMessage("Nachricht","Es sind noch Bestellungen an diesem Tag vorhanden. Bitte löschen Sie diese, bevor Sie eine Bestellung von einem anderen Tag übernehmen.");
-			}
+			var customerID = $('#userID').data("value");
+			$.ajax({
+				type: 'POST',
+				url: 'ajax/orders_takeOverOrdersFrom.php',
+				data: {
+					takeFromDate:takeFromDateSelected,
+					orderDate:selectedDate,
+					userID:customerID,
+					normalOrderMode:orderSendMode,
+					standardSlot:standardOrderSlotSelected,
+					standardTakeoverSlot:standardOrderTakeoverSelected
+				}
+			}).done(function(response) {
+				$('#pickDateModal').modal('hide');
+				var responseObject = JSON.parse(response);
+				if(!responseObject.success){
+					if(responseObject.logMessage != null){
+						logMessage('Fehler', responseObject.logMessage);
+					}
+					if(responseObject.displayMessage != null){
+						
+						displayMessage('Nachricht', responseObject.displayMessage);
+					}
+				}
+				showOrderSentIcon();
+				updateOrderDays();
+			}).fail(function(data) {
+				$('#pickDateModal').modal('hide');
+				if (data.responseText !== '') {
+					logMessage("Fehler",data.responseText);
+				} else {
+					logMessage("Fehler", 'Fehler, Bestellungen konnten nicht übernommen werden.');
+				}
+				displayMessage("Fehler", 'Fehler, Bestellungen konnten nicht übernommen werden.');
+			});
+			setTimeout(function(){showOrders(); }, 100);
 		}
 		else{
 			displayMessage("Nachricht","Bitte wählen Sie ein Datum oder eine Standardbestellung aus.");

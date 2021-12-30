@@ -390,7 +390,7 @@ $('#sendOrderForm').submit(function(event) {
 				showOrders();
 				updateOrderDays();
 				if(!resData.success){
-					displayMessage("Nachricht", resData.displayMessage);
+					displayMessage("Fehler", resData.displayMessage);
 					logMessage("Fehler", resData.logMessage);
 				}else{
 					if(!orderSendMode){
@@ -1210,13 +1210,13 @@ var main = function(){
 				showOrderSentIcon();
 				updateOrderDays();	
 				var responseObject = JSON.parse(response);
-				if(!responseObject.success){
+				if(responseObject.success == false){
 					if(responseObject.logMessage != null){
 						logMessage('Fehler', responseObject.logMessage);
 					}
-					displayMessage('Nachricht', responseObject.displayMessage);
+					displayMessage('Fehler', responseObject.displayMessage);
 				}
-				if(!orderSendMode){
+				else if(!orderSendMode){
 					displayMessage('Bestätigung', 'Ihre Standardbestellung auf diesem Speicherplatz wurde gelöscht.')
 				}else{
 					displayMessage('Bestätigung', 'Ihre Bestellung für diesen Tag wurde gelöscht.\n\n Wenn Sie keine erneute Bestellung eingeben, werden Sie an diesem Tag nicht von uns beliefert.')

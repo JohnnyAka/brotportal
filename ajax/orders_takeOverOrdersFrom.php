@@ -87,8 +87,9 @@ foreach ($data as $order) {
 			"idCustomer=?1 AND orderDate=?2 AND idProduct=?3 AND hook=?4", array($idCustomer, $orderDate, $order['idProduct'], $order['hook']));
 		if($existingOrder != null){
             $existingOrder = $existingOrder[0];
-		    //dieser Fall sollte eigentlich nicht eintreten, da nur Produkte gelockt werden, die nicht mehr in angemessener Zeit hergestellt werden
-            if($order['locked']) {
+		    //dieser Fall tritt ein, wenn ein Produkt schon exportiert worden ist - zB. weil es eine Vorlaufzeit hat (preBakeExp) oder schon exportiert wurde
+            if($existingOrder['locked']) {
+            	array_push($productNamesNotProduced, $productName);
                 continue;
             }
             else{
@@ -104,8 +105,8 @@ foreach ($data as $order) {
         }
         else {
             $result = $db->createData("orders",
-                array('idProduct', 'idCustomer', 'orderDate', 'number', 'hook', 'important', 'noteDelivery', 'noteBaking','locked'),
-                $order);
+                array('idProduct', 'idCustomer', 'orderDate', 'number', 'hook', 'important', 'noteDelivery', 'noteBaking'),
+                array($order['idProduct'], $order['idCustomer'], $order['orderDate'], $order['number'], $order['hook'], $order['important'], $order['noteDelivery'], $order['noteBaking'] ));
             if (substr($result, 0, 1) != "N") { //wenn die Datenbankaktion einen Fehler auslöst
                 $responseMessage->logMessage .= $result;
                 $responseMessage->displayMessage .= "Ein Fehler ist beim Erstellen des Artikels " . $productName . " aufgetreten.\n";

@@ -94,8 +94,20 @@ foreach ($data as $order) {
             }
             else{
                 $order['number'] = $order['number'] + $existingOrder['number'];
-                $order['noteBaking'] = $existingOrder['noteBaking'] + ' | ' + $order['noteBaking'];
-                $order['noteDelivery'] = $existingOrder['noteDelivery'] + ' | ' + $order['noteDelivery'];
+                if($existingOrder['noteBaking']) {
+                    $tmpNoteBaking = $existingOrder['noteBaking'];
+                    if($order['noteBaking']){
+                        $tmpNoteBaking .= ' | ' . $order['noteBaking'];
+                    }
+                    $order['noteBaking'] = $tmpNoteBaking;
+                }
+                if($existingOrder['noteDelivery']) {
+                    $tmpNoteDelivery = $existingOrder['noteDelivery'];
+                    if($order['noteDelivery']){
+                        $tmpNoteDelivery .= ' | ' . $order['noteDelivery'];
+                    }
+                    $order['noteDelivery'] = $tmpNoteDelivery;
+                }
                 $db->updateData("orders",
                     array('number', 'noteBaking', 'noteDelivery'),
                     array($order['number'], $order['noteBaking'], $order['noteDelivery']),

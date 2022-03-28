@@ -14,8 +14,8 @@ $customer = "kunde";
 $customerPw = "password";
 
 //admin Zugangsdaten
-$adminName = "bestellannahme";
-$adminPassword = "halleluja";
+$adminName = "Bestellung";
+$adminPassword = "blaueSonne2";
 
 //Erinnerung: Wenn neuer table hinzugefügt wird müssen drop und permissions gesetzt werden
 
@@ -70,6 +70,8 @@ $conn->query($sql);
 $sql = "DROP TABLE productLabels;";
 $conn->query($sql);
 $sql = "DROP TABLE productLabelRelations;";
+$conn->query($sql);
+$sql = "DROP TABLE advertisingMessages;";
 $conn->query($sql);
 
 $sql = "CREATE TABLE products (
@@ -269,6 +271,25 @@ if ($conn->query($sql) === TRUE) {
     echo "Error creating database: " . $conn->error."<br>";
 }
 
+$sql = "CREATE TABLE advertisingMessages(
+id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(100) NOT NULL,
+messageImage VARCHAR(200),
+messageHeader  VARCHAR(200),
+messageText VARCHAR(3000),
+popupStartDate DATE,
+popupEndDate DATE,
+messageboxStartDate DATE,
+messageboxEndDate DATE,
+linkedProductId INT(6) UNSIGNED,
+orderPriority INT(2)
+)";
+if ($conn->query($sql) === TRUE) {
+    echo "Table advertisingMessages created successfully<br>";
+} else {
+    echo "Error creating database: " . $conn->error."<br>";
+}
+
 $sql = "CREATE TABLE settings (
 adminName VARCHAR(40),
 adminPassword VARCHAR(255),
@@ -288,7 +309,7 @@ if ($conn->query($sql) === TRUE) {
 }
 //create users and grant permissions
 echo "<br />Setting permissons:<br />";
-$tablesAdminUser = array('products','users','orders','productCategories','userCategories','prizeCategories','categoryRelations','calendars','calendarsDaysRelations','productTags','productTagRelations','productLabels','productLabelRelations');
+$tablesAdminUser = array('products','users','orders','productCategories','userCategories','prizeCategories','categoryRelations','calendars','calendarsDaysRelations','productTags','productTagRelations','productLabels','productLabelRelations', 'advertisingMessages');
 foreach($tablesAdminUser as $table){
 	$sql = "grant all on brotportal.".$table." to ".$adminUser."@localhost identified by '".$adminUserPw."'";
 	if ($conn->query($sql) === TRUE) {
@@ -306,7 +327,7 @@ if ($conn->query($sql) === TRUE) {
 	echo "Error granting permissions: " . $conn->error."<br>";
 }
 
-$tablesSelectCustomer = array('products','users','orders','productCategories','userCategories','prizeCategories','categoryRelations','calendars','calendarsDaysRelations','productTags','productTagRelations','productLabels','productLabelRelations');
+$tablesSelectCustomer = array('products','users','orders','productCategories','userCategories','prizeCategories','categoryRelations','calendars','calendarsDaysRelations','productTags','productTagRelations','productLabels','productLabelRelations', 'advertisingMessages');
 foreach($tablesSelectCustomer as $table){
 	$sql = "grant select on brotportal.".$table." to ".$customer."@localhost identified by '".$customerPw."'";
 	if ($conn->query($sql) === TRUE) {

@@ -148,7 +148,7 @@ if(!isset($_SESSION['userid'])) {
 					<h4 class="modal-title">Bestellung übernehmen</h4>
 				</div>
 				<div class="modal-body">
-					<p>Bitte wählen Sie den Tag oder den Standardspeicherplatz aus, von dem die Bestellung übernommen werden soll:</p>
+					<p>Bitte wählen Sie den Tag oder den Standardbestellplatz aus, von dem die Bestellung übernommen werden soll:</p>
 					<input type="text" id="takeDatepicker">
 					<div class="standardOrderTakeoverSlot">
 					<p>Standardbestellungen</p>

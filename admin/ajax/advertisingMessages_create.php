@@ -5,10 +5,10 @@ $name = strip_tags(trim($_POST["name"]));
 $messageImage = strip_tags(trim($_POST["messageImage"]));
 $messageHeader = strip_tags(trim($_POST["messageHeader"]));
 $messageText = strip_tags(trim($_POST["messageText"]));
-$popupStartDate = strip_tags(trim($_POST["popupStartDate"]));
-$popupEndDate = strip_tags(trim($_POST["popupEndDate"]));
-$messageboxStartDate = strip_tags(trim($_POST["messageboxStartDate"]));
-$messageboxEndDate = strip_tags(trim($_POST["messageboxEndDate"]));
+$popupStartDate = date('Y-m-d', strtotime($_POST["popupStartDate"]));
+$popupEndDate = date('Y-m-d', strtotime($_POST["popupEndDate"]));
+$messageboxStartDate = date('Y-m-d', strtotime($_POST["messageboxStartDate"]));
+$messageboxEndDate = date('Y-m-d', strtotime($_POST["messageboxEndDate"]));
 $linkedProductId = strip_tags(trim($_POST["linkedProductId"]));
 $orderPriority = strip_tags(trim($_POST["orderPriority"]));
 

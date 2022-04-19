@@ -118,29 +118,17 @@ if(!isset($_SESSION['trustedUser'])) {
 					</div> 
 					<h1>Ausgewählte Nachricht:</h1>
 					<hr>
-					<!--<p> //muss noch angepasst werden!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-						Artikel Nr.: <span class="displayProductID"></span><br />
+					<p> 
 					 	Name: <span class="displayName"></span><br />
-						Veröffentlicht: <span class="displayVisibleForUser"></span><br />
-						Kategorie: <span class="displayProductCategory"></span><br />
-						Listen Priorit&auml;t: <span class="displayOrderPriority"></span><br />
-						Beschreibung: <span class="displayDescription"></span><br />
-						Bildpfad normal: <span class="displayImagePath"></span><br />
-						Bildpfad klein: <span class="displayImagePathSmall"></span><br />
-						Bildpfad gross: <span class="displayImagePathBig"></span><br />
-						Inhaltsstoffe: <span class="displayIngredients"></span><br />
-						Allergene: <span class="displayAllergens"></span><br />
-						Gewicht: <span class="displayWeight"></span><br />
-						Tage vorher backen: <span class="displayPreBakeExp"></span><br />
-						Maximal Tage vorher backen: <span class="displayPreBakeMax"></span><br />
-						Notiz (Pre-Notification): <span class="displayFeatureExp"></span><br />
-						Preis1: <span class="displayPrice1"></span><br />
-						Preis2: <span class="displayPrice2"></span><br />
-						Preis3: <span class="displayPrice3"></span><br />
-						Preis4: <span class="displayPrice4"></span><br />
-						Preis5: <span class="displayPrice5"></span><br />
-						Kalender: <span class="displayIdCalendar"></span><br />
-					</p>-->
+						Bild: <span class="displayImage"></span><br />
+						&Uuml;berschrift: <span class="displayCaption"></span><br />
+						Text: <span class="displayText"></span><br />
+						Anzeige-Priorit&auml;t: <span class="displayPriority"></span><br />
+						Popup Start: <span class="displayPopupStart"></span><br />
+						Popup Ende: <span class="displayPopupEnd"></span><br />
+						Messagebox Start: <span class="displayMessageboxStart"></span><br />
+						Messagebox Ende: <span class="displayMessageboxEnd"></span><br />
+					</p>
 				</div>
 			</div>
     </div> <!-- /container -->
@@ -235,25 +223,51 @@ if(!isset($_SESSION['trustedUser'])) {
 		<div class="modal-content">
 		  <div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h4 class="modal-title" id="updateAdvertisingMessageLabel">Produktkategorie &auml;ndern</h4>
+			<h4 class="modal-title" id="updateAdvertisingMessageLabel">Nachricht &auml;ndern</h4>
 		  </div>
 		  <div class="modal-body">
 			<form id="updateAdvertisingMessageForm" method="post" action="ajax/categories_product_update.php">
 				<div class="field">
-					<label for="advertisingMessageNameUp">Produktkategorie:</label>
-					<input id="advertisingMessageNameUp" name="advertisingMessageName" required>
+					<label for="nameUp">Name:</label>
+					<input id="nameUp" name="nameUp" required>
 				</div>
 				<div class="field">
-					<label for="orderPriorityUp">Listen Priorität:</label>
-					<input type="number" min="1" max="99" id="orderPriorityUp" name="orderPriority">
-				</div>
-				<div class="field">
-					<label for="upperCategoryUp">Übergeordnete-Kategorie:</label>
-					<select id="upperCategoryUp" name="upperCategory">
+					<label for="messageImageUp">Bild:</label>
+					<select id="messageImageUp" name="messageImageUp">
 					</select>
 				</div>
 				<div class="field">
-					<input type="hidden" id="catIdUp" name="catId">
+					<label for="messageHeaderUp">Überschrift:</label>
+					<input type="text" id="messageHeaderUp" name="messageHeaderUp">
+				</div>
+				<div class="field">
+					<label for="messageTextUp">Text:</label>
+					<textarea id="messageTextUp" name="messageTextUp"></textarea>
+				</div>
+				<div class="field">
+					<label for="popupStartDateUp">Popup-Startdatum:</label>
+					<input type="text" id="popupStartDateUp" name="popupStartDateUp">
+				</div>
+				<div class="field">
+					<label for="popupEndDateUp">Popup-Enddatum:</label>
+					<input type="text" id="popupEndDateUp" name="popupEndDateUp">
+				</div>
+				<div class="field">
+					<label for="messageboxStartDateUp">Messagebox-Startdatum:</label>
+					<input type="text" id="messageboxStartDateUp" name="messageboxStartDateUp">
+				</div>
+				<div class="field">
+					<label for="messageboxEndDateUp">Messagebox-Enddatum:</label>
+					<input type="text" id="messageboxEndDateUp" name="messageboxEndDateUp">
+				</div>
+				<div class="field">
+					<label for="linkedProductIdUp">Angezeigtes Produkt:</label>
+					<select id="linkedProductIdUp" name="linkedProductIdUp">
+					</select>
+				</div>
+				<div class="field">
+					<label for="orderPriorityUp">Anzeigepriorität:</label>
+					<input type="number" min="1" max="99" value="50" id="orderPriorityUp" name="orderPriorityUp">
 				</div>
 			</form>
 		  </div>

@@ -66,7 +66,7 @@ $(function() {
 			//close modal
 			$("#createAdvertisingMessage").modal("hide");
 			//show changes
-			//displayCategories();
+			displayMessages();
 		}).fail(function(data) {
 			// Set the message text.
 			if (data.responseText !== '') {
@@ -112,7 +112,7 @@ $(function() {
 			//close modal
 			$("#updateProductCat").modal("hide");
 			//display changes
-			displayCategories();
+			displayMessages();
 		}).fail(function(data) {
 			// Set the message text.
 			if (data.responseText !== '') {
@@ -124,60 +124,73 @@ $(function() {
 	});
 });
 
-/*//displays categories
-var displayCategories = function(){
+//displays messages in left sidebar
+var displayMessages = function(){
 	$('ul.sidebarList').empty();
 	$.ajax({
 		type: 'POST',
-		url: 'ajax/categories_product_read.php'
+		url: 'ajax/advertisingMessages_messages_read.php'
 	}).done(function(response){
-		var categoryData = JSON.parse(response);
+		var messageData = JSON.parse(response);
 		//set Item List
-		for(var x=0; x < categoryData.length; x++){
-			$('ul.sidebarList').append("<li class='categoryListItem' data-idCategory='"+categoryData[x].id+"'>"+categoryData[x].name+"</li>");
+		for(var x=0; x < messageData.length; x++){
+			$('ul.sidebarList').append("<li class='messageListItem' data-idmessage='"+messageData[x].id+"'>"+messageData[x].name+"</li>");
 		}
 		// click-event to select category
 		$('ul.sidebarList li').click(function() {
 			$('ul.sidebarList li').removeClass("active");
 			$(this).addClass("active");
-			displayProducts($(this));
+			displayActiveMessage($(this));
 		});
 	}).fail(function(data){
 		// Set the message text.
 		if (data.responseText !== '') {
 			$(messages).text(data.responseText);
 		} else {
-			$(messages).text('Fehler, Kategorien konnten nicht angezeigt werden.');
+			$(messages).text('Fehler, Nachrichten konnten nicht angezeigt werden.');
 		}
 	});
 };
 
-//displays products belonging to active category
-var displayProducts = function(category){
-	//reset list
-	$('ul.productList').empty();
-	var categoryID = category.data('idcategory');
+//displays active message
+var displayActiveMessage = function(message){
+
+	var MessageID = message.data('idmessage');
 	$.ajax({
 		type: 'POST',
-		url: 'ajax/categories_product_products_read.php',
+		url: 'ajax/advertisingMessages_message_read.php',
 		data: {
-			id:categoryID
+			id:MessageID
 		}
 	}).done(function(response){
-		var productData = JSON.parse(response);
-		//set Item List
-		for(var x=0; x < productData.length; x++){
-			$('ul.productList').append("<li>"+productData[x].name+"</li>");
-		}
+		var messageData = JSON.parse(response);
+		
+		$(".displayName").text(messageData[0].name);
+		$(".displayImage").text(messageData[0].messageImage);
+		$(".displayCaption").text(messageData[0].messageHeader);
+		$(".displayText").text(messageData[0].messageText);
+		$(".displayLinkedProduct").text(messageData[0].linkedProductId);
+		$(".displayPriority").text(messageData[0].orderPriority);
+		$(".displayPopupStart").text(formatDateFromMysql(messageData[0].popupStartDate));
+		$(".displayPopupEnd").text(formatDateFromMysql(messageData[0].popupEndDate));
+		$(".displayMessageboxStart").text(formatDateFromMysql(messageData[0].messageboxStartDate));
+		$(".displayMessageboxEnd").text(formatDateFromMysql(messageData[0].messageboxEndDate));
+
 	}).fail(function(data){
 		// Set the message text.
 		if (data.responseText !== '') {
 			$(messages).text(data.responseText);
 		} else {
-			$(messages).text('Fehler, Bestellung konnte nicht geladen werden.');
+			$(messages).text('Fehler, Nachricht konnte nicht geladen werden.');
 		}
 	});
-};*/
+};
+
+function formatDateFromMysql(dateToFormat){
+	const [year, month, day] = [...dateToFormat.split("-")];
+	const popupStartDateFormated = day+'.'+month+'.'+year;
+	return popupStartDateFormated;
+}
 
 //datepicker setup including onclose ajax orderlist load function
 function resetDatepickers() {
@@ -197,7 +210,7 @@ var main = function(){
 
 
 
-	//displayCategories();
+	displayMessages();
 	
 	$('.createAdvertisingMessageButton').click(function(){
 		//reset datepickers of form
@@ -253,7 +266,7 @@ var main = function(){
 	
 	
 	$('.updateProductCatButton').click(function(){
-		var item = $(".categoryListItem.active");
+		var item = $(".messageListItem.active");
 		if (item.length){
 			// Get the messages div.
 			var messages = $('#messages');
@@ -312,7 +325,7 @@ var main = function(){
 	});
 	
 	$('.deleteProductCatButton').click(function(){
-		var item = $(".categoryListItem.active");
+		var item = $(".messageListItem.active");
 		if (item.length){
 			// Get the messages div.
 			var messages = $('#messages');
@@ -353,7 +366,7 @@ var main = function(){
 							}).done(function(response){
 								$(".messages").text("Kategorie erfolgreich gel&ouml;scht!");
 								buildCategoryDict();
-								displayCategories();
+								displayMessages();
 							}).fail(function(data){
 								// Set the message text.
 								if (data.responseText !== '') {

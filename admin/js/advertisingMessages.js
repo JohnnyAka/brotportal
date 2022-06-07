@@ -72,24 +72,32 @@ $(function() {
 			if (data.responseText !== '') {
 				$(messages).text(data.responseText);
 			} else {
-				$(messages).text('Fehler, Kategorie konnte nicht erstellt werden.');
+				$(messages).text('Fehler, Nachricht konnte nicht erstellt werden.');
 			}
 		});
 	});
 });
 
-//update productcat form submit
+//update advertisingMessages form submit
 $(function() {
 	// Get the form.
-	var form = $('#updateProductCatForm');
+	var form = $('#updateAdvertisingMessageForm');
 
 	// Get the messages div.
 	var messages = $('#messages');
 	
 	//clear formfields after modal close (event)
-	$('#updateProductCat').on('hidden.bs.modal', function () {
-		$('#productCatNameUp').val('');
-		$('#upperCategoryUp').empty();
+	$('#updateAdvertisingMessage').on('hidden.bs.modal', function () {
+		$('#nameUp').val('');
+		$('#messageHeaderUp').val('');
+		$('#messageTextUp').val('');
+		$('#popupStartDateUp').val('');
+		$('#popupEndDateUp').val('');
+		$('#messageboxStartDateUp').val('');
+		$('#messageboxEndDateUp').val('');
+		$('#orderPriorityUp').val('');
+		$('#messageImageUp').empty();
+		$('#linkedProductIdUp').empty();
 	})
 
 	// Set up an event listener for the updateProduct form.
@@ -108,9 +116,8 @@ $(function() {
 		}).done(function(response) {
 			// Set the message text.
 			$(messages).text(response);
-			buildCategoryDict()
 			//close modal
-			$("#updateProductCat").modal("hide");
+			$("#updateAdvertisingMessage").modal("hide");
 			//display changes
 			displayMessages();
 		}).fail(function(data) {
@@ -118,7 +125,7 @@ $(function() {
 			if (data.responseText !== '') {
 				$(messages).text(data.responseText);
 			} else {
-				$(messages).text('Fehler, Kategorie konnte nicht geändert werden.');
+				$(messages).text('Fehler, Nachricht konnte nicht geändert werden.');
 			}
 		});
 	});
@@ -169,7 +176,12 @@ var displayActiveMessage = function(message){
 		$(".displayImage").text(messageData[0].messageImage);
 		$(".displayCaption").text(messageData[0].messageHeader);
 		$(".displayText").text(messageData[0].messageText);
-		$(".displayLinkedProduct").text(messageData[0].linkedProductId);
+		var productName;
+		if(messageData[0].linkedProductId == 0)
+			{productName = 'Kein Produkt verlinkt';}
+		else
+			{productName = productsNameDict[messageData[0].linkedProductId];}
+		$(".displayLinkedProduct").text(productName);
 		$(".displayPriority").text(messageData[0].orderPriority);
 		$(".displayPopupStart").text(formatDateFromMysql(messageData[0].popupStartDate));
 		$(".displayPopupEnd").text(formatDateFromMysql(messageData[0].popupEndDate));
@@ -193,8 +205,7 @@ function formatDateFromMysql(dateToFormat){
 }
 
 //datepicker setup including onclose ajax orderlist load function
-function resetDatepickers() {
-	var showtimeDatepickers = ["#popupStartDate", "#popupEndDate", "#messageboxStartDate", "#messageboxEndDate"];
+function resetDatepickers(showtimeDatepickers) {
 	showtimeDatepickers.forEach(function(picker){
 		$( picker ).datepicker($.datepicker.regional[ "de" ])
 		.datepicker( "option", "dateFormat", "dd.mm.yy" )
@@ -214,7 +225,7 @@ var main = function(){
 	
 	$('.createAdvertisingMessageButton').click(function(){
 		//reset datepickers of form
-		resetDatepickers();
+		resetDatepickers(["#popupStartDate", "#popupEndDate", "#messageboxStartDate", "#messageboxEndDate"]);
 
 		//set product options of select
 		$('#linkedProductId').append($('<option>', {
@@ -265,62 +276,102 @@ var main = function(){
 	});
 	
 	
-	$('.updateProductCatButton').click(function(){
+	$('.updateAdvertisingMessageButton').click(function(){
 		var item = $(".messageListItem.active");
 		if (item.length){
 			// Get the messages div.
 			var messages = $('#messages');
-			
+
+
 			//get values of item from db
-			var selectedCategory = item.data('idcategory');
+			var selectedMessage = item.data('idmessage');
 			$.ajax({
 				type: 'POST',
-				url: 'ajax/categories_product_single_read.php',
+				url: 'ajax/advertisingMessages_message_read.php',
 				data: {
-					catId:selectedCategory
+					id:selectedMessage
 				}
 			}).done(function(response){
-				var productData = JSON.parse(response);
-				
-				//set product options of select
-				$('#upperCategoryUp').append($('<option>', {
-					value: 0,
-					text: 'Keine'
-				}));
-				for (var key in productsNameDict) {
-					if (key === 'length' || !productsNameDict.hasOwnProperty(key)){ 
-						continue;
-					}
-					$('#upperCategoryUp').append($('<option>', {
-						value: key,
-						text: productsNameDict[key]
-					}));
-				}
+				var messageData = JSON.parse(response);
 				
 				//set values of form
-				$('#productCatNameUp').val(productData[0]['name']);
-				$('#orderPriorityUp').val(productData[0]['orderPriority']);
-				if(productData[0]["upperCategoryID"] != null){
-					$('#upperCategoryUp').val(productData[0]["upperCategoryID"]);
+				$('#nameUp').val(messageData[0]['name']);
+				$('#messageHeaderUp').val(messageData[0]['messageHeader']);
+				$('#messageTextUp').val(messageData[0]['messageText']);
+				$('#orderPriorityUp').val(messageData[0]['orderPriority']);
+				
+				$('#idUp').val(messageData[0]["id"]);
+				
+
+				//reset datepickers of form
+				resetDatepickers(["#popupStartDateUp", "#popupEndDateUp", "#messageboxStartDateUp", "#messageboxEndDateUp"]);
+				var showtimeDatepickers = [ "#popupEndDateUp", "#messageboxStartDateUp", "#messageboxEndDateUp"];
+				$("#popupStartDateUp").datepicker( "setDate", formatDateFromMysql(messageData[0]['popupStartDate']));
+				$("#popupEndDateUp").datepicker( "setDate", formatDateFromMysql(messageData[0]['popupEndDate']));
+				$("#messageboxStartDateUp").datepicker( "setDate", formatDateFromMysql(messageData[0]['messageboxStartDate']));
+				$("#messageboxEndDateUp").datepicker( "setDate", formatDateFromMysql(messageData[0]['messageboxEndDate']));
+
+				//set product options of select
+				$('#linkedProductIdUp').append($('<option>', {
+							value: 0,
+							text: 'Kein Produkt'
+						}));
+				for (var key in productsNameDict) {
+						if (key === 'length' || !productsNameDict.hasOwnProperty(key)){ 
+							continue;
+						}
+						$('#linkedProductIdUp').append($('<option>', {
+							value: key,
+							text: productsNameDict[key]
+						}));
 				}
-				
-				//set hidden formfields
-				$('#catIdUp').val(selectedCategory);
-				
-				//show modal
-				$("#updateProductCat").modal("show");
+				$('#linkedProductIdUp').val(messageData[0]["linkedProductId"]);
+
+				//set image options of select
+				$.ajax({
+					type: 'POST',
+					url: 'ajax/advertisingMessages_imagesOfDirectory_read.php'
+				}).done(function(response){
+					var imageList = JSON.parse(response);
+					selectObjectHandle = $('#messageImageUp');
+
+					selectObjectHandle.append($('<option>', {
+						value: '',
+						text: 'Kein Bild'
+					}));
+					//set options of directory select
+					for (var imgName of imageList) {
+						//if (dirName === 'length' || !categoriesNameDict.hasOwnProperty(key)){ 
+						//	continue;
+						//}
+						selectObjectHandle.append($('<option>', {
+							value: imgName,
+							text: imgName
+						}));
+					}
+					$('#messageImageUp').val(messageData[0]['messageImage']);
+
+					$("#updateAdvertisingMessage").modal("show");
+				}).fail(function(data){
+					// Set the message text.
+					if (data.responseText !== '') {
+						$(messages).text(data.responseText);
+					} else {
+						$(messages).text('Fehler, Bilder konnten nicht geladen werden.');
+					}
+				});
 			}).fail(function(data){
 				// Set the message text.
 				if (data.responseText !== '') {
 					$(messages).text(data.responseText);
 				} else {
-					$(messages).text('Fehler, Produktkategorie konnte nicht geändert werden.');
+					$(messages).text('Fehler, Nachricht konnte nicht geändert werden.');
 				}
 			});
 			
 		}
 		else{
-			alert("Keine Kategorie ausgewählt");
+			alert("Keine Nachricht ausgewählt");
 		}
 	});
 	
@@ -365,7 +416,6 @@ var main = function(){
 								}
 							}).done(function(response){
 								$(".messages").text("Kategorie erfolgreich gel&ouml;scht!");
-								buildCategoryDict();
 								displayMessages();
 							}).fail(function(data){
 								// Set the message text.

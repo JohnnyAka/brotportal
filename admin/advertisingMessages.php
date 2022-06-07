@@ -123,6 +123,7 @@ if(!isset($_SESSION['trustedUser'])) {
 						Bild: <span class="displayImage"></span><br />
 						&Uuml;berschrift: <span class="displayCaption"></span><br />
 						Text: <span class="displayText"></span><br />
+						Verlinktes Produkt: <span class="displayLinkedProduct"></span><br />
 						Anzeige-Priorit&auml;t: <span class="displayPriority"></span><br />
 						Popup Start: <span class="displayPopupStart"></span><br />
 						Popup Ende: <span class="displayPopupEnd"></span><br />
@@ -226,7 +227,7 @@ if(!isset($_SESSION['trustedUser'])) {
 			<h4 class="modal-title" id="updateAdvertisingMessageLabel">Nachricht &auml;ndern</h4>
 		  </div>
 		  <div class="modal-body">
-			<form id="updateAdvertisingMessageForm" method="post" action="ajax/categories_product_update.php">
+			<form id="updateAdvertisingMessageForm" method="post" action="ajax/advertisingMessages_update.php">
 				<div class="field">
 					<label for="nameUp">Name:</label>
 					<input id="nameUp" name="nameUp" required>
@@ -235,6 +236,9 @@ if(!isset($_SESSION['trustedUser'])) {
 					<label for="messageImageUp">Bild:</label>
 					<select id="messageImageUp" name="messageImageUp">
 					</select>
+				</div>
+				<div class="field">
+					<input type="hidden" id="idUp" name="idUp">
 				</div>
 				<div class="field">
 					<label for="messageHeaderUp">Überschrift:</label>

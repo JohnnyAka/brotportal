@@ -18,6 +18,7 @@ class db_connection{
 		if ($this->mysqli->connect_error) {
 			die('Error : ('. $this->mysqli->connect_errno .') '. $this->mysqli->connect_error);
 		}
+		$this->mysqli -> set_charset("utf8");
 	}
 
 	function createData($table_name, $array_args_names, $array_args){

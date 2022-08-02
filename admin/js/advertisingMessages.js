@@ -375,77 +375,35 @@ var main = function(){
 		}
 	});
 	
-	$('.deleteProductCatButton').click(function(){
+	$('.deleteAdvertisingMessageButton').click(function(){
 		var item = $(".messageListItem.active");
+		// Get the messages div.
+		var messages = $('#messages');
+		
+		//get values of item from db
+		var messageID = item.data('idmessage');
 		if (item.length){
-			// Get the messages div.
-			var messages = $('#messages');
-			
-			//get values of item from db
-			var categoryID = item.data('idcategory');
-			//check for dependent customers
 			$.ajax({
 				type: 'POST',
-				url: 'ajax/categories_product_products_read.php',
+				url: 'ajax/advertisingMessage_delete.php',
 				data: {
-					id:categoryID
+					id:messageID
 				}
 			}).done(function(response){
-				products = JSON.parse(response);
-				if(products !== 'undefined' && products.length > 0){
-					alert("Es gibt noch Artikel dieser Kategorie. Bevor die Kategorie gelöscht werden kann, bitte die Artikel löschen oder die Kategorie dieser Artikel ändern.");
-				}
-				else{
-					$.ajax({
-						type: 'POST',
-						url: 'ajax/categories_product_category_read.php',
-						data: {
-							catId:categoryID
-						}
-					}).done(function(response){
-						categories = JSON.parse(response);
-						if(categories !== 'undefined' && categories.length > 0){
-							alert("Es gibt noch Kategorien, die dieser Kategorie untergeordnet sind. Bevor die Kategorie gelöscht werden kann, bitte die übergeordnete Kategorie dieser Kategorien ändern.");
-						}
-						else{
-							$.ajax({
-								type: 'POST',
-								url: 'ajax/categories_product_delete.php',
-								data: {
-									catId:categoryID
-								}
-							}).done(function(response){
-								$(".messages").text("Kategorie erfolgreich gel&ouml;scht!");
-								displayMessages();
-							}).fail(function(data){
-								// Set the message text.
-								if (data.responseText !== '') {
-									$(messages).text(data.responseText);
-								} else {
-									$(messages).text('Fehler, Kategorie konnte nicht gelöscht werden.');
-								}
-							});
-						}
-					}).fail(function(data){
-						// Set the message text.
-						if (data.responseText !== '') {
-							$(messages).text(data.responseText);
-						} else {
-							$(messages).text('Fehler, Kategorie konnte nicht gelöscht werden.');
-						}
-					});
-				}
+				$(".messages").text("Nachricht erfolgreich gel&ouml;scht!");
+				//reload page to show new message
+				location.reload(); 
 			}).fail(function(data){
 				// Set the message text.
 				if (data.responseText !== '') {
 					$(messages).text(data.responseText);
 				} else {
-					$(messages).text('Fehler, Artikel konnten nicht gelesen werden.');
+					$(messages).text('Fehler, Nachricht konnte nicht gel&ouml;scht werden.');
 				}
 			});
 		}
 		else{
-			alert("Keine Kategorie ausgewählt");
+			alert("Keine Nachricht ausgewählt");
 		}
 	});
 	

@@ -4,6 +4,7 @@ include('../db_crud.php');
 $messageId = strip_tags(trim($_POST["idUp"]));
 $name = strip_tags(trim($_POST["nameUp"]));
 $messageImage = strip_tags(trim($_POST["messageImageUp"]));
+$imageDirectory = strip_tags(trim($_POST["imageDirectoryUp"]));
 $messageHeader = strip_tags(trim($_POST["messageHeaderUp"]));
 $messageText = strip_tags(trim($_POST["messageTextUp"]));
 $popupStartDate = date('Y-m-d', strtotime($_POST["popupStartDateUp"]));
@@ -12,6 +13,10 @@ $messageboxStartDate = date('Y-m-d', strtotime($_POST["messageboxStartDateUp"]))
 $messageboxEndDate = date('Y-m-d', strtotime($_POST["messageboxEndDateUp"]));
 $linkedProductId = strip_tags(trim($_POST["linkedProductIdUp"]));
 $orderPriority = strip_tags(trim($_POST["orderPriorityUp"]));
+
+if($messageImage != ''){
+	$messageImage = $imageDirectory.'/'.$messageImage;
+}
 
 
 $db = new db_connection();

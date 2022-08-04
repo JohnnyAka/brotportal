@@ -152,6 +152,11 @@ if(!isset($_SESSION['trustedUser'])) {
 					<input id="name" name="name" required>
 				</div>
 				<div class="field">
+					<label for="imageDirectory">Bild-Ordner:</label>
+					<select id="imageDirectory" name="imageDirectory">
+					</select>
+				</div>
+				<div class="field">
 					<label for="messageImage">Bild:</label>
 					<select id="messageImage" name="messageImage">
 					</select>
@@ -233,6 +238,11 @@ if(!isset($_SESSION['trustedUser'])) {
 					<input id="nameUp" name="nameUp" required>
 				</div>
 				<div class="field">
+					<label for="imageDirectoryUp">Bild-Ordner:</label>
+					<select id="imageDirectoryUp" name="imageDirectoryUp">
+					</select>
+				</div>
+				<div class="field">
 					<label for="messageImageUp">Bild:</label>
 					<select id="messageImageUp" name="messageImageUp">
 					</select>
@@ -278,6 +288,35 @@ if(!isset($_SESSION['trustedUser'])) {
 		  <div class="modal-footer">
 			<button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
 			<button type="submit" form="updateAdvertisingMessageForm" class="btn btn-primary updateAdvertisingMessage">&Auml;nderungen speichern</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+
+		<!-- Modal for image uploads-->
+	<div class="modal" id="imageUpload" tabindex="-1" role="dialog" aria-labelledby="imageUploadLabel">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="imageUploadLabel">Bilder hochladen</h4>
+		  </div>
+		  <div class="modal-body">
+		  	<p>Bitte wählen Sie die Bilder aus, die Sie hochladen wollen:</p>
+			<form id="uploadImagesForm" method="post" action="ajax/advertisingMessages_imageUpload.php">
+				<div class="field">
+					<label for="directoryInput">Speichern in:</label>
+					<select id="directoryInput" name="directoryInput" required></select>
+				</div>
+				<div class="field">
+					<label for="imageUploadInput"></label>
+					<input type="file" id="imageUploadInput" name="imageUploadInput" accept="image/*" multiple required>
+				</div>
+			</form>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
+			<button type="submit" form="uploadImagesForm" class="btn btn-primary imageUploadSubmitButton">Ok</button>
 		  </div>
 		</div>
 	  </div>

@@ -35,6 +35,7 @@ $(function() {
 	$('#createAdvertisingMessage').on('hidden.bs.modal', function () {
 		$(this).find(form)[0].reset();
 		//clear selects separately
+		$('#imageDirectory').empty();
 		$('#messageImage').empty();
 		$('#linkedProductId').empty();
 	})
@@ -96,6 +97,7 @@ $(function() {
 		$('#messageboxStartDateUp').val('');
 		$('#messageboxEndDateUp').val('');
 		$('#orderPriorityUp').val('');
+		$('#imageDirectoryUp').empty();
 		$('#messageImageUp').empty();
 		$('#linkedProductIdUp').empty();
 	})
@@ -215,6 +217,109 @@ function resetDatepickers(showtimeDatepickers) {
 	});
 };
 
+//upload message image
+$(function() {
+    // Get the form.
+    var form = $('#uploadImagesForm');
+
+    // Get the messages div.
+    var messages = $('#messages');
+
+	//clear formfields after modal close (event)
+	$('#imageUpload').on('hidden.bs.modal', function () {
+		$(this).find('form')[0].reset();
+		//clear selects separately
+		$('#directoryInput').empty();
+	})
+		
+
+	// Set up an event listener for the createProduct form.
+	$(form).submit(function(event) {
+		// Stop the browser from submitting the form.
+		event.preventDefault();
+		//check input of form
+		var formArray = $(form).serializeArray();
+
+		//let csvFile = event.target[5].files[0];
+		var dir = formArray[0].value;
+
+
+		for(var imageFile of event.target[1].files){
+			readFile(imageFile);
+		}
+		//close modal
+		$("#imageUpload").modal("hide");
+
+		function readFile(imgFile){
+			var reader = new FileReader();
+			reader.onload = function(e) {
+				var fileDataString = e.target.result;
+				$.ajax({
+					type: 'POST',
+					url: $(form).attr('action'),
+					data:{
+						image: JSON.stringify(fileDataString),
+						directory: dir,
+						name: fileName
+					}
+				}).done(function(response) {
+					// Set the message text.
+					$(messages).text(response);
+				}).fail(function(data) {
+					// Set the message text.
+					if (data.responseText !== '') {
+						$(messages).text(data.responseText);
+					} else {
+						$(messages).text('Fehler, Bild konnte nicht hochgeladen werden.');
+					}
+				});
+			}
+
+			var fileName = imgFile.name;
+			reader.readAsDataURL(imgFile);
+		}
+	});
+});
+
+function setImgsReloadInCreateAdMessageForm(selectObjectHandle, changingObjectHandle){
+	changingObjectHandle.addEventListener('change', function(event){
+	selectObjectHandle.empty();
+
+	$.ajax({
+		type: 'POST',
+		url: 'ajax/advertisingMessages_imagesOfDirectory_read.php',
+		data: {
+			'directory': this.value
+		}
+	}).done(function(response){
+		if(response == ''){
+			return;
+		}
+		var imageList = JSON.parse(response);
+
+
+		selectObjectHandle.append($('<option>', {
+			value: '',
+			text: ''
+		}));
+		//set options of directory select
+		for (var imgName of imageList) {
+			selectObjectHandle.append($('<option>', {
+				value: imgName,
+				text: imgName
+			}));
+		}
+	}).fail(function(data){
+		// Set the message text.
+		if (data.responseText !== '') {
+			$(messages).text(data.responseText);
+		} 
+		else {
+			$(messages).text('Fehler, Bilder konnten nicht geladen werden.');
+		}
+	});
+	}, false);
+}
 	
 //main function for click event handlers
 var main = function(){
@@ -222,6 +327,15 @@ var main = function(){
 
 
 	displayMessages();
+
+
+	//events for loading image selects in create message form
+	let imageDirectoryHandle = document.getElementById('imageDirectory');
+	setImgsReloadInCreateAdMessageForm( $('#messageImage'), imageDirectoryHandle);
+
+	//events for loading image selects in update message form
+	let imageDirectoryUpHandle = document.getElementById('imageDirectoryUp');
+	setImgsReloadInCreateAdMessageForm($('#messageImageUp'), imageDirectoryUpHandle);
 	
 	$('.createAdvertisingMessageButton').click(function(){
 		//reset datepickers of form
@@ -242,37 +356,47 @@ var main = function(){
 				}));
 		}
 
-		//set image options of select
+
+
+
+		//get subdirectories of images directory
 		$.ajax({
 			type: 'POST',
-			url: 'ajax/advertisingMessages_imagesOfDirectory_read.php'
+			url: 'ajax/advertisingMessages_imageDirectories_read.php'
 		}).done(function(response){
-			var imageList = JSON.parse(response);
-			selectObjectHandle = $('#messageImage');
-
-			selectObjectHandle.append($('<option>', {
-				value: '',
-				text: ''
-			}));
+			var directoryList = JSON.parse(response);
+			$('#imageDirectory').append($('<option selected="selected">', {
+					value: '',
+					text: ''
+				}));
 			//set options of directory select
-			for (var imgName of imageList) {
+			for (var dirName of directoryList) {
 				//if (dirName === 'length' || !categoriesNameDict.hasOwnProperty(key)){ 
 				//	continue;
 				//}
-				selectObjectHandle.append($('<option>', {
-					value: imgName,
-					text: imgName
+				$('#imageDirectory').append($('<option>', {
+					value: dirName,
+					text: dirName
 				}));
 			}
+			//set imagePath fields to empty String
+			$('#messageImage').append($('<option selected="selected">', {	value: '',	text: ''}));
+			//show modal
 			$("#createAdvertisingMessage").modal("show");
 		}).fail(function(data){
 			// Set the message text.
 			if (data.responseText !== '') {
 				$(messages).text(data.responseText);
 			} else {
-				$(messages).text('Fehler, Bilder konnten nicht geladen werden.');
+				$(messages).text('Fehler, Ordner konnten nicht geladen werden.');
 			}
 		});
+
+
+
+
+
+		
 	});
 	
 	
@@ -293,72 +417,137 @@ var main = function(){
 				}
 			}).done(function(response){
 				var messageData = JSON.parse(response);
-				
-				//set values of form
-				$('#nameUp').val(messageData[0]['name']);
-				$('#messageHeaderUp').val(messageData[0]['messageHeader']);
-				$('#messageTextUp').val(messageData[0]['messageText']);
-				$('#orderPriorityUp').val(messageData[0]['orderPriority']);
-				
-				$('#idUp').val(messageData[0]["id"]);
-				
 
-				//reset datepickers of form
-				resetDatepickers(["#popupStartDateUp", "#popupEndDateUp", "#messageboxStartDateUp", "#messageboxEndDateUp"]);
-				var showtimeDatepickers = [ "#popupEndDateUp", "#messageboxStartDateUp", "#messageboxEndDateUp"];
-				$("#popupStartDateUp").datepicker( "setDate", formatDateFromMysql(messageData[0]['popupStartDate']));
-				$("#popupEndDateUp").datepicker( "setDate", formatDateFromMysql(messageData[0]['popupEndDate']));
-				$("#messageboxStartDateUp").datepicker( "setDate", formatDateFromMysql(messageData[0]['messageboxStartDate']));
-				$("#messageboxEndDateUp").datepicker( "setDate", formatDateFromMysql(messageData[0]['messageboxEndDate']));
-
-				//set product options of select
-				$('#linkedProductIdUp').append($('<option>', {
-							value: 0,
-							text: 'Kein Produkt'
-						}));
-				for (var key in productsNameDict) {
-						if (key === 'length' || !productsNameDict.hasOwnProperty(key)){ 
-							continue;
-						}
-						$('#linkedProductIdUp').append($('<option>', {
-							value: key,
-							text: productsNameDict[key]
-						}));
-				}
-				$('#linkedProductIdUp').val(messageData[0]["linkedProductId"]);
-
-				//set image options of select
+				//get subdirectories of images directory
 				$.ajax({
 					type: 'POST',
-					url: 'ajax/advertisingMessages_imagesOfDirectory_read.php'
+					url: 'ajax/advertisingMessages_imageDirectories_read.php'
 				}).done(function(response){
-					var imageList = JSON.parse(response);
-					selectObjectHandle = $('#messageImageUp');
-
-					selectObjectHandle.append($('<option>', {
-						value: '',
-						text: 'Kein Bild'
-					}));
+					var directoryList = JSON.parse(response);
+					$('#imageDirectoryUp').append($('<option>', {
+							value: '',
+							text: ''
+						}));
 					//set options of directory select
-					for (var imgName of imageList) {
-						//if (dirName === 'length' || !categoriesNameDict.hasOwnProperty(key)){ 
-						//	continue;
-						//}
-						selectObjectHandle.append($('<option>', {
-							value: imgName,
-							text: imgName
+					for (var dirName of directoryList) {
+						$('#imageDirectoryUp').append($('<option>', {
+							value: dirName,
+							text: dirName
 						}));
 					}
-					$('#messageImageUp').val(messageData[0]['messageImage']);
+				
+					//set values of form
+					$('#nameUp').val(messageData[0]['name']);
+					$('#messageHeaderUp').val(messageData[0]['messageHeader']);
+					$('#messageTextUp').val(messageData[0]['messageText']);
+					$('#orderPriorityUp').val(messageData[0]['orderPriority']);
+					
+					$('#idUp').val(messageData[0]["id"]);
 
-					$("#updateAdvertisingMessage").modal("show");
-				}).fail(function(data){
-					// Set the message text.
-					if (data.responseText !== '') {
-						$(messages).text(data.responseText);
-					} else {
-						$(messages).text('Fehler, Bilder konnten nicht geladen werden.');
+					//set image field to empty String
+					$('#messageImageUp').append($('<option selected="selected">', {	value: '',	text: ''}));
+					
+					//cut image Path String and display in form
+					
+					if(messageData[0]["messageImage"] != '' && messageData[0]["messageImage"] != null){
+						let imageString = messageData[0]["messageImage"].split('/');
+						var imageName = imageString[1];
+						var imagePathDir = imageString[0];
 					}
+					if(imagePathDir != ''){
+						$('#imageDirectoryUp').val(imagePathDir);
+						let selectImgDirHandle = $('#imageDirectoryUp');
+						$.ajax({
+							type: 'POST',
+							url: 'ajax/advertisingMessages_imagesOfDirectory_read.php',
+							data: {
+								'directory': imagePathDir
+							}
+						}).done(function(response){
+							var imageList = JSON.parse(response);
+							
+							//set options of image select
+							selectImgHandle = $('#messageImageUp');
+							for (var imgName of imageList) {
+								selectImgHandle.append($('<option>', {
+									value: imgName,
+									text: imgName
+								}));
+							}
+							//set image select 
+								if(imageName != ''){
+									selectImgHandle.val(imageName);
+								
+							}
+						}).fail(function(data){
+							// Set the message text.
+							if (data.responseText !== '') {
+								$(messages).text(data.responseText);
+							} else {
+								$(messages).text('Fehler, Pfad konnte nicht geladen werden.');
+							}
+						});
+					}
+					
+
+					//reset datepickers of form
+					resetDatepickers(["#popupStartDateUp", "#popupEndDateUp", "#messageboxStartDateUp", "#messageboxEndDateUp"]);
+					var showtimeDatepickers = [ "#popupEndDateUp", "#messageboxStartDateUp", "#messageboxEndDateUp"];
+					$("#popupStartDateUp").datepicker( "setDate", formatDateFromMysql(messageData[0]['popupStartDate']));
+					$("#popupEndDateUp").datepicker( "setDate", formatDateFromMysql(messageData[0]['popupEndDate']));
+					$("#messageboxStartDateUp").datepicker( "setDate", formatDateFromMysql(messageData[0]['messageboxStartDate']));
+					$("#messageboxEndDateUp").datepicker( "setDate", formatDateFromMysql(messageData[0]['messageboxEndDate']));
+
+					//set product options of select
+					$('#linkedProductIdUp').append($('<option>', {
+								value: 0,
+								text: 'Kein Produkt'
+							}));
+					for (var key in productsNameDict) {
+							if (key === 'length' || !productsNameDict.hasOwnProperty(key)){ 
+								continue;
+							}
+							$('#linkedProductIdUp').append($('<option>', {
+								value: key,
+								text: productsNameDict[key]
+							}));
+					}
+					$('#linkedProductIdUp').val(messageData[0]["linkedProductId"]);
+
+					//set image options of select
+					/*$.ajax({
+						type: 'POST',
+						url: 'ajax/advertisingMessages_imagesOfDirectory_read.php'
+					}).done(function(response){
+						var imageList = JSON.parse(response);
+						selectObjectHandle = $('#messageImageUp');
+
+						selectObjectHandle.append($('<option>', {
+							value: '',
+							text: 'Kein Bild'
+						}));
+						//set options of directory select
+						for (var imgName of imageList) {
+							//if (dirName === 'length' || !categoriesNameDict.hasOwnProperty(key)){ 
+							//	continue;
+							//}
+							selectObjectHandle.append($('<option>', {
+								value: imgName,
+								text: imgName
+							}));
+						}
+						$('#messageImageUp').val(messageData[0]['messageImage']);
+
+						$("#updateAdvertisingMessage").modal("show");
+					}).fail(function(data){
+						// Set the message text.
+						if (data.responseText !== '') {
+							$(messages).text(data.responseText);
+						} else {
+							$(messages).text('Fehler, Bilder konnten nicht geladen werden.');
+						}
+					});*/
+					$("#updateAdvertisingMessage").modal("show");
 				});
 			}).fail(function(data){
 				// Set the message text.
@@ -405,6 +594,36 @@ var main = function(){
 		else{
 			alert("Keine Nachricht ausgewählt");
 		}
+	});
+
+	$('.imageUploadAdButton').click(function(){
+		//get subdirectories of images directory
+		$.ajax({
+			type: 'POST',
+			url: 'ajax/advertisingMessages_imageDirectories_read.php'
+		}).done(function(response){
+			var directoryList = JSON.parse(response);
+			
+			//set options of directory select
+			for (var dirName of directoryList) {
+				//if (dirName === 'length' || !categoriesNameDict.hasOwnProperty(key)){ 
+				//	continue;
+				//}
+				$('#directoryInput').append($('<option>', {
+					value: dirName,
+					text: dirName
+				}));
+			}
+			//show modal
+			$('#imageUpload').modal("show");
+		}).fail(function(data){
+			// Set the message text.
+			if (data.responseText !== '') {
+				$(messages).text(data.responseText);
+			} else {
+				$(messages).text('Fehler, Ordner konnten nicht geladen werden.');
+			}
+		});
 	});
 	
 }
